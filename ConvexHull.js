@@ -36,7 +36,7 @@ ConflictList.prototype.fill = function(visible) {
     }
     var curr = this.head;
     do{
-	visible.add(curr.face);
+	visible.push(curr.face);
 	curr.face.marked = true;
 	curr = curr.nextf;
     }while(curr !== null);
@@ -111,7 +111,7 @@ Vertex.prototype.subtract = function(v){
 }
 Vertex.prototype.crossproduct = function(v){
     return new Vertex((this.y * v.z) - (this.z * v.y), (this.z * v.x) - (this.x * v.z), (this.x * v.y) - (this.y *
-v.x)); }
+                                                                                                          v.x)); }
 Vertex.prototype.equals = function(v){
     return (this.x === v.x && this.y === v.y && this.z === v.z);
 }
@@ -148,28 +148,28 @@ var Face = function(a, b, c){
     
     this.normal = (new Vector(-t.x, -t.y, -t.z));
     this.normal.normalize();
-    this.edges = this.createEdges();
+    this.createEdges();
 }
 Face.prototype.createEdges = function(){
-        e = [];
-        e[0] = new HEdge(this.verts[0], this.verts[1], this);
-        e[1] = new HEdge(this.verts[1], this.verts[2], this);
-        e[2] = new HEdge(this.verts[2], this.verts[0], this);
-        e[0].next = e[1];
-	e[0].prev = e[2];
-	e[1].next = e[2];
-	e[1].prev = e[0];
-	e[2].next = e[0];
-	e[2].prev = e[1];
+    this.edges = [];
+    this.edges[0] = new HEdge(this.verts[0], this.verts[1], this);
+    this.edges[1] = new HEdge(this.verts[1], this.verts[2], this);
+    this.edges[2] = new HEdge(this.verts[2], this.verts[0], this);
+    this.edges[0].next = this.edges[1];
+    this.edges[0].prev = this.edges[2];
+    this.edges[1].next = this.edges[2];
+    this.edges[1].prev = this.edges[0];
+    this.edges[2].next = this.edges[0];
+    this.edges[2].prev = this.edges[1];
 }
 // IN: vertex orient
 Face.prototype.orient = function(orient){
-    if (!(dot(normal,orient) < dot(normal, this.verts[0]))){
+    if (!(dot(this.normal,orient) < dot(this.normal, this.verts[0]))){
         var temp = this.verts[1];
         this.verts[1] = this.verts[2];
         this.verts[2] = temp;
-        normal.negate();
-        createEdges();
+        this.normal.negate();
+        this.createEdges();
     }
 }
 // IN: two vertices v0 and v1
@@ -183,26 +183,37 @@ Face.prototype.getEdge = function(v0, v1){
 }
 // IN: Face face, vertices v0 and v1
 Face.prototype.link = function(face, v0, v1){
-    var twin = face.getEdge(v0, v1);
-    if (twin === null){
-        // error
-        console.log("ERROR: twin is null");
+    if (face instanceof Face){
+        var twin = face.getEdge(v0, v1);
+        if (twin === null){
+            // error
+            console.log("ERROR: twin is null");
+        }
+        var edge = this.getEdge(v0, v1);
+        twin.twin = edge;
+        edge.twin = twin;
+    } 
+    else{
+        var e = face;
+        var edge = this.getEdge(e.orig, e.dest);
+        e.twin = edge;
+        edge.twin = e;
     }
-    var edge = this.getEdge(v0, v1);
-    twin.twin = edge;
-    edge.twin = twin;
 }
 // IN: vertex v
 Face.prototype.conflict = function(v){
-    return (dot(this.normal, v) > dot(this.normal, v[0]) + epsilon);
+    return (dot(this.normal, v) > dot(this.normal, this.verts[0]) + epsilon);
 }
 Face.prototype.getHorizon = function(){
     for (var i = 0; i < 3; i++){
-        if (this.edges[i].twin !== null && e[i].twin.isHorizon()){
-            return e[i];
+        if (this.edges[i].twin !== null && this.edges[i].twin.isHorizon()){
+            return this.edges[i];
         }
     }
     return null;
+}
+Face.prototype.removeConflict = function(){
+    this.conflicts.removeAll();
 }
 
 
@@ -216,7 +227,7 @@ var HEdge = function(orig, dest, face){
     this.iFace = face;
 }
 HEdge.prototype.isHorizon = function(){
-    return twin !== null && twin.iFace.marked && !iFace.marked;
+    return this.twin !== null && this.twin.iFace.marked && !this.iFace.marked;
 }
 
 // IN: array horizon
@@ -225,12 +236,12 @@ HEdge.prototype.findHorizon = function(horizon) {
 	if (horizon.length > 0 && this === horizon[0]) {
 	    return;
 	} else {
-	    horizon.add(this);
+	    horizon.push(this);
 	    this.next.findHorizon(horizon);
 	}
     } else {
 	if (this.twin !== null) {
-	    twin.next.findHorizon(horizon);
+	    this.twin.next.findHorizon(horizon);
 	}
     }
 }
@@ -262,33 +273,33 @@ var ConvexHull = {
 
     // IN: sites (x,y,z)
     init: function(sites){
-        points = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
+        this.points = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
     },
 
     prep: function(){
-        if (points.size() <= 3){
+        if (this.points.length <= 3){
             // error
             console.log("ERROR: Less than 4 points");
         }
 
         // set vertex indices
-        for (var i in points){
-            points[i].index = i;
+        for (var i = 0; i <  this.points.length; i++){
+            this.points[i].index = i;
         }
 
         var v0, v1, v2, v3;
         var f1, f2, f3, f0;
-        v0 = points[0];
-        v1 = points[1];
+        v0 = this.points[0];
+        v1 = this.points[1];
         v2 = v3 = null;
         
-        for (var i = 2; i < points.length; i++){
-            if (!(linearDependent(v0, points[i]) && linearDependent(v1, points[i]))){
-                v2 = points[i];
+        for (var i = 2; i < this.points.length; i++){
+            if (!(this.linearDependent(v0, this.points[i]) && this.linearDependent(v1, this.points[i]))){
+                v2 = this.points[i];
                 v2.index = 2;
-                points[2].index = i;
-                var temp = points.splice(2, 1, v2);
-                points.push(temp);
+                this.points[2].index = i;
+                this.points.splice(i, 1, this.points[2]);
+                this.points.splice(2, 1, v2);
                 break;
             }
         }
@@ -298,13 +309,13 @@ var ConvexHull = {
         }
 
         f0 = new Face(v0, v1, v2);
-        for (var i = 3; i < points.length; i++){
-            if (dot(f0.normal, f0.verts[0]) !== dot(f0.normal, points[i])) {
-                v3 = points.get(i);
+        for (var i = 3; i < this.points.length; i++){
+            if (dot(f0.normal, f0.verts[0]) !== dot(f0.normal, this.points[i])) {
+                v3 = this.points[i];
                 v3.index = 3;
-                points[3].index = i;
-                var temp = points.splice(3,1,v3);
-                points.push(temp);
+                this.points[3].index = i;
+                this.points.splice(i, 1, this.points[3]);
+                this.points.splice(3,1,v3);
                 break;
             }
         }
@@ -319,10 +330,10 @@ var ConvexHull = {
         f2 = new Face(v0,v1,v3,v2);
 	f3 = new Face(v1,v2,v3,v0);
 	
-	addFacet(f0);
-	addFacet(f1);
-	addFacet(f2);
-	addFacet(f3);
+	this.addFacet(f0);
+	this.addFacet(f1);
+	this.addFacet(f2);
+	this.addFacet(f3);
 	//Connect facets
 	f0.link(f1, v0, v2);
 	f0.link(f2,v0,v1);
@@ -334,22 +345,23 @@ var ConvexHull = {
         this.current = 4;
         
         var v;
-	for(var i = current; i < points.length; i++){
-	    v = points[i];
+	for(var i = this.current; i < this.points.length; i++){
+	    v = this.points[i];
 	    if(f0.conflict(v)){
-		addConflict(f0,v);
+		this.addConflict(f0,v);
 	    }
 	    //!f1.behind(v)
 	    if(f1.conflict(v)){
-		addConflict(f1,v);
+		this.addConflict(f1,v);
 	    }
 	    if(f2.conflict(v)){
-		addConflict(f2,v);
+		this.addConflict(f2,v);
 	    }
 	    if(f3.conflict(v)){
-		addConflict(f3,v);
+		this.addConflict(f3,v);
 	    }
 	}		
+
 
     },
 
@@ -365,32 +377,32 @@ var ConvexHull = {
         f.removeConflict();
         var index = f.index;
 	f.index = -1;
-	if(index === facets.length - 1){
-	    facets.splice(facets.length - 1, 1);
+	if(index === this.facets.length - 1){
+	    this.facets.splice(this.facets.length - 1, 1);
 	    return;
 	}
-	if(index >= facets.length|| index < 0)
+	if(index >= this.facets.length|| index < 0)
 	    return;
-	var last = facets.splice(facets.size() - 1, 1);
+	var last = this.facets.splice(this.facets.length - 1, 1);
 	last.index = index;
-	facets.splice(index, 1, last);
+	this.facets.splice(index, 1, last);
 
     },
 
     // IN: Face face
     addFacet: function(face){
-        face.index = facets.length;
-        facets.push(face);
+        face.index = this.facets.length;
+        this.facets.push(face);
     },
 
     compute: function(){
-        prep();
+        this.prep();
 
-        while(current < points.length){
-            var next = points[current];
+        while(this.current < this.points.length){
+            var next = this.points[this.current];
 
             if (next.conflicts.empty()){ //No conflict, point in hull
-		++current;
+		this.current++;
 		continue;
 	    }
 	    created = [];// TODO: make sure this is okay and doesn't dangle references
@@ -400,9 +412,9 @@ var ConvexHull = {
 	    next.conflicts.fill(visible);
 	    //Horizon edges are orderly added to the horizon list
 	    var e;
-	    for(var jF in visible){
+	    for(var jF = 0; jF < visible.length; jF++){
 		e = visible[jF].getHorizon();
-		if(e !== null){
+		if(e != null){
 		    e.findHorizon(horizon);
 		    break;
 		}
@@ -414,14 +426,14 @@ var ConvexHull = {
 	    for(var hEi = 0; hEi < horizon.length; hEi++){
                 var hE = horizon[hEi];
 		var fn = new Face(next,hE.orig,hE.dest,hE.twin.next.dest);
-		fn.conflicts = new JConflictList(true);
+		fn.conflicts = new ConflictList(true);
 		
 		//Add to facet list
-		addFacet(fn);
+		this.addFacet(fn);
 		created.push(fn);
 		
 		//Add new conflicts
-		addConflicts(hE.iFace,hE.twin.iFace,fn);
+		this.addConflict(hE.iFace,hE.twin.iFace,fn);
 		
 		//Link the new face with the horizon edge
 		fn.link(hE);
@@ -435,16 +447,16 @@ var ConvexHull = {
 	    if(first !== null && last !== null){
 		last.link(first, next, horizon[0].orig);
 	    }
-	    if(created.size() != 0){
+	    if(created.length != 0){
 		//update conflict graph
 		for(var f = 0; f <  visible.length; f++){
-		    removeConflict(f);
+		    this.removeConflict(visible[f]);
 		}
-		current++;
+		this.current++;
 		created = [];
 	    }
 	}
-	return facets;
+	return this.facets;
     },
 
     // IN: two vertex objects, p1 and p2
@@ -479,7 +491,5 @@ var ConvexHull = {
             return false;
         }
     }
-
-    
 
 }
