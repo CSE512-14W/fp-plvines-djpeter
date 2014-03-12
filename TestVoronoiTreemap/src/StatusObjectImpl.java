@@ -16,7 +16,7 @@ public class StatusObjectImpl implements kn.uni.voronoitreemap.interfaces.Status
 					System.out.println("poly == null");
 				}
 				else {
-					System.out.println(poly.toString());
+					//System.out.println(poly.toString());
 					System.out.println(poly.getArea());
 				}
 			}
