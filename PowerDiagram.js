@@ -6,7 +6,7 @@ function applyDeltaPi(S, W){
     var result = [];
     for (var i in S){
         var x = S[i][0], y = S[i][1], w = W[i];
-        result[i] = [x,y, (x*x) + (y*y) - w];
+        result[i] = [x,y,w];//[x,y, (x*x) + (y*y) - w];
     }
 
     return result;
@@ -19,12 +19,14 @@ function getFacesOfDestVertex(edge) {
     var previous = edge;
     var first = edge.dest;
 
+    // var site = first.originalObject;
     var site = first;
     var neighbours = [];
     do {
 	previous = previous.twin.prev;
 
 	// add neighbour to the neighbourlist
+//	var siteOrigin = previous.orig.originalObject;
 	var siteOrigin = previous.orig;
 	if (!siteOrigin.isDummy) {
 	    neighbours.push(siteOrigin);
@@ -50,6 +52,13 @@ function computePowerDiagram(S, W, boundingPolygon){
     ConvexHull.init(boundingPolygon, sStar);
     
     var facets = ConvexHull.compute(sStar);
+
+    // for (var i = 0; i < facets.length; i++){
+    //     var f = facets[i];
+    //     console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
+
+    // }
+    
     var polygons = [];
     var vertexCount = ConvexHull.points.length; 
     var verticesVisited = [];
@@ -66,6 +75,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 		var edge = facet.edges[e];
 		var destVertex = edge.dest;
 		var site = destVertex; 
+//		var site = destVertex.originalObject; 
 
 		if (!verticesVisited[destVertex.index]) {
 
@@ -112,7 +122,8 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    }
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
-		    if (!site.isDummy) {
+		    if (!site.isDummy && site.nonClippedPolygon.length > 0) {
+                        site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
 			polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
                         console.log(site.polygon);
 		    }
@@ -121,5 +132,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 	}
     }
     alert("done with computing power diagram!");
+
     return polygons;
 }
+

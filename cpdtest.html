@@ -38,14 +38,12 @@ function printFacets(facets){
 var w = 1000;
 var h = 1000;
 boundingPoly = d3.geom.polygon([[-w,-h],[-w,2 *h],[2*w,2*h],[2*w,-h]]);
-var sites = d3.range(1000).map(function(d, i) {
+var sites = d3.range(10).map(function(d, i) {
     var r =[Math.random() * w, Math.random()*w, Math.random()*w];
-    console.log(r);
     return(r);
 });
-var weights = d3.range(1000).map(function() {
+var weights = d3.range(10).map(function() {
     var r =Math.random()*10;
-    console.log(r);
     return(r);
 });
 for (var i = 0; i < sites.length; i++){
@@ -54,11 +52,31 @@ for (var i = 0; i < sites.length; i++){
             && sites[i][2] === sites[j][2]){
             alert("Discarding: " + sites[i] + " : " + sites[j]);
             sites.splice(i,1);
-        }
+       }
     }
 }
-computePowerDiagram(sites, weights, boundingPoly);
+var bases = d3.geom.polygon([[-1000, -1000],
+[-1000, 2000],
+[2000, 2000],
+[2000, -1000]]);
+var v =[[731.8968416657299, 7.620953489094973],
+        [172.79187962412834, 495.32342655584216],
+        [769.9715013150126, 716.2646360229701],
+        [125.28637191280723, 279.1040879674256],
+        [882.5746602378786, 172.18416254036129],
+        [777.3083001375198, 703.7240525241941],
+        [16.56112354248762, 605.8580968528986],
+        [935.6260856147856, 838.9132195152342],
+        [252.6318971067667, 407.75449317879975],
+        [500.06895465776324, 838.7587391771376]]; 
 
+var w = [535724.4386455703, 275194.8682683763,
+1105883.2770125112, 93595.08448961764, 808584.2211800586, 1099429.6963842455, 367335.0666268901, 1579169.0330803632, 230086.22230533778, 953584.5510914279];
+
+var x = computePowerDiagram(v, w, bases);
+
+//var x = computePowerDiagram(sites, weights, boundingPoly);
+//alert(x.length);
 </script>
     </div>
     </body>

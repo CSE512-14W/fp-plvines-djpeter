@@ -130,7 +130,7 @@ ConflictList.prototype.getVertices = function(l1) {
 
 
 // IN: coordinates x, y, z
-var Vertex = function(x, y, z, isDummy) {
+var Vertex = function(x, y, z, orig, isDummy) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -139,6 +139,12 @@ var Vertex = function(x, y, z, isDummy) {
     this.neighbors = null; // Potential trouble
     this.nonClippedPolygon = null;
     this.polygon = null;
+    if (orig != undefined){
+        this.originalObject = null;
+    }
+    else{
+        this.originalObject = orig;
+    }
     if (isDummy != undefined){
         this.isDummy = isDummy;
     }
@@ -327,9 +333,17 @@ var ConvexHull = {
 
     // IN: sites (x,y,z)
     init: function(boundingSites, sites){
-        this.points = boundingSites.map(function(a) {return new Vertex(a[0], a[1], epsilon, true)});
-        var temppoints = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
+        this.points = boundingSites.map(function(a) {return new Vertex(a[0], a[1], epsilon, null, true);});
+        var temppoints = sites.map(function(a) {return new Vertex(a[0], a[1], a[2]);});
         this.points = this.points.concat(temppoints);
+
+        for (var i = 0; i < this.points.length; i++){
+            var p = this.points[i];            
+            console.log(p.x + ", " + p.y + ", " + p.z)
+        }
+
+
+        //this.point = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
     },
 
     permutate: function(){
@@ -495,7 +509,7 @@ var ConvexHull = {
 	if(index >= this.facets.length|| index < 0)
 	    return;
 	var last = this.facets.splice(this.facets.length - 1, 1);
-	last.index = index;
+	last[0].index = index;
 	this.facets.splice(index, 1, last[0]);
 
     },
