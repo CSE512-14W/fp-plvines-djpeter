@@ -382,6 +382,48 @@ var ConvexHull = {
 
     },
 
+    // IN: Faces old1 old2 and fn
+    addConflicts: function(old1, old2, fn){
+	//Adding the vertices
+        var l1 = [];
+        old1.conflicts.getVertices(l1);
+	var l2 = [];
+        old2.conflicts.getVertices(l2);
+	var nCL = [];
+	var v1,v2;
+	var i,l;
+	var i = l = 0;
+	//Fill the possible new Conflict List
+	while(i < l1.length || l < l2.length){
+	    if(i < l1.length && l < l2.length){
+		v1 = l1[i];
+		v2 = l2[l];
+		//If the index is the same, its the same vertex and only 1 has to be added
+		if(v1.index === v2.index){
+		    nCL.push(v1);
+		    i++;
+		    l++;
+		}else if(v1.index > v2.index){
+		    nCL.push(v1);
+		    i++;
+		}else{
+		    nCL.push(v2);
+		    l++;
+		}
+	    }else if( i < l1.length){
+		nCL.push(l1[i++]);
+	    }else{
+		nCL.push(l2[l++]);
+	    }
+	}
+	//Check if the possible conflicts are real conflicts
+	for(var i = nCL.length -1; i >= 0; i--){
+	    v1 = nCL[i];
+	    if(fn.conflict(v1))
+		this.addConflict(fn,v1);
+	}
+    },
+
     // IN: Face face, Vertex v
     addConflict: function(face, vert){
         var e = new GraphEdge(face, vert);
@@ -450,7 +492,7 @@ var ConvexHull = {
 		this.created.push(fn);
 		
 		//Add new conflicts
-		this.addConflict(hE.iFace,hE.twin.iFace,fn);
+		this.addConflicts(hE.iFace,hE.twin.iFace,fn);
 		
 		//Link the new face with the horizon edge
 		fn.link(hE);
