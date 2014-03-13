@@ -192,7 +192,6 @@ Face.prototype.link = function(face, v0, v1){
         var edge = this.getEdge(v0, v1);
         twin.twin = edge;
         edge.twin = twin;
-}
     } 
     else{
         var e = face;
