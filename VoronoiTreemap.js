@@ -110,8 +110,9 @@ var VoronoiTreemap = {
 		return dx * dx + dy * dy;
 	},
 	
-	adaptWeights:function(bounding_polygon, node, power_diagram, sites) {
+	adaptWeights:function(bounding_polygon, bounding_polygon_area, node, power_diagram, sites) {
 		// O(n^2) nearest neighbor
+		// note: to get O(n log n) you need to use, say, an ordinary voronoi diagram (see paper seciton 4.2)
 		var nn_squaredNorm = [];
 		// really stupid, twice as slow as needed
 		for (var i = 0; i < sites.length; i++) {
@@ -127,12 +128,11 @@ var VoronoiTreemap = {
 			nn_squaredNorm.push(best_squaredNorm);
 		}
 		
-		//area_bounding = area(bounding_polygon)
 		var epsilon = 0.0000001;
 		
 		for (var s = 0; s < sites.length; s++) {
-			//area_current = area(power_diagram[s]);
-			//area_target = area_bounding * sites[s].size_fraction;
+			area_current = power_diagram[s].area();
+			area_target = bounding_polygon_area * sites[s].size_fraction;
 			//var f_adapt = area_target / area_current;
 			//var w_new = Math.sqrt(sites[s].weight) * f_adapt;
 			//var w_max = Math.sqrt(nn_squaredNorm[s]); // compute squareroots once?
@@ -142,9 +142,15 @@ var VoronoiTreemap = {
 		}
 	},
 	
-	computeAreaError:function(power_diagram, sites) {
+	computeAreaError:function(bounding_polygon_area, power_diagram, sites) {
 		// stuff...simple from Algorithm 1
-	}
+		// note algorithm 1 lacks the Math.abs()    I think a typo
+		var total_error = 0;
+		for (var s = 0; s < sites.length; s++) {
+			total_error += Math.abs(power_diagram[s].area() - bounding_polygon_area * sites[s].size_fraction);
+		}
+		return total_error / (2 * bounding_polygon_area);
+	},
 	
 	// in: bounding polygon and node
 	// out: a list of polygons
@@ -174,6 +180,8 @@ var VoronoiTreemap = {
 		console.log("initial sites:");
 		console.log(sites);
 		
+		var bounding_polygon_area = bounding_polygon.area();
+		
 		// NEED POWER DIAGRAM HERE (and in iterations)
 		//power_diagram = computePowerDiagram(bounding_polygon, sites);
 		
@@ -184,9 +192,9 @@ var VoronoiTreemap = {
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
 			//this.adaptPositionsWeights(node, power_diagram, sites);
 			//power_diagram = computePowerDiagram(bounding_polygon, sites);
-			//this.adaptWeights(bounding_polygon, node, power_diagram, sites);
+			//this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			//power_diagram = computePowerDiagram(bounding_polygon, sites);
-			//area_error = this.computeAreaError(power_diagram, sites);
+			//area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
 		}
 		
 		//return power_diagram;
