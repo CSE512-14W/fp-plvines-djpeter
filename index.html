@@ -48,12 +48,17 @@
 
 
 <script language="javascript">
-var width = 500;
-var height = 500;
+var width = 510;
+var height = 510;
 var svn_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
 var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
-var polygon_list = VoronoiTreemap.computeVoronoiTreemapSingle(svg_poly, simple_json);
+var n1 = 10;
+var n2 = 140;
+var n3 = 370;
+var n4 = 500;
+var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
+var polygon_list = VoronoiTreemap.computeVoronoiTreemapSingle(octogon_poly, simple_json);
 
 /*
 // stupid debugging
@@ -70,9 +75,9 @@ function make_d3_poly(d) {
 var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 polylines.enter().append("path")
 	.attr("d", make_d3_poly)
-	.attr("stroke_width", "3px")
+	.attr("stroke-width", "10px")
 	.attr("stroke", "black")
-	.attr("fill", "white");
+	.attr("fill", "cyan");
 	
 	
 </script>
