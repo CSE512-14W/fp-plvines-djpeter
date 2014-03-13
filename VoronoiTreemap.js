@@ -254,7 +254,72 @@ var VoronoiTreemap = {
 		return d3.geom.polygon(result);
 	},
 	
+	// returns array of 2 points, where counterclockwise order contains p1
+	weightedMidpointLine:function(p1, w1, p2, w2) {
+		// this is stupid and probably wrong
+		var dx = p2[0] - p1[0];
+		var dy = p2[1] - p1[1];
+		var squared_norm = dx * dx + dy * dy;
+		var norm = Math.sqrt(squared_norm);
+		var ray_d = (squared_norm - (w2 - w1)) / (2 * norm);
+		var dx_normed = dx / norm;
+		var dy_normed = dy / norm;
+		var mx = p1[0] + dx_normed * ray_d;
+		var my = p1[1] + dy_normed * ray_d;
+		
+		// now move away from mx,my to get another point
+		var mx_2 = mx + dy;
+		var my_2 = my + (-dx);
+		
+		return [[mx, my], [mx_2, my_2]];
+	},
+	
+	
+	powerDiagramTwoSites:function(bounding_polygon, p1, w1, p2, w2) {
+		var result = [];
+		var s = this.weightedMidpointLine(p1, w1, p2, w2);
+		result.push(this.clipPolygonByLine(bounding_polygon, s[0], s[1]));
+		result.push(this.clipPolygonByLine(bounding_polygon, s[1], s[0]));
+		return result;
+	},
+	
+	powerDiagramThreeSites:function(bounding_polygon, p1, w1, p2, w2, p3, w3) {
+		var result = [];
+		var s12 = this.weightedMidpointLine(p1, w1, p2, w2);
+		var s13 = this.weightedMidpointLine(p1, w1, p3, w3);
+		var s23 = this.weightedMidpointLine(p2, w2, p3, w3);
+		// 1
+		var poly = this.clipPolygonByLine(bounding_polygon, s12[0], s12[1]);
+		poly = this.clipPolygonByLine(poly, s13[0], s13[1]);
+		result.push(poly);
+		// 2
+		poly = this.clipPolygonByLine(bounding_polygon, s12[1], s12[0]);
+		poly = this.clipPolygonByLine(poly, s23[0], s23[1]);
+		result.push(poly);
+		// 3
+		poly = this.clipPolygonByLine(bounding_polygon, s13[1], s13[0]);
+		poly = this.clipPolygonByLine(poly, s23[1], s23[0]);
+		result.push(poly);
+		return result;
+	},
+	
 	powerDiagramWrapper:function(bounding_polygon, sites) {
+		// hack in 1, 2, and 3 case here
+		// todo: move to power diagram function
+		if (sites.length == 1) {
+			return bounding_polygon;
+		}
+		else if (sites.length == 2) {
+			return this.powerDiagramTwoSites(bounding_polygon, 
+				sites[0].p, sites[0].weight, sites[1].p, sites[1].weight);
+		}
+		else if (sites.length == 3) {
+			return this.powerDiagramThreeSites(bounding_polygon, 
+				sites[0].p, sites[0].weight, sites[1].p, sites[1].weight, sites[2].p, sites[2].weight);
+		}
+		// else...
+		console.log("BROKEN GENERAL CODE PATH");
+	
 		site_points = sites.map(function(s) {return s.p;});
 		site_weights = sites.map(function(s) {return s.weight;});
 		result = computePowerDiagram(site_points, site_weights, bounding_polygon);
@@ -265,6 +330,8 @@ var VoronoiTreemap = {
 	
 	// in: bounding polygon and node
 	// out: a list of polygons
+	// recent test in index.html:
+	// VoronoiTreemap.computeVoronoiTreemapSingle(test_poly, simple_json);
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
 		if (!node.hasOwnProperty("children")) {
 			return null; // really? null?
@@ -296,17 +363,32 @@ var VoronoiTreemap = {
 		power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 		
 		// also power diagram should be in the form of d3 polygons
+		// assume that it is?!
 		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
 		
-		var max_iterations = 200;
+		var max_iterations = 100;
+		var error_threshold = 0.001; // or whatever...
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
-			//this.adaptPositionsWeights(node, power_diagram, sites);
-			//power_diagram = computePowerDiagram(bounding_polygon, sites);
-			//this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
-			//power_diagram = computePowerDiagram(bounding_polygon, sites);
-			//area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
+			console.log("iteration: " + iteration);
+			this.adaptPositionsWeights(node, power_diagram, sites);
+			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
+			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+			area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
+			console.log("area error: " + area_error);
+			if (area_error < error_threshold) break;
 		}
 		
-		//return power_diagram;
+		// debug result
+		console.log("power_diagram:");
+		for (var i = 0; i < power_diagram.length; i++) {
+			console.log("polygon " + i);
+			for (var j = 0; j < power_diagram[i].length; j++) {
+				console.log(power_diagram[i][j]);
+			}
+			console.log("area: " + power_diagram[i].area());
+		}
+		
+		return power_diagram;
 	}
 }
