@@ -9,13 +9,13 @@
     <script src="jquery-1.11.0.min.js"></script>
 
 
-    </head>
+</head>
     <body>
     <style>
     body{ background-color:#EEF; } .name{ cursor: pointer; cursor:
-	hand; } div.first{ width:650px;
-    
-    }
+	                                  hand; } div.first{ width:650px;
+                                                             
+                                                           }
 
 #chart {
     width:750px;
@@ -31,12 +31,12 @@ path {
 </style>
 
 
-<div>
-<h1> VORONOI TESTING </h1>
-<p id="chart"></p>
+    <div>
+    <h1> VORONOI TESTING </h1>
+    <p id="chart"></p>
 
 
-<script>
+    <script>
 
 
 function printFacets(facets){
@@ -44,7 +44,7 @@ function printFacets(facets){
         console.log("Face: " + i);
         for (var j = 0; j < 3; j++){
             console.log("\t" + j + ": " + facets[i].verts[j].x + " : "
-    + facets[i].verts[j].y + " : " + facets[i].verts[j].z + " : ");
+                        + facets[i].verts[j].y + " : " + facets[i].verts[j].z + " : ");
         }
     }
 }
@@ -56,48 +56,37 @@ function getRandomArbitary (min, max) {
 var w = 1000;
 var h = 1000;
 // var sites = [[0,0,0],[2,0,0],[2,0,2],[0,2,0]];
-// var sites = d3.range(6).map(function(d, i) {
+// var sites = d3.range(1000).map(function(d, i) {
 //     var r =[Math.random() * w, Math.random()*w, Math.random()*w];
 //     console.log(r);
 //     return(r);
 // });
 
-var sites = [[174, 693, 949],
-[800, 100, 550],
-[550, 520, 830],
-[960, 10, 720],
-[60, 140, 70],
-[760, 640, 700]];
-
-// var sites = [[698.0814766138792, 104.16704905219376,
-//              446.26934197731316],[511.4364663604647,
-//              463.49317766726017,
-//              417.11602499708533],[58.07207152247429,
-//              41.06521070934832, 331.1879469547421],[604.342635255307,
-//              189.8373074363917,
-//              16.059366520494223],[375.6328267045319,
-//              811.2494808156043, 53.67899523116648],
-//              [849.6900135651231, 321.1922908667475,
-//              200.1924195792526], [979.6814217697829,
-//              662.4346717726439, 853.0635414645076], [110.992681235075,
-//              402.57152589038014,
-//              961.8305037729442],[494.9555543716997,
-//              477.48550749383867, 93.99628010578454], [688.0769561976194, 30.193729093298316, 705.4427999537438]];
+//  var sites = [
+// [234.6288962289691, 298.8159565720707, 272.9292113799602],
+// [126.74332316964865, 987.0213838294148, 756.2393094412982],
+// [785.3325614705682, 438.0646657664329, 972.957591060549],
+// [767.4444664735347, 716.9417280238122, 752.6870332658291],
+// [22.89591100998223, 445.64883364364505, 335.82407608628273],
+// [479.60696346126497, 806.1456705909222, 676.674836082384],
+// [947.3269795998931, 688.7247504200786, 257.550047012046], 
+// [181.02950463071465, 759.1825230047107, 373.6083614639938]];
 
 for (var i = 0; i < sites.length; i++){
     for (var j = 0; j < sites.length; j++){
         if (i !== j && sites[i][0] === sites[j][0] && sites[i][1] === sites[j][1]
-    && sites[i][2] === sites[j][2]){
-            console.log(sites[i] + " : " + sites[j]);
+            && sites[i][2] === sites[j][2]){
+            alert(sites[i] + " : " + sites[j]);
             sites.splice(i,1);
         }
     }
 }
 
-ConvexHull.init(sites);
-var f = ConvexHull.compute(sites);
-printFacets(f);
-alert("done!");
+// ConvexHull.init(sites);
+// var f = ConvexHull.compute(sites);
+// //printFacets(f);
+// alert("done!");
+
 
 // IN: sites and weights
 // OUT: sites with Z coordinate based on X,Y,and W
@@ -118,9 +107,76 @@ function applyDeltaPi(S, W){
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(omega, S, W){
     
-    sStar = applyDeltaPi(S);
-//    F = convexHull(sStar);
+    var sStar = applyDeltaPi(S);
+    var facets = convexHull(sStar);
     
+    var vertexCount = ConvexHull.vertices.length; 
+    var verticesVisited = [];
+
+    var facetCount = facets.length;
+    for (var i = 0; i < facetCount; i++) {
+	var facet = facets[i];
+
+	if (facet.isVisibleFromBelow()) { // TODO
+
+	    for (var e = 0; e < 3; e++) {
+		// got through the edges and start to build the polygon by
+		// going through the double connected edge list
+		var edge = facet.edges[e];
+		var destVertex = edge.dest;
+		var site = destVertex.originalObject; // TODO Not sure how
+                // exactly this is used
+
+		if (!verticesVisited[destVertex.index]) {
+
+		    verticesVisited[destVertex.index] = true;
+		    if (site.isDummy) { // TODO
+			continue;
+		    }
+
+		    // faces around the vertices which correspond to the
+		    // polygon corner points
+		    var faces = getFacesOfDestVertex(edge); // TODO
+                    var poly = new PolygonSimple(); // TODO replace
+                    // with D3 or some other polygon
+		    var lastX = NaN;
+		    var lastY = NaN;
+		    var dx = 1;
+                    var dy = 1;
+		    for (var i =0; i < faces.length; i++) {
+			var point = face.getDualPoint(); // TODO
+			var x1 = point.x;
+                        var y1 = point.y;
+			if (lastX !== NaN){
+
+			    dx = lastX - x1;
+			    dy = lastY - y1;
+			    if (dx < 0) {
+				dx = -dx;
+			    }
+			    if (dy < 0) {
+				dy = -dy;
+			    }
+			}
+			if (dx > numericError || dy > numericError) {
+
+			    poly.add(x1, y1); // TODO
+			    lastX = x1;
+			    lastY = y1;
+
+			}
+
+		    }
+		    site.nonClippedPolyon = poly; // TODO
+
+		    if (!site.isDummy) { // TODO
+			site.polygon =
+			    clipPoly.convexClip(poly); // TODO
+		    }
+		}
+	    }
+	}
+    }
 }
 
 function draw(location, w, h, vertices, voronoi, enclosingPolygon) {
