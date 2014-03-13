@@ -192,6 +192,7 @@ Face.prototype.link = function(face, v0, v1){
         var edge = this.getEdge(v0, v1);
         twin.twin = edge;
         edge.twin = twin;
+}
     } 
     else{
         var e = face;
@@ -398,7 +399,7 @@ var ConvexHull = {
 	    return;
 	var last = this.facets.splice(this.facets.length - 1, 1);
 	last.index = index;
-	this.facets.splice(index, 1, last);
+	this.facets.splice(index, 1, last[0]);
 
     },
 
@@ -418,17 +419,17 @@ var ConvexHull = {
 		this.current++;
 		continue;
 	    }
-	    created = [];// TODO: make sure this is okay and doesn't dangle references
-	    horizon = []; 
-	    visible = [];
+	    this.created = [];// TODO: make sure this is okay and doesn't dangle references
+	    this.horizon = []; 
+	    this.visible = [];
 	    //The visible faces are also marked
-	    next.conflicts.fill(visible);
+	    next.conflicts.fill(this.visible);
 	    //Horizon edges are orderly added to the horizon list
 	    var e;
-	    for(var jF = 0; jF < visible.length; jF++){
-		e = visible[jF].getHorizon();
-		if(e != null){
-		    e.findHorizon(horizon);
+	    for(var jF = 0; jF < this.visible.length; jF++){
+		e = this.visible[jF].getHorizon();
+		if(e !== null){
+		    e.findHorizon(this.horizon);
 		    break;
 		}
 	    }
@@ -436,14 +437,14 @@ var ConvexHull = {
             var last = null, first = null;
 
 	    //Iterate over horizon edges and create new faces oriented with the marked face 3rd unused point
-	    for(var hEi = 0; hEi < horizon.length; hEi++){
-                var hE = horizon[hEi];
+	    for(var hEi = 0; hEi < this.horizon.length; hEi++){
+                var hE = this.horizon[hEi];
 		var fn = new Face(next,hE.orig,hE.dest,hE.twin.next.dest);
 		fn.conflicts = new ConflictList(true);
 		
 		//Add to facet list
 		this.addFacet(fn);
-		created.push(fn);
+		this.created.push(fn);
 		
 		//Add new conflicts
 		this.addConflict(hE.iFace,hE.twin.iFace,fn);
@@ -458,15 +459,15 @@ var ConvexHull = {
 	    }
 	    //Links the first and the last created JFace
 	    if(first !== null && last !== null){
-		last.link(first, next, horizon[0].orig);
+		last.link(first, next, this.horizon[0].orig);
 	    }
-	    if(created.length != 0){
+	    if(this.created.length != 0){
 		//update conflict graph
-		for(var f = 0; f <  visible.length; f++){
-		    this.removeConflict(visible[f]);
+		for(var f = 0; f <  this.visible.length; f++){
+		    this.removeConflict(this.visible[f]);
 		}
 		this.current++;
-		created = [];
+		this.created = [];
 	    }
 	}
 	return this.facets;
