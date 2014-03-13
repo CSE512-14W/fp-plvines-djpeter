@@ -15,8 +15,39 @@
 <script language="javascript" type="text/javascript" src="simple.js"></script>
 <script language="javascript" type="text/javascript" src="simple_four.js"></script>
 
+
+</head>
+ 
+<body>
+
 <!--
-<script language"javascript">
+<script>
+ //Make an SVG Container
+ var svgContainer = d3.select("body").append("svg")
+                                     .attr("width", 200)
+                                     .attr("height", 200);
+ 
+ //Draw the Circle
+ var circle = svgContainer.append("circle")
+                          .attr("cx", 30)
+                          .attr("cy", 30)
+                         .attr("r", 20)
+						 .style("fill", "black");
+</script>
+-->
+
+
+<h2>Voronoi Treemap</h2>
+
+
+
+<!--
+<div id="div1">This is div1</div><br><br>
+-->
+
+
+
+<script language="javascript">
 var width = 500;
 var height = 500;
 var svn_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
@@ -24,37 +55,27 @@ var svn_container = d3.select("body").append("svg").attr("width",width).attr("he
 var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
 var polygon_list = VoronoiTreemap.computeVoronoiTreemapSingle(svg_poly, simple_json);
 
+/*
 // stupid debugging
 $(document).ready(function(){
 $("#div1").text('');
 $("#div1").append(JSON.stringify(polygon_list));
 });
+*/
 
 function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
 }
 
-var polylines = svn_container.append("g").selectAll("path").data(polygon_list[0], make_d3_poly);
+var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 polylines.enter().append("path")
 	.attr("d", make_d3_poly)
 	.attr("stroke_width", "3px")
 	.attr("stroke", "black")
-	.attr("fill", "black");
+	.attr("fill", "white");
+	
+	
 </script>
--->
-
-</head>
- 
-<body>
-
-<h2>Voronoi Treemap</h2>
-
-
-<p>
-Some stupid paragraph
-</p>
-
-<div id="div1">This is div1</div><br><br>
 
 
 
