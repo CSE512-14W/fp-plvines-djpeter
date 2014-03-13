@@ -1,8 +1,39 @@
-var epsilon = 0.0000000001;
+var epsilon = 1E-10;
 
 // IN: vectors or dertices
 var dot = function(v1, v2){
     return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z); 
+}
+
+// IN: Face face
+var Plane3D = function(face){
+    var p1 = face.verts[0];
+    var p2 = face.verts[1];
+    var p3 = face.verts[2];
+
+    this.a=p1.y*(p2.z-p3.z)+p2.y*(p3.z-p1.z)+p3.y*(p1.z-p2.z);
+    this.b=p1.z*(p2.x-p3.x)+p2.z*(p3.x-p1.x)+p3.z*(p1.x-p2.x);
+    this.c=p1.x*(p2.y-p3.y)+p2.x*(p3.y-p1.y)+p3.x*(p1.y-p2.y);
+    this.d=-1*(p1.x*(p2.y*p3.z-p3.y*p2.z)+p2.x*(p3.y*p1.z-p1.y*p3.z)+p3.x*(p1.y*p2.z-p2.y*p1.z));	
+}
+// OUT: Point2D
+Plane3D.prototype.getDualPointMappedToPlane = function(){
+    var nplane = getNormZPlane();
+    var dualPoint = new Point2D(nplane[0]/2, nplane[1]/2);
+    return dualPoint;
+}
+Plane3D.prototype.getNormZPlane = function(){
+    return [
+        -1 * (this.a / this.c),
+        -1 * (this.b / this.c),
+        -1 * (this.d / this.c)
+    ];
+}
+
+// IN: doubles x and y
+var Point2D = function(x,y){
+    this.x = x;
+    this.y = y;
 }
 
 // IN: boolean face
@@ -99,12 +130,21 @@ ConflictList.prototype.getVertices = function(l1) {
 
 
 // IN: coordinates x, y, z
-var Vertex = function(x, y, z) {
+var Vertex = function(x, y, z, isDummy) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.index = 0;
     this.conflicts = new ConflictList(false);
+    this.neighbors = null; // Potential trouble
+    this.nonClippedPolygon = null;
+    this.polygon = null;
+    if (isDummy != undefined){
+        this.isDummy = isDummy;
+    }
+    else{
+        this.isDummy = false;
+    }
 }
 Vertex.prototype.subtract = function(v){
     return new Vertex(v.x - this.x, v.y - this.y, v.z - this.z);
@@ -149,10 +189,22 @@ var Face = function(a, b, c, orient){
     this.normal = (new Vector(-t.x, -t.y, -t.z));
     this.normal.normalize();
     this.createEdges();
+    this.dualPoint = null;
 
     if (orient != undefined){
         this.orient(orient);
     }
+}
+// OUT: Point2D
+Face.prototype.getDualPoint = function(){
+    if (this.dualPoint === null){
+        var plane3d = new Plane3D(this);
+        this.dualPoint = plane3d.getDualPointMappedToPlane();
+    }
+    return this.dualPoint;
+}
+Face.prototype.isVisibleFromBelow = function(){
+    return (this.normal.z < -1.4259414393190911E-9);
 }
 Face.prototype.createEdges = function(){
     this.edges = [];
