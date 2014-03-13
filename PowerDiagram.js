@@ -1,3 +1,5 @@
+
+
 // IN: sites and weights
 // OUT: sites with Z coordinate based on X,Y,and W
 function applyDeltaPi(S, W){
@@ -48,7 +50,7 @@ function computePowerDiagram(S, W, boundingPolygon){
     ConvexHull.init(boundingPolygon, sStar);
     
     var facets = ConvexHull.compute(sStar);
-    
+    var polygons = [];
     var vertexCount = ConvexHull.points.length; 
     var verticesVisited = [];
 
@@ -111,8 +113,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy) {
-			site.polygon =
-			boundingPolygon.clip(site.nonClippedPolygon);
+			polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
                         console.log(site.polygon);
 		    }
 		}
@@ -120,5 +121,5 @@ function computePowerDiagram(S, W, boundingPolygon){
 	}
     }
     alert("done with computing power diagram!");
-    return sites;
+    return polygons;
 }
