@@ -326,8 +326,10 @@ var ConvexHull = {
     current: 0,
 
     // IN: sites (x,y,z)
-    init: function(sites){
-        this.points = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
+    init: function(boundingSites, sites){
+        this.points = boundingSites.map(function(a) {return new Vertex(a[0], a[1], epsilon, true)});
+        var temppoints = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
+        this.points = this.points.concat(temppoints);
     },
 
     permutate: function(){

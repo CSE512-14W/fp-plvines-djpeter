@@ -1,0 +1,66 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <script type="text/javascript" src="d3-master/d3.js"></script>
+    <script type="text/javascript" src="ConvexHull.js"></script>
+    <script type="text/javascript" src="PowerDiagram.js"></script>
+    <script src="jquery-1.11.0.min.js"></script>
+
+
+</head>
+    <body>
+    <style>
+    body{ background-color:#EEF; } .name{ cursor: pointer; cursor:
+                                          hand; } div.first{ width:650px;
+                                                           }
+</style>
+
+
+    <div>
+    <h1> VORONOI TESTING </h1>
+    <p id="chart"></p>
+
+
+    <script>
+
+function printFacets(facets){
+    for (var i = 0; i < facets.length; i++){
+        console.log("Face: " + i);
+        for (var j = 0; j < 3; j++){
+            console.log("\t" + j + ": " + facets[i].verts[j].x + " : "
+                        + facets[i].verts[j].y + " : " + facets[i].verts[j].z + " : ");
+        }
+    }
+}
+
+var w = 1000;
+var h = 1000;
+boundingPoly = d3.geom.polygon([[-w,-h],[-w,2 *h],[2*w,2*h],[2*w,-h]]);
+var sites = d3.range(1000).map(function(d, i) {
+    var r =[Math.random() * w, Math.random()*w, Math.random()*w];
+    console.log(r);
+    return(r);
+});
+var weights = d3.range(1000).map(function() {
+    var r =Math.random()*10;
+    console.log(r);
+    return(r);
+});
+for (var i = 0; i < sites.length; i++){
+    for (var j = 0; j < sites.length; j++){
+        if (i !== j && sites[i][0] === sites[j][0] && sites[i][1] === sites[j][1]
+            && sites[i][2] === sites[j][2]){
+            alert("Discarding: " + sites[i] + " : " + sites[j]);
+            sites.splice(i,1);
+        }
+    }
+}
+computePowerDiagram(sites, weights, boundingPoly);
+
+</script>
+    </div>
+    </body>
+    </html>
+
