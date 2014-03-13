@@ -37,7 +37,6 @@ path {
 
     <script>
 
-
 function printFacets(facets){
     for (var i = 0; i < facets.length; i++){
         console.log("Face: " + i);
@@ -51,41 +50,6 @@ function printFacets(facets){
 function getRandomArbitary (min, max) {
     return Math.random() * (max - min) + min;
 }
-
-var w = 1000;
-var h = 1000;
-// var sites = [[0,0,0],[2,0,0],[2,0,2],[0,2,0]];
-// var sites = d3.range(1000).map(function(d, i) {
-//     var r =[Math.random() * w, Math.random()*w, Math.random()*w];
-//     console.log(r);
-//     return(r);
-// });
-
-//  var sites = [
-// [234.6288962289691, 298.8159565720707, 272.9292113799602],
-// [126.74332316964865, 987.0213838294148, 756.2393094412982],
-// [785.3325614705682, 438.0646657664329, 972.957591060549],
-// [767.4444664735347, 716.9417280238122, 752.6870332658291],
-// [22.89591100998223, 445.64883364364505, 335.82407608628273],
-// [479.60696346126497, 806.1456705909222, 676.674836082384],
-// [947.3269795998931, 688.7247504200786, 257.550047012046], 
-// [181.02950463071465, 759.1825230047107, 373.6083614639938]];
-
-for (var i = 0; i < sites.length; i++){
-    for (var j = 0; j < sites.length; j++){
-        if (i !== j && sites[i][0] === sites[j][0] && sites[i][1] === sites[j][1]
-            && sites[i][2] === sites[j][2]){
-            alert(sites[i] + " : " + sites[j]);
-            sites.splice(i,1);
-        }
-    }
-}
-
-// ConvexHull.init(sites);
-// var f = ConvexHull.compute(sites);
-// //printFacets(f);
-// alert("done!");
-
 
 // IN: sites and weights
 // OUT: sites with Z coordinate based on X,Y,and W
@@ -101,7 +65,7 @@ function applyDeltaPi(S, W){
 
 
 // IN: HEdge edge
-getFacesOfDestVertex = function(edge) {
+function getFacesOfDestVertex(edge) {
     var faces = [];
     var previous = edge;
     var first = edge.dest;
@@ -131,10 +95,14 @@ getFacesOfDestVertex = function(edge) {
 // IN: S = unique set of sites
 // IN: W = set of weights for sites
 // OUT: Set of lines making up the voronoi power diagram
-function computePowerDiagram(omega, S, W){
+function computePowerDiagram(S, W, boundingPolygon){
     
-    var sStar = applyDeltaPi(S);
-    var facets = convexHull(sStar);
+    //    var sStar = applyDeltaPi(S, W);
+    var sStar = S;
+    ConvexHull.init(sStar);
+    var facets = ConvexHull.compute(sStar);
+    
+    alert("done computing CH!");
     
     var vertexCount = ConvexHull.vertices.length; 
     var verticesVisited = [];
@@ -198,13 +166,39 @@ function computePowerDiagram(omega, S, W){
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy) {
-			site.polygon = clippingPolygon.clip(site.nonClippedPolygon); // TODO
+			site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
 		    }
 		}
 	    }
 	}
     }
+    alert("done!");
 }
+
+
+var w = 1000;
+var h = 1000;
+boundingPoly = d3.geom.polygon([[0,0],[0,h],[w,h],[w,0]]);
+var sites = d3.range(6).map(function(d, i) {
+    var r =[Math.random() * w, Math.random()*w, Math.random()*w];
+    console.log(r);
+    return(r);
+});
+var weights = d3.range(6).map(function() {
+    var r =Math.random()*10;
+    console.log(r);
+    return(r);
+});
+for (var i = 0; i < sites.length; i++){
+    for (var j = 0; j < sites.length; j++){
+        if (i !== j && sites[i][0] === sites[j][0] && sites[i][1] === sites[j][1]
+            && sites[i][2] === sites[j][2]){
+            alert("Discarding: " + sites[i] + " : " + sites[j]);
+            sites.splice(i,1);
+        }
+    }
+}
+computePowerDiagram(boundingPoly, sites, weights);
 
 function draw(location, w, h, vertices, voronoi, enclosingPolygon) {
 
