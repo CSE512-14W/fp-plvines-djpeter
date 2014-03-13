@@ -1,7 +1,7 @@
 
 var epsilon = 0.0000000001;
 
-test_poly = [[0,0],[5,0],[5,5],[0,5]];
+test_poly = [[0,0],[0,10],[10,10],[10,0]];
 test_poly = d3.geom.polygon(test_poly);
 
 var VoronoiTreemap = {
@@ -153,12 +153,114 @@ var VoronoiTreemap = {
 		return total_error / (2 * bounding_polygon_area);
 	},
 	
+	// counterclockwise in GRAPHICS space
 	testClipping:function() {
-		p1 = [[0,0],[5,0],[5,5],[0,5]];
-		p2 = [[-1,1],[3,-2],[4,4]];
+		p1 = [[0,0],[0,5],[5,5],[5,0]];
+		p2 = [[0,0],[0,4],[4,4],[4,0]];
 		p1 = d3.geom.polygon(p1);
 		p2 = d3.geom.polygon(p2);
 		return p1.clip(p2);
+	},
+	
+	// copied from polygon.js
+	d3_geom_polygonInside:function (p, a, b) {
+		return (b[0] - a[0]) * (p[1] - a[1]) < (b[1] - a[1]) * (p[0] - a[0]);
+	},
+	
+	// copied from polygon.js
+	// Intersect two infinite lines cd and ab.
+	d3_geom_polygonIntersect:function (c, d, a, b) {
+		var x1 = c[0], x3 = a[0], x21 = d[0] - x1, x43 = b[0] - x3,
+			y1 = c[1], y3 = a[1], y21 = d[1] - y1, y43 = b[1] - y3,
+			ua = (x43 * (y1 - y3) - y43 * (x1 - x3)) / (y43 * x21 - x43 * y21);
+		return [x1 + ua * x21, y1 + ua * y21];
+	},
+	
+	// copied from polygon.js
+	// Returns true if the polygon is closed.
+	d3_geom_polygonClosed:function d3_geom_polygonClosed(coordinates) {
+		var a = coordinates[0],
+		    b = coordinates[coordinates.length - 1];
+		return !(a[0] - b[0] || a[1] - b[1]);
+	},
+	
+	/*function(subject) {
+	// KEEP THIS A PURE REFERENCE
+  var input,
+      closed = d3_geom_polygonClosed(subject),
+      i = -1,
+      n = this.length - d3_geom_polygonClosed(this),
+      j,
+      m,
+      a = this[n - 1], // this end
+      b,
+      c,
+      d;
+
+	  // first a is this end
+	  // first b is this[0]
+	  // a is set to b in loop
+	  // so I just need a single a,b pair and keep the inner loop
+  while (++i < n) { // iterate over "this"
+    input = subject.slice();
+    subject.length = 0;
+    b = this[i]; // b is "this"
+    c = input[(m = input.length - closed) - 1]; // c is "input end"
+    j = -1;
+    while (++j < m) {
+      d = input[j]; // input begin
+      if (d3_geom_polygonInside(d, a, b)) {
+        if (!d3_geom_polygonInside(c, a, b)) {
+          subject.push(d3_geom_polygonIntersect(c, d, a, b));
+        }
+        subject.push(d);
+      } else if (d3_geom_polygonInside(c, a, b)) {
+        subject.push(d3_geom_polygonIntersect(c, d, a, b));
+      }
+      c = d;
+    }
+    if (closed) subject.push(subject[0]);
+    a = b;
+  }
+
+  return subject;
+};
+	*/
+	
+	clipPolygonByLine:function(polygon, a, b) {
+		var closed = this.d3_geom_polygonClosed(polygon),
+			j,
+			m,
+			c,
+			d,
+			result = [];
+			
+		c = polygon[(m = polygon.length - closed) - 1];
+		j = -1;
+		while (++j < m) {
+			d = polygon[j];
+			if (this.d3_geom_polygonInside(d, a, b)) {
+				if (!this.d3_geom_polygonInside(c, a, b)) {
+					result.push(this.d3_geom_polygonIntersect(c, d, a, b));
+				}
+				result.push(d);
+			}
+			else if (this.d3_geom_polygonInside(c, a, b)) {
+				result.push(this.d3_geom_polygonIntersect(c, d, a, b));
+			}
+			c = d;
+		}
+		if (closed) result.push(result[0]);
+		return d3.geom.polygon(result);
+	},
+	
+	powerDiagramWrapper:function(bounding_polygon, sites) {
+		site_points = sites.map(function(s) {return s.p;});
+		site_weights = sites.map(function(s) {return s.weight;});
+		result = computePowerDiagram(site_points, site_weights, bounding_polygon);
+		console.log("from computePowerDiagram:");
+		console.log(result);
+		return result;
 	},
 	
 	// in: bounding polygon and node
@@ -191,8 +293,7 @@ var VoronoiTreemap = {
 		
 		var bounding_polygon_area = bounding_polygon.area();
 		
-		// NEED POWER DIAGRAM HERE (and in iterations)
-		//power_diagram = computePowerDiagram(bounding_polygon, sites);
+		power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 		
 		// also power diagram should be in the form of d3 polygons
 		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
