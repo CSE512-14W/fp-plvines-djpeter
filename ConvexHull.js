@@ -110,8 +110,7 @@ Vertex.prototype.subtract = function(v){
     return new Vertex(v.x - this.x, v.y - this.y, v.z - this.z);
 }
 Vertex.prototype.crossproduct = function(v){
-    return new Vertex((this.y * v.z) - (this.z * v.y), (this.z * v.x) - (this.x * v.z), (this.x * v.y) - (this.y *
-                                                                                                          v.x)); }
+    return new Vertex((this.y * v.z) - (this.z * v.y), (this.z * v.x) - (this.x * v.z), (this.x * v.y) - (this.y *v.x)); }
 Vertex.prototype.equals = function(v){
     return (this.x === v.x && this.y === v.y && this.z === v.z);
 }
@@ -131,7 +130,7 @@ Vector.prototype.negate = function(){
 
 // Normalizes X Y and Z in-place
 Vector.prototype.normalize = function(){
-    var len = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    var len = Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
     if (len > 0){
         this.x /= len;
         this.y /= len;
@@ -140,15 +139,20 @@ Vector.prototype.normalize = function(){
 }
 
 // IN: Vertices a, b, c
-var Face = function(a, b, c){
+var Face = function(a, b, c, orient){
     this.conflicts = new ConflictList(true);
     this.verts = [a,b,c];
     this.marked = false;
-    t = (this.verts[0].subtract(this.verts[1])).crossproduct(this.verts[1].subtract(this.verts[2]));
+    var t = ((a.subtract(b)).crossproduct(b.subtract(c)));
+    // var t = (this.verts[0].subtract(this.verts[1])).crossproduct(this.verts[1].subtract(this.verts[2]));
     
     this.normal = (new Vector(-t.x, -t.y, -t.z));
     this.normal.normalize();
     this.createEdges();
+
+    if (orient != undefined){
+        this.orient(orient);
+    }
 }
 Face.prototype.createEdges = function(){
     this.edges = [];
