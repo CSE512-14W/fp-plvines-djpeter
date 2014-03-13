@@ -1,4 +1,6 @@
 
+var epsilon = 0.0000000001;
+
 test_poly = [[0,0],[5,0],[5,5],[0,5]];
 
 var VoronoiTreemap = {
@@ -127,8 +129,6 @@ var VoronoiTreemap = {
 			}
 			nn_squaredNorm.push(best_squaredNorm);
 		}
-		
-		var epsilon = 0.0000001;
 		
 		for (var s = 0; s < sites.length; s++) {
 			area_current = power_diagram[s].area();
