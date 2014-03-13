@@ -1,5 +1,5 @@
 // stupid local file access lockdown...I just want my data!
-input = {
+test_input = {
  "name": "flare",
  "children": [
   {
