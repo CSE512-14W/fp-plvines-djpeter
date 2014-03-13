@@ -1,4 +1,5 @@
 
+test_poly = [[0,0],[5,0],[5,5],[0,5]];
 
 var VoronoiTreemap = {
 
@@ -66,17 +67,42 @@ var VoronoiTreemap = {
 		return result;
 	},
 	
+	setSizeForAllNodes:function(node) {
+		// assume we're good if we have a size
+		if (!node.hasOwnProperty("size")) {
+			var total = 0;
+			for (var c = 0; c < node.children.length; c++) {
+				total += this.setSizeForAllNodes(node.children[c]);
+			}
+			node.size = total;
+		}
+		return node.size;
+	},
+	
 	// in: bounding polygon and node
 	// out: a list of polygons
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
+		if (!node.hasOwnProperty("children")) {
+			return null; // really? null?
+		}
+	
+		// perhaps silly to do this every time, but it's quick if set
+		this.setSizeForAllNodes(node);
+	
 		var sites = [];
-		// get random points for sites
-		var random_points = getRandomPointsInPolygon(bounding_polygon, node.children.length);
+
+		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
+		
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
+			sites.push({
+				"p":random_points[c], 
+				"size_fraction":(node.children[c].size * 1.0 / node.size)
+				});
 		}
-
-	
+		
+		console.log("sites:");
+		console.log(sites);
 	}
 
 }
