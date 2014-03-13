@@ -276,6 +276,19 @@ var ConvexHull = {
         this.points = sites.map(function(a) {return new Vertex(a[0], a[1], a[2])});
     },
 
+    permutate: function(){
+        var pointSize = this.points.length;
+        for (var i = pointSize -1; i > 0; i--){
+            var ra = Math.floor(Math.random()*i);
+            var temp = this.points[ra];
+            temp.index = i;
+            var currentItem = this.points[i];
+            currentItem.index = ra;
+            this.points.splice(ra, 1, currentItem);
+            this.points.splice(i, 1, temp);
+        }
+    },
+
     prep: function(){
         if (this.points.length <= 3){
             // error

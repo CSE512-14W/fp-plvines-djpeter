@@ -1,0 +1,168 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <script type="text/javascript" src="d3-master/d3.js"></script>
+    <script type="text/javascript" src="ConvexHull.js"></script>
+    <!-- <script type="text/javascript" src="d3.v2.js"></script> -->
+    <script src="jquery-1.11.0.min.js"></script>
+
+
+    </head>
+    <body>
+    <style>
+    body{ background-color:#EEF; } .name{ cursor: pointer; cursor:
+	hand; } div.first{ width:650px;
+    
+    }
+
+#chart {
+    width:750px;
+    height:750px;
+    background:white;
+}
+
+path {
+    stroke: #000;
+    stroke-widthL .5px;
+}
+
+</style>
+
+
+<div>
+<h1> VORONOI TESTING </h1>
+<p id="chart"></p>
+
+
+<script>
+
+
+function printFacets(facets){
+    for (var i = 0; i < facets.length; i++){
+        console.log("Face: " + i);
+        for (var j = 0; j < 3; j++){
+            console.log("\t" + j + ": " + facets[i].verts[j].x + " : "
+    + facets[i].verts[j].y + " : " + facets[i].verts[j].z + " : ");
+        }
+    }
+}
+
+function getRandomArbitary (min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+var w = 1000;
+var h = 1000;
+// var sites = [[0,0,0],[2,0,0],[2,0,2],[0,2,0]];
+// var sites = d3.range(6).map(function(d, i) {
+//     var r =[Math.random() * w, Math.random()*w, Math.random()*w];
+//     console.log(r);
+//     return(r);
+// });
+
+var sites = [[174, 693, 949],
+[800, 100, 550],
+[550, 520, 830],
+[960, 10, 720],
+[60, 140, 70],
+[760, 640, 700]];
+
+// var sites = [[698.0814766138792, 104.16704905219376,
+//              446.26934197731316],[511.4364663604647,
+//              463.49317766726017,
+//              417.11602499708533],[58.07207152247429,
+//              41.06521070934832, 331.1879469547421],[604.342635255307,
+//              189.8373074363917,
+//              16.059366520494223],[375.6328267045319,
+//              811.2494808156043, 53.67899523116648],
+//              [849.6900135651231, 321.1922908667475,
+//              200.1924195792526], [979.6814217697829,
+//              662.4346717726439, 853.0635414645076], [110.992681235075,
+//              402.57152589038014,
+//              961.8305037729442],[494.9555543716997,
+//              477.48550749383867, 93.99628010578454], [688.0769561976194, 30.193729093298316, 705.4427999537438]];
+
+for (var i = 0; i < sites.length; i++){
+    for (var j = 0; j < sites.length; j++){
+        if (i !== j && sites[i][0] === sites[j][0] && sites[i][1] === sites[j][1]
+    && sites[i][2] === sites[j][2]){
+            console.log(sites[i] + " : " + sites[j]);
+            sites.splice(i,1);
+        }
+    }
+}
+
+ConvexHull.init(sites);
+var f = ConvexHull.compute(sites);
+printFacets(f);
+alert("done!");
+
+// IN: sites and weights
+// OUT: sites with Z coordinate based on X,Y,and W
+function applyDeltaPi(S, W){
+    var result = [];
+    for (var i in S){
+        var x = S[i][0], y = S[i][1], w = W[i];
+        result[i] = [x,y, (x*x) + (y*y) - w];
+    }
+
+    return result;
+}
+
+
+// IN: Omega = convex bounding polygon
+// IN: S = unique set of sites
+// IN: W = set of weights for sites
+// OUT: Set of lines making up the voronoi power diagram
+function computePowerDiagram(omega, S, W){
+    
+    sStar = applyDeltaPi(S);
+//    F = convexHull(sStar);
+    
+}
+
+function draw(location, w, h, vertices, voronoi, enclosingPolygon) {
+
+	$("#chart").empty();
+	var svg = d3.select(location).append("svg").attr("width", w+100).attr("height", h+100);
+	
+	svg.selectAll("voronoi")
+	.data(voronoi)
+    .enter().append("path")
+	.attr("class", function(d, i) { return i ? "q" + (i % 9) + "-9" : null; })
+	.attr("d", function(d) {  
+		return "M" + enclosingPolygon.clip(d).join("L") + "Z"; 
+	})
+	.attr("fill", function(d) {
+		return "#33CC33";
+	});
+	
+	svg.selectAll("circle").data(vertices).enter().append("circle")
+	.attr("transform", function(d) { 
+	 	if(!isNaN(d[0])) {
+	 		return "translate(" + d[0] + "," + d[1] + ")"; 
+		}
+	})
+	.attr("r", function(d) { 
+		return 5;
+	});
+	svg.selectAll("text").data(vertices).enter().append("text")
+	.attr("transform", function(d) { 
+	 	if(!isNaN(d[0])) {
+	 		return "translate(" + d[0] + "," + d[1] + ")"; 
+		}
+	})
+    .text(function(d) { 
+		return d[2];
+	})
+        .attr("fill", "white");
+}
+
+
+</script>
+</div>
+</body>
+    </html>
+
