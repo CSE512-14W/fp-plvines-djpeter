@@ -79,6 +79,73 @@ var VoronoiTreemap = {
 		return node.size;
 	},
 	
+	// http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+	computeDistanceBorder:function(polygon, point) {
+		for (var i = 0; i < polygon.length; i++) {
+			var p1 = polygon[i];
+			if (i+1 < polygon.length) var p2 = polygon[i+1];
+			else var p2 = polygon[0];
+			
+			var dx = p1[0] - p2[0];
+			var dy = p1[1] - p2[1];
+			
+			var d = Math.abs(dy * point[0] - dx * point[1] + p1[0]*p2[1] - p2[0]-p1[1]) / Math.sqrt(dx*dx + dy*dy);
+			if (i == 0 || d < result) var result = d;
+		}
+		return result;
+	},
+	
+	adaptPositionsWeights:function(node, power_diagram, sites) {
+		for (var s = 0; s < sites.length; s++) {
+			sites[s].p = power_diagram[s].centroid();
+			var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
+			var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
+			sites[s].weight = to_square * to_square;
+		}
+	},
+	
+	squaredNorm:function(p1,p2) {
+		var dx = p1[0] - p2[0];
+		var dy = p1[1] - p2[1];
+		return dx * dx + dy * dy;
+	},
+	
+	adaptWeights:function(bounding_polygon, node, power_diagram, sites) {
+		// O(n^2) nearest neighbor
+		var nn_squaredNorm = [];
+		// really stupid, twice as slow as needed
+		for (var i = 0; i < sites.length; i++) {
+			var best_squaredNorm = Number.MAX_VALUE;
+			for (var j = 0; j < sites.length; j++) {
+				if (i == j) continue;
+				var d = sites[i].p[0] - sites[j].p[0]
+				if (d < best_squaredNorm) {
+					best_squaredNorm = d;
+					var best_j = j;
+				}
+			}
+			nn_squaredNorm.push(best_squaredNorm);
+		}
+		
+		//area_bounding = area(bounding_polygon)
+		var epsilon = 0.0000001;
+		
+		for (var s = 0; s < sites.length; s++) {
+			//area_current = area(power_diagram[s]);
+			//area_target = area_bounding * sites[s].size_fraction;
+			//var f_adapt = area_target / area_current;
+			//var w_new = Math.sqrt(sites[s].weight) * f_adapt;
+			//var w_max = Math.sqrt(nn_squaredNorm[s]); // compute squareroots once?
+			//var to_square = Math.min(w_new, w_max);
+			//sites[s].weight = to_square * to_square;
+			//sites[s].weight = Math.max(sites[s].weight, epsilon);
+		}
+	},
+	
+	computeAreaError:function(power_diagram, sites) {
+		// stuff...simple from Algorithm 1
+	}
+	
 	// in: bounding polygon and node
 	// out: a list of polygons
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
@@ -93,16 +160,35 @@ var VoronoiTreemap = {
 
 		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
 		
+		var initial_weight = 0.001; // initial weight
+		
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
 			sites.push({
 				"p":random_points[c], 
-				"size_fraction":(node.children[c].size * 1.0 / node.size)
+				"size_fraction":(node.children[c].size * 1.0 / node.size),
+				"weight":initial_weight
 				});
 		}
 		
-		console.log("sites:");
+		console.log("initial sites:");
 		console.log(sites);
+		
+		// NEED POWER DIAGRAM HERE (and in iterations)
+		//power_diagram = computePowerDiagram(bounding_polygon, sites);
+		
+		// also power diagram should be in the form of d3 polygons
+		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
+		
+		var max_iterations = 200;
+		for (var iteration = 0; iteration < max_iterations; iteration++) {
+			//this.adaptPositionsWeights(node, power_diagram, sites);
+			//power_diagram = computePowerDiagram(bounding_polygon, sites);
+			//this.adaptWeights(bounding_polygon, node, power_diagram, sites);
+			//power_diagram = computePowerDiagram(bounding_polygon, sites);
+			//area_error = this.computeAreaError(power_diagram, sites);
+		}
+		
+		//return power_diagram;
 	}
-
 }
