@@ -153,6 +153,14 @@ var VoronoiTreemap = {
 		return total_error / (2 * bounding_polygon_area);
 	},
 	
+	testClipping:function() {
+		p1 = [[0,0],[5,0],[5,5],[0,5]];
+		p2 = [[-1,1],[3,-2],[4,4]];
+		p1 = d3.geom.polygon(p1);
+		p2 = d3.geom.polygon(p2);
+		return p1.clip(p2);
+	},
+	
 	// in: bounding polygon and node
 	// out: a list of polygons
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
