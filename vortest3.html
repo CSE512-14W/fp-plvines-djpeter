@@ -5,7 +5,6 @@
     <title>Demo</title>
     <script type="text/javascript" src="d3-master/d3.js"></script>
     <script type="text/javascript" src="ConvexHull.js"></script>
-    <!-- <script type="text/javascript" src="d3.v2.js"></script> -->
     <script src="jquery-1.11.0.min.js"></script>
 
 
@@ -165,7 +164,8 @@ function computePowerDiagram(omega, S, W){
 		    // polygon corner points
 
 		    var faces = getFacesOfDestVertex(edge);
-                    var poly = new PolygonSimple(); // TODO replace
+//                    var poly = new PolygonSimple(); // TODO replace
+                    var protopoly = [];
                     // with D3 or some other polygon
 		    var lastX = NaN;
 		    var lastY = NaN;
@@ -188,18 +188,17 @@ function computePowerDiagram(omega, S, W){
 			}
 			if (dx > numericError || dy > numericError) {
 
-			    poly.add(x1, y1); // TODO
+			    protopoly.push([x1, y1]);
 			    lastX = x1;
 			    lastY = y1;
 
 			}
 
 		    }
-		    site.nonClippedPolyon = poly;
+		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy) {
-			site.polygon =
-			    clipPoly.convexClip(poly); // TODO
+			site.polygon = clippingPolygon.clip(site.nonClippedPolygon); // TODO
 		    }
 		}
 	    }
