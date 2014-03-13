@@ -96,15 +96,13 @@ function getFacesOfDestVertex(edge) {
 // IN: W = set of weights for sites
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(S, W, boundingPolygon){
-    
-    //    var sStar = applyDeltaPi(S, W);
-    var sStar = S;
+    var sStar = applyDeltaPi(S, W);
     ConvexHull.init(sStar);
     var facets = ConvexHull.compute(sStar);
     
     alert("done computing CH!");
     
-    var vertexCount = ConvexHull.vertices.length; 
+    var vertexCount = ConvexHull.points.length; 
     var verticesVisited = [];
 
     var facetCount = facets.length;
@@ -140,7 +138,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    var dx = 1;
                     var dy = 1;
 		    for (var i =0; i < faces.length; i++) {
-			var point = face.getDualPoint();
+			var point = faces[i].getDualPoint();
 			var x1 = point.x;
                         var y1 = point.y;
 			if (lastX !== NaN){
@@ -154,7 +152,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 				dy = -dy;
 			    }
 			}
-			if (dx > numericError || dy > numericError) {
+			if (dx > epsilon || dy > epsilon) {
 
 			    protopoly.push([x1, y1]);
 			    lastX = x1;
@@ -198,7 +196,7 @@ for (var i = 0; i < sites.length; i++){
         }
     }
 }
-computePowerDiagram(boundingPoly, sites, weights);
+computePowerDiagram(sites, weights, boundingPoly);
 
 function draw(location, w, h, vertices, voronoi, enclosingPolygon) {
 

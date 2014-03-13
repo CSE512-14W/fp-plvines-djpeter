@@ -18,7 +18,7 @@ var Plane3D = function(face){
 }
 // OUT: Point2D
 Plane3D.prototype.getDualPointMappedToPlane = function(){
-    var nplane = getNormZPlane();
+    var nplane = this.getNormZPlane();
     var dualPoint = new Point2D(nplane[0]/2, nplane[1]/2);
     return dualPoint;
 }
@@ -324,8 +324,6 @@ var ConvexHull = {
     horizon: [],
     visible: [],
     current: 0,
-    episilon: 0.000000000001,
-
 
     // IN: sites (x,y,z)
     init: function(sites){
