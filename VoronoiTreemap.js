@@ -2,6 +2,7 @@
 var epsilon = 0.0000000001;
 
 test_poly = [[0,0],[5,0],[5,5],[0,5]];
+test_poly = d3.geom.polygon(test_poly);
 
 var VoronoiTreemap = {
 
