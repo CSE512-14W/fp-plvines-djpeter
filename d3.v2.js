@@ -8035,7 +8035,7 @@ d3.geom.polygon = function(coordinates) {
         n = coordinates.length,
         a = coordinates[n - 1][0] * coordinates[0][1],
         b = coordinates[n - 1][1] * coordinates[0][0];
-    while (++i < n) {
+      while (++i < n) {
       a += coordinates[i - 1][0] * coordinates[i][1];
       b += coordinates[i - 1][1] * coordinates[i][0];
     }
@@ -8188,13 +8188,16 @@ var d3_voronoi_opposite = {"l": "r", "r": "l"};
 
 function d3_voronoi_tessellate(vertices, callback) {
 
+    // Change vertices into a list of sites where each site is [x,y,#]
+    // and the sites are sorted by Y then by X
   var Sites = {
     list: vertices
       .map(function(v, i) {
         return {
           index: i,
           x: v[0],
-          y: v[1]
+          y: v[1],
+            w: v[2]
         };
       })
       .sort(function(a, b) {
@@ -8275,19 +8278,29 @@ function d3_voronoi_tessellate(vertices, callback) {
 
   var Geom = {
 
-    bisect: function(s1, s2) {
+    bisect2: function(s1, s2) {
       var newEdge = {
         region: {"l": s1, "r": s2},
         ep: {"l": null, "r": null}
       };
 
+      var dw = s2.w - s1.w;
+        
       var dx = s2.x - s1.x,
-          dy = s2.y - s1.y,
-          adx = dx > 0 ? dx : -dx,
+          dy = s2.y - s1.y;
+
+      dx = dx - (dx > 0 ? dw : -dw);
+      dy = dy - (dy > 0 ? dw : -dw);
+
+      var adx = dx > 0 ? dx : -dx,
           ady = dy > 0 ? dy : -dy;
 
       newEdge.c = s1.x * dx + s1.y * dy
-          + (dx * dx + dy * dy) * .5;
+            + (dx * dx + dy * dy) * .5;
+
+      // newEdge.c = s1.x * dx + s1.y * dy
+      //       + (dx * dx + dy * dy) * (s1.w / (s1.w +s2.w));
+// * ((s1.w / (s1.w + s2.w)) * (s1.w / (s1.w + s2.w)))
 
       if (adx > ady) {
         newEdge.a = 1;
@@ -8298,7 +8311,40 @@ function d3_voronoi_tessellate(vertices, callback) {
         newEdge.a = dx / dy;
         newEdge.c /= dy;
       }
+      return newEdge;
+    },
 
+    bisect: function(s1, s2) {
+      var newEdge = {
+        region: {"l": s1, "r": s2},
+        ep: {"l": null, "r": null}
+      };
+
+      var dw = s2.w - s1.w;
+
+      var dx = s2.x - s1.x,
+          dy = s2.y - s1.y;
+
+      dx = dx - (dx > 0 ? dw : -dw);
+      dy = dy - (dy > 0 ? dw : -dw);
+
+      var adx = dx > 0 ? dx : -dx,
+          ady = dy > 0 ? dy : -dy;
+        
+      newEdge.c = s1.x * dx + s1.y * dy
+            + (dx * dx + dy * dy) * .5;
+
+        // * ((s1.w / (s1.w + s2.w)) * (s1.w / (s1.w + s2.w)))
+
+      if (adx > ady) {
+        newEdge.a = 1;
+        newEdge.b = dy / dx;
+        newEdge.c /= dx;
+      } else {
+        newEdge.b = 1;
+        newEdge.a = dx / dy;
+        newEdge.c /= dy;
+      }
       return newEdge;
     },
 

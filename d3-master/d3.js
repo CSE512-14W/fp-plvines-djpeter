@@ -4738,6 +4738,11 @@
   function d3_geom_hullOrder(a, b) {
     return a[0] - b[0] || a[1] - b[1];
   }
+
+
+
+
+
   d3.geom.polygon = function(coordinates) {
     d3_subclass(coordinates, d3_geom_polygonPrototype);
     return coordinates;
@@ -4800,6 +4805,8 @@
     var a = coordinates[0], b = coordinates[coordinates.length - 1];
     return !(a[0] - b[0] || a[1] - b[1]);
   }
+
+
   var d3_geom_voronoiEdges, d3_geom_voronoiCells, d3_geom_voronoiBeaches, d3_geom_voronoiBeachPool = [], d3_geom_voronoiFirstCircle, d3_geom_voronoiCircles, d3_geom_voronoiCirclePool = [];
   function d3_geom_voronoiBeach() {
     d3_geom_voronoiRedBlackNode(this);

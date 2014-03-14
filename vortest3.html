@@ -97,7 +97,9 @@ function getFacesOfDestVertex(edge) {
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(S, W, boundingPolygon){
     var sStar = applyDeltaPi(S, W);
-    ConvexHull.init(sStar);
+    
+    ConvexHull.init(boundingPolygon, sStar);
+    
     var facets = ConvexHull.compute(sStar);
     
     alert("done computing CH!");
@@ -164,7 +166,9 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy) {
-			site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
+			site.polygon =
+			boundingPolygon.clip(site.nonClippedPolygon);
+                        console.log(site.polygon);
 		    }
 		}
 	    }
@@ -176,13 +180,13 @@ function computePowerDiagram(S, W, boundingPolygon){
 
 var w = 1000;
 var h = 1000;
-boundingPoly = d3.geom.polygon([[0,0],[0,h],[w,h],[w,0]]);
-var sites = d3.range(6).map(function(d, i) {
+boundingPoly = d3.geom.polygon([[-w,-h],[-w,2 *h],[2*w,2*h],[2*w,-h]]);
+var sites = d3.range(1000).map(function(d, i) {
     var r =[Math.random() * w, Math.random()*w, Math.random()*w];
     console.log(r);
     return(r);
 });
-var weights = d3.range(6).map(function() {
+var weights = d3.range(1000).map(function() {
     var r =Math.random()*10;
     console.log(r);
     return(r);
