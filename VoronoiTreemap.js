@@ -333,6 +333,8 @@ var VoronoiTreemap = {
 	// recent test in index.html:
 	// VoronoiTreemap.computeVoronoiTreemapSingle(test_poly, simple_json);
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
+		bounding_polygon = d3.geom.polygon(bounding_polygon); // just make sure...
+	
 		if (!node.hasOwnProperty("children")) {
 			return null; // really? null?
 		}

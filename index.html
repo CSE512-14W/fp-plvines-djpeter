@@ -13,15 +13,74 @@
 <!-- test input local filesystem -->
 <script language="javascript" type="text/javascript" src="flare.js"></script>
 <script language="javascript" type="text/javascript" src="simple.js"></script>
+<script language="javascript" type="text/javascript" src="simple_four.js"></script>
+
 
 </head>
  
 <body>
 
+<!--
+<script>
+ //Make an SVG Container
+ var svgContainer = d3.select("body").append("svg")
+                                     .attr("width", 200)
+                                     .attr("height", 200);
+ 
+ //Draw the Circle
+ var circle = svgContainer.append("circle")
+                          .attr("cx", 30)
+                          .attr("cy", 30)
+                         .attr("r", 20)
+						 .style("fill", "black");
+</script>
+-->
+
+
 <h2>Voronoi Treemap</h2>
 
 
 
+<!--
+<div id="div1">This is div1</div><br><br>
+-->
+
+
+
+<script language="javascript">
+var width = 510;
+var height = 510;
+var svn_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
+
+var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+var n1 = 10;
+var n2 = 140;
+var n3 = 370;
+var n4 = 500;
+var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
+var polygon_list = VoronoiTreemap.computeVoronoiTreemapSingle(octogon_poly, simple_json);
+
+/*
+// stupid debugging
+$(document).ready(function(){
+$("#div1").text('');
+$("#div1").append(JSON.stringify(polygon_list));
+});
+*/
+
+function make_d3_poly(d) {
+	return "M" + d.join("L") + "Z";
+}
+
+var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
+polylines.enter().append("path")
+	.attr("d", make_d3_poly)
+	.attr("stroke-width", "10px")
+	.attr("stroke", "black")
+	.attr("fill", "cyan");
+	
+	
+</script>
 
 
 
