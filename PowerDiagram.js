@@ -12,6 +12,19 @@ function applyDeltaPi(S, W){
     return result;
 }
 
+// As applyDeltaPi, but applies a minimum weight
+// IN: sites
+// OUT: sites with Z coordinate based on X,Y,and W
+function applyDeltaPiToBounds(S){
+    var result = [];
+    for (var i in S){
+        var x = S[i][0], y = S[i][1];
+        result[i] = [x,y, (x*x) + (y*y) - epsilon];
+    }
+
+    return result;
+}
+
 
 // IN: HEdge edge
 function getFacesOfDestVertex(edge) {
@@ -20,14 +33,12 @@ function getFacesOfDestVertex(edge) {
     var first = edge.dest;
 
     var site = first.originalObject;
-    //var site = first;
     var neighbours = [];
     do {
 	previous = previous.twin.prev;
 
 	// add neighbour to the neighbourlist
 	var siteOrigin = previous.orig.originalObject;
-//	var siteOrigin = previous.orig;
 	if (!siteOrigin.isDummy) {
 	    neighbours.push(siteOrigin);
 	}
@@ -37,7 +48,7 @@ function getFacesOfDestVertex(edge) {
 	    faces.push(iFace);
 	}
     } while (previous !== edge);
-    site.neighbours = neighbours; // TODO
+    site.neighbours = neighbours;
     return faces;
 }
 
@@ -48,17 +59,16 @@ function getFacesOfDestVertex(edge) {
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(S, W, boundingPolygon){
     var sStar = applyDeltaPi(S, W);
-    var b = applyDeltaPi(boundingPolygon, W);
+    var bounds = applyDeltaPiToBounds(boundingPolygon);
     
-    ConvexHull.init(b, sStar);
+    ConvexHull.init(bounds, sStar);
     
     var facets = ConvexHull.compute(sStar);
 
-    for (var i = 0; i < facets.length; i++){
-        var f = facets[i];
-        console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
-
-    }
+    // for (var i = 0; i < facets.length; i++){
+    //     var f = facets[i];
+    //     console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
+    // }
     
     var polygons = [];
     var vertexCount = ConvexHull.points.length; 
@@ -75,7 +85,6 @@ function computePowerDiagram(S, W, boundingPolygon){
 		// going through the double connected edge list
 		var edge = facet.edges[e];
 		var destVertex = edge.dest;
-//		var site = destVertex; 
 		var site = destVertex.originalObject; 
 
 		if (!verticesVisited[destVertex.index]) {
@@ -90,9 +99,7 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    // polygon corner points
 
 		    var faces = getFacesOfDestVertex(edge);
-//                    var poly = new PolygonSimple(); // TODO replace
                     var protopoly = [];
-                    // with D3 or some other polygon
 		    var lastX = null;
 		    var lastY = null;
 		    var dx = 1;
@@ -124,16 +131,14 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy && site.nonClippedPolygon.length > 0) {
-                        // site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
-			// polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
-                        // console.log(site.polygon);
-                        polygons.push(site.nonClippedPolygon);
+                        //                        site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
+			polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
 		    }
 		}
 	    }
 	}
     }
-    alert("done with computing power diagram!");
+    console.log("finished computing power diagram");
 
     return polygons;
 }
