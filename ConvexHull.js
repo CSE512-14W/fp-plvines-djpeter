@@ -10,13 +10,13 @@ var Plane3D = function(face){
     var p1 = face.verts[0];
     var p2 = face.verts[1];
     var p3 = face.verts[2];
-
+    console.log("plane: " + p1.x + ", " + p2.x + ", " + p3.x);
     this.a=p1.y*(p2.z-p3.z)+p2.y*(p3.z-p1.z)+p3.y*(p1.z-p2.z);
     this.b=p1.z*(p2.x-p3.x)+p2.z*(p3.x-p1.x)+p3.z*(p1.x-p2.x);
     this.c=p1.x*(p2.y-p3.y)+p2.x*(p3.y-p1.y)+p3.x*(p1.y-p2.y);
     this.d=-1*(p1.x*(p2.y*p3.z-p3.y*p2.z)+p2.x*(p3.y*p1.z-p1.y*p3.z)+p3.x*(p1.y*p2.z-p2.y*p1.z));	
 }
-// OUT: Point2D
+// OUT: int2D
 Plane3D.prototype.getDualPointMappedToPlane = function(){
     var nplane = this.getNormZPlane();
     var dualPoint = new Point2D(nplane[0]/2, nplane[1]/2);
@@ -139,7 +139,7 @@ var Vertex = function(x, y, z, orig, isDummy) {
     this.neighbors = null; // Potential trouble
     this.nonClippedPolygon = null;
     this.polygon = null;
-    if (orig != undefined){
+    if (orig == undefined){
         this.originalObject = null;
     }
     else{
@@ -203,7 +203,7 @@ var Face = function(a, b, c, orient){
 }
 // OUT: Point2D
 Face.prototype.getDualPoint = function(){
-    if (this.dualPoint === null){
+    if (this.dualPoint == null){
         var plane3d = new Plane3D(this);
         this.dualPoint = plane3d.getDualPointMappedToPlane();
     }
@@ -333,10 +333,11 @@ var ConvexHull = {
 
     // IN: sites (x,y,z)
     init: function(boundingSites, sites){
-        this.points = boundingSites.map(function(a) {return new Vertex(a[0], a[1], epsilon, null, true);});
-        var temppoints = sites.map(function(a) {return new Vertex(a[0], a[1], a[2]);});
+        this.points  = sites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2]));});
+        
+        var temppoints = boundingSites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2], null, true), true);});
+        
         this.points = this.points.concat(temppoints);
-
         for (var i = 0; i < this.points.length; i++){
             var p = this.points[i];            
             console.log(p.x + ", " + p.y + ", " + p.z)

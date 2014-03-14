@@ -6,7 +6,7 @@ function applyDeltaPi(S, W){
     var result = [];
     for (var i in S){
         var x = S[i][0], y = S[i][1], w = W[i];
-        result[i] = [x,y,w];//[x,y, (x*x) + (y*y) - w];
+        result[i] = [x,y, (x*x) + (y*y) - w];
     }
 
     return result;
@@ -19,15 +19,15 @@ function getFacesOfDestVertex(edge) {
     var previous = edge;
     var first = edge.dest;
 
-    // var site = first.originalObject;
-    var site = first;
+    var site = first.originalObject;
+    //var site = first;
     var neighbours = [];
     do {
 	previous = previous.twin.prev;
 
 	// add neighbour to the neighbourlist
-//	var siteOrigin = previous.orig.originalObject;
-	var siteOrigin = previous.orig;
+	var siteOrigin = previous.orig.originalObject;
+//	var siteOrigin = previous.orig;
 	if (!siteOrigin.isDummy) {
 	    neighbours.push(siteOrigin);
 	}
@@ -48,16 +48,17 @@ function getFacesOfDestVertex(edge) {
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(S, W, boundingPolygon){
     var sStar = applyDeltaPi(S, W);
+    var b = applyDeltaPi(boundingPolygon, W);
     
-    ConvexHull.init(boundingPolygon, sStar);
+    ConvexHull.init(b, sStar);
     
     var facets = ConvexHull.compute(sStar);
 
-    // for (var i = 0; i < facets.length; i++){
-    //     var f = facets[i];
-    //     console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
+    for (var i = 0; i < facets.length; i++){
+        var f = facets[i];
+        console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
 
-    // }
+    }
     
     var polygons = [];
     var vertexCount = ConvexHull.points.length; 
@@ -74,8 +75,8 @@ function computePowerDiagram(S, W, boundingPolygon){
 		// going through the double connected edge list
 		var edge = facet.edges[e];
 		var destVertex = edge.dest;
-		var site = destVertex; 
-//		var site = destVertex.originalObject; 
+//		var site = destVertex; 
+		var site = destVertex.originalObject; 
 
 		if (!verticesVisited[destVertex.index]) {
 
@@ -92,15 +93,15 @@ function computePowerDiagram(S, W, boundingPolygon){
 //                    var poly = new PolygonSimple(); // TODO replace
                     var protopoly = [];
                     // with D3 or some other polygon
-		    var lastX = NaN;
-		    var lastY = NaN;
+		    var lastX = null;
+		    var lastY = null;
 		    var dx = 1;
                     var dy = 1;
 		    for (var i =0; i < faces.length; i++) {
 			var point = faces[i].getDualPoint();
 			var x1 = point.x;
                         var y1 = point.y;
-			if (lastX !== NaN){
+			if (lastX !== null){
 
 			    dx = lastX - x1;
 			    dy = lastY - y1;
@@ -123,9 +124,10 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
 
 		    if (!site.isDummy && site.nonClippedPolygon.length > 0) {
-                        site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
-			polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
-                        console.log(site.polygon);
+                        // site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
+			// polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
+                        // console.log(site.polygon);
+                        polygons.push(site.nonClippedPolygon);
 		    }
 		}
 	    }
