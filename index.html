@@ -51,14 +51,15 @@
 var width = 510;
 var height = 510;
 var svn_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
-
 var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+var polygon_list = []; // start empty
+
 var n1 = 10;
 var n2 = 140;
 var n3 = 370;
 var n4 = 500;
 var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
-var polygon_list = VoronoiTreemap.computeVoronoiTreemapSingle(octogon_poly, simple_json);
+
 
 /*
 // stupid debugging
@@ -72,13 +73,34 @@ function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
 }
 
-var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
-polylines.enter().append("path")
-	.attr("d", make_d3_poly)
-	.attr("stroke-width", "10px")
-	.attr("stroke", "black")
-	.attr("fill", "cyan");
-	
+function stupid_draw() {
+	var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
+	polylines.enter().append("path")
+		.attr("d", make_d3_poly)
+		.attr("stroke-width", "10px")
+		.attr("stroke", "black")
+		.attr("fill", "cyan");
+	//polylines.update();
+}
+
+/*
+var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingle(octogon_poly, simple_json);
+//var polygon_list = VoronoiTreemap.computeVoronoiTreemapRecursive(octogon_poly, simple_json, 2);
+var polygon_list = polygons_and_sites[0];
+var sites = polygons_and_sites[1];
+*/
+
+stupid_draw();
+
+var sites = VoronoiTreemap.initSites(octogon_poly, simple_json);
+for (var i = 0; i < 100; i++) {
+	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(octogon_poly, simple_json, sites, 1);
+	polygon_list = polygons_and_sites[0];
+	sites = polygons_and_sites[1];
+	stupid_draw();
+	alert("stupid_draw");
+}
+
 	
 </script>
 

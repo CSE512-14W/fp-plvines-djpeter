@@ -122,24 +122,27 @@ var VoronoiTreemap = {
 			var best_squaredNorm = Number.MAX_VALUE;
 			for (var j = 0; j < sites.length; j++) {
 				if (i == j) continue;
-				var d = sites[i].p[0] - sites[j].p[0]
-				if (d < best_squaredNorm) {
-					best_squaredNorm = d;
-					var best_j = j;
+				var dx = sites[i].p[0] - sites[j].p[0];
+				var dy = sites[i].p[1] - sites[j].p[1];
+				var squared_norm = dx * dx + dy * dy;
+				if (squared_norm < best_squaredNorm) {
+					best_squaredNorm = squared_norm;
 				}
 			}
 			nn_squaredNorm.push(best_squaredNorm);
 		}
 		
 		for (var s = 0; s < sites.length; s++) {
-			area_current = power_diagram[s].area();
-			area_target = bounding_polygon_area * sites[s].size_fraction;
-			//var f_adapt = area_target / area_current;
-			//var w_new = Math.sqrt(sites[s].weight) * f_adapt;
-			//var w_max = Math.sqrt(nn_squaredNorm[s]); // compute squareroots once?
-			//var to_square = Math.min(w_new, w_max);
-			//sites[s].weight = to_square * to_square;
-			//sites[s].weight = Math.max(sites[s].weight, epsilon);
+			//console.log(sites[s]);
+			var area_current = power_diagram[s].area();
+			var area_target = bounding_polygon_area * sites[s].size_fraction;
+			var f_adapt = area_target / area_current;
+			var w_new = Math.sqrt(sites[s].weight) * f_adapt;
+			var w_max = Math.sqrt(nn_squaredNorm[s]); // compute squareroots once?
+			var to_square = Math.min(w_new, w_max);
+			sites[s].weight = to_square * to_square;
+			sites[s].weight = Math.max(sites[s].weight, epsilon);
+			//console.log(sites[s].weight);
 		}
 	},
 	
@@ -328,26 +331,34 @@ var VoronoiTreemap = {
 		return result;
 	},
 	
-	// in: bounding polygon and node
-	// out: a list of polygons
-	// recent test in index.html:
-	// VoronoiTreemap.computeVoronoiTreemapSingle(test_poly, simple_json);
-	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
-		bounding_polygon = d3.geom.polygon(bounding_polygon); // just make sure...
-	
-		if (!node.hasOwnProperty("children")) {
-			return null; // really? null?
+	computeVoronoiTreemapRecursive:function(bounding_polygon, node, depth) {
+		if (depth <= 0) {
+			return bounding_polygon;
 		}
-	
-		// perhaps silly to do this every time, but it's quick if set
-		this.setSizeForAllNodes(node);
-	
-		var sites = [];
+		
+		var node_result = this.computeVoronoiTreemapSingle(bounding_polygon, node);
 
+		if (node_result.length > 1) {
+			var all_children_flat = []
+			for (var i = 0; i < node_result.length; i++) {
+				var child_result = this.computeVoronoiTreemapRecursive(node_result[i], node.children[i], depth - 1);
+				console.log(child_result);
+				for (var j = 0; j < child_result.length; j++) {
+					all_children_flat.push(child_result[j]);
+				}
+			}
+		}
+		else {
+			// this is weird, maybe
+			return node_result[0];
+		}
+	},
+	
+	initSites:function(bounding_polygon, node) {
+		this.setSizeForAllNodes(node); // quick if done already
+		var sites = [];
 		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
-		
 		var initial_weight = 0.001; // initial weight
-		
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
 			sites.push({
@@ -356,28 +367,48 @@ var VoronoiTreemap = {
 				"weight":initial_weight
 				});
 		}
-		
 		console.log("initial sites:");
 		console.log(sites);
+		return sites;
+	},
+	
+	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
+		var sites = this.initSites(bounding_polygon, node);
+		return this.computeVoronoiTreemapSingleWithSites(bounding_polygon, node, sites, 100);
+	},
+	
+	
+	computeVoronoiTreemapSingleWithSites:function(bounding_polygon, node, sites, max_iterations) {
+		bounding_polygon = d3.geom.polygon(bounding_polygon); // just make sure...
+		this.setSizeForAllNodes(node); // quick if done already
+	
+		if (!node.hasOwnProperty("children")) {
+			//return null; // really? null?
+			return bounding_polygon; // really?
+			// todo: make this return sites as well!!!!
+		}
 		
 		var bounding_polygon_area = bounding_polygon.area();
 		
-		power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+		var power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 		
 		// also power diagram should be in the form of d3 polygons
 		// assume that it is?!
 		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
 		
-		var max_iterations = 100;
 		var error_threshold = 0.001; // or whatever...
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
 			console.log("iteration: " + iteration);
+			//console.log(sites);
+			for (var stupid = 0; stupid < sites.length; stupid++) {
+				console.log(sites[stupid].weight);
+			}
 			this.adaptPositionsWeights(node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 			area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
-			console.log("area error: " + area_error);
+			//console.log("area error: " + area_error);
 			if (area_error < error_threshold) break;
 		}
 		
@@ -391,6 +422,8 @@ var VoronoiTreemap = {
 			console.log("area: " + power_diagram[i].area());
 		}
 		
-		return power_diagram;
+		// look at sites too?
+		
+		return [power_diagram, sites]
 	}
 }
