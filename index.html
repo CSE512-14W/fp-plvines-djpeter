@@ -13,7 +13,8 @@
 
 <!-- test input local filesystem -->
 <script language="javascript" type="text/javascript" src="flare.js"></script>
-<script language="javascript" type="text/javascript" src="simple.js"></script>
+<script language="javascript" type="text/javascript" src="simple_two.js"></script>
+<script language="javascript" type="text/javascript" src="simple_three.js"></script>
 <script language="javascript" type="text/javascript" src="simple_four.js"></script>
 
 
@@ -21,76 +22,91 @@
  
 <body>
 
-<!--
-<script>
- //Make an SVG Container
- var svgContainer = d3.select("body").append("svg")
-                                     .attr("width", 200)
-                                     .attr("height", 200);
- 
- //Draw the Circle
- var circle = svgContainer.append("circle")
-                          .attr("cx", 30)
-                          .attr("cy", 30)
-                         .attr("r", 20)
-						 .style("fill", "black");
-</script>
--->
-
-
 <h2>Voronoi Treemap</h2>
-
-
 
 <!--
 <div id="div1">This is div1</div><br><br>
 -->
 
-
-
 <script language="javascript">
+
+// here we set up the svg
 var width = 510;
 var height = 510;
-var svn_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
-var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
-var polygon_list = []; // start empty
+var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
+// here's the whole svg as a poly
+var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+
+// here's a octogon inside 510x510
 var n1 = 10;
 var n2 = 140;
 var n3 = 370;
 var n4 = 500;
 var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
 
-// TEST CASE
-//var square_poly = [[-1000,-1000],[-1000, 2000],[2000,2000],[2000, -1000]];
-
-var square_poly = [[0, 0],[0, 1000],[1000,1000],[1000, 0]];
 
 function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
 }
 
-function stupid_draw() {
-	var polylines = svn_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
+var refresh = function(polygon_list, sites) {
+	// don't know what that append("g") was about...
+	// OH!  GROUPING...good for draw order...still don't fully understand it...
+	var polylines = svg_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 	polylines.enter().append("path")
-		.attr("d", make_d3_poly)
-		.attr("stroke-width", "10px")
+			.attr("d", make_d3_poly)
+			.attr("stroke-width", "10px")
+			.attr("stroke", "black")
+			.attr("fill", "cyan");
+			
+	var circles = svg_container.append("g").selectAll("circle").data(sites);
+	circles.enter().append("circle")
+		.attr("cx", function(d,i) {return (d.p[0]);})
+		.attr("cy", function(d,i) {return (d.p[1]);})
+		.attr("r", function(d) {return 10;})
 		.attr("stroke", "black")
-		.attr("fill", "cyan");
-	//polylines.update();
+		.attr("fill", "black");
 }
 
-var sites = VoronoiTreemap.initSites(square_poly, simple_four_json);
-for (var i = 0; i < 100; i++) {
-	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(square_poly, simple_four_json, sites, 1);
-	polygon_list = polygons_and_sites[0];
+//var dataset = simple_two_json;
+//var dataset = simple_three_json;
+var dataset = simple_four_json;
+var sites = VoronoiTreemap.initSites(svg_poly, dataset);
+refresh([], sites);
+
+var iterate = function() {
+	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(svg_poly, dataset, sites, 1);
+	var polygon_list = polygons_and_sites[0];
 	sites = polygons_and_sites[1];
-	stupid_draw();
-	alert("stupid_draw");
+	refresh(polygon_list, sites);
 }
+
+/*
+for (var i = 0; i < 5; i++) {
+	iterate();
+}
+*/
+
+d3.select("body").append("input")
+	.attr("type", "button")
+	.attr("name", "iterate_button")
+	.attr("id", "iterate_button")
+	.attr("value", "Iterate!");
+	
+d3.select("#iterate_button").on("click", function() {iterate();});
 
 	
 </script>
+
+<!--
+<div id="option">
+    <input name="updateButton" 
+                 type="button" 
+                value="Update" 
+                onclick="updateData()" />
+</div>
+-->
 
 
 
