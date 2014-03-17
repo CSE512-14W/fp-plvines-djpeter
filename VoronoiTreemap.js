@@ -103,9 +103,14 @@ var VoronoiTreemap = {
             // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
 		for (var s = 0; s < sites.length; s++) {
 			sites[s].p = power_diagram[s].centroid();
-			var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
-			var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
-			sites[s].weight = to_square * to_square;
+			// Yeah..so this limit on the weight keeps it from achieving the desired areas...
+			// however, removing it causes the optimization to break sometimes
+			var limit_weight = false;
+			if (limit_weight) {
+				var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
+				var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
+				sites[s].weight = to_square * to_square;
+			}
 		}
 	},
 	
@@ -376,8 +381,7 @@ var VoronoiTreemap = {
 		this.setSizeForAllNodes(node); // quick if done already
 		var sites = [];
 		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
-		//var initial_weight = 0.001; // initial weight
-		var initial_weight = 10.0; // initial weight
+		var initial_weight = 0.001; // initial weight
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
 			sites.push({
