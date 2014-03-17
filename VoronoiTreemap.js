@@ -103,10 +103,14 @@ var VoronoiTreemap = {
             // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
 		for (var s = 0; s < sites.length; s++) {
 			sites[s].p = power_diagram[s].centroid();
-                    console.log("centroid: " + sites[s].p);
-			var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
-			var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
-			sites[s].weight = to_square * to_square;
+			// Yeah..so this limit on the weight keeps it from achieving the desired areas...
+			// however, removing it causes the optimization to break sometimes
+			var limit_weight = false;
+			if (limit_weight) {
+				var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
+				var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
+				sites[s].weight = to_square * to_square;
+			}
 		}
 	},
 	
@@ -136,7 +140,6 @@ var VoronoiTreemap = {
 		}
 		
 		for (var s = 0; s < sites.length; s++) {
-			//console.log(sites[s]);
 			var area_current = power_diagram[s].area();
 			var area_target = bounding_polygon_area * sites[s].size_fraction;
 			var f_adapt = area_target / area_current;
@@ -145,7 +148,6 @@ var VoronoiTreemap = {
 			var to_square = Math.min(w_new, w_max);
 			sites[s].weight = to_square * to_square;
 			sites[s].weight = Math.max(sites[s].weight, epsilon);
-			//console.log(sites[s].weight);
 		}
 	},
 	
@@ -260,6 +262,13 @@ var VoronoiTreemap = {
 		return d3.geom.polygon(result);
 	},
 	
+	pointSquaredDistance:function(p1, p2) {
+		var dx = p2[0] - p1[0];
+		var dy = p2[1] - p1[1];
+		var squared_norm = dx * dx + dy * dy;
+		return squared_norm;
+	},
+	
 	// returns array of 2 points, where counterclockwise order contains p1
 	weightedMidpointLine:function(p1, w1, p2, w2) {
 		// this is stupid and probably wrong
@@ -276,6 +285,14 @@ var VoronoiTreemap = {
 		// now move away from mx,my to get another point
 		var mx_2 = mx + dy;
 		var my_2 = my + (-dx);
+		
+		// SANITY CHECK
+		// todo: remove once working
+		// THESE SHOULD BE EQUAL
+		var dist_1 = this.pointSquaredDistance(p1, [mx,my]) - w1;
+		var dist_2 = this.pointSquaredDistance(p2, [mx,my]) - w2;
+		var dist_3 = this.pointSquaredDistance(p1, [mx_2,my_2]) - w1;
+		var dist_4 = this.pointSquaredDistance(p2, [mx_2,my_2]) - w2;
 		
 		return [[mx, my], [mx_2, my_2]];
 	},
@@ -411,21 +428,30 @@ var VoronoiTreemap = {
 		
 		var error_threshold = 0.001; // or whatever...
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
-			console.log("iteration: " + iteration);
-			//console.log(sites);
+			console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
+			
+			// debug weights?
+			console.log("weights:");
 			for (var stupid = 0; stupid < sites.length; stupid++) {
 				console.log(sites[stupid].weight);
 			}
+			
+			// debug areas
+			console.log("areas (before update):");
+			for (var i = 0; i < power_diagram.length; i++) {
+				console.log(power_diagram[i].area());
+			}
+			
 			this.adaptPositionsWeights(node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 		    var area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
-			//console.log("area error: " + area_error);
 			if (area_error < error_threshold) break;
 		}
 		
 		// debug result
+		/*
 		console.log("power_diagram:");
 		for (var i = 0; i < power_diagram.length; i++) {
 			console.log("polygon " + i);
@@ -434,8 +460,8 @@ var VoronoiTreemap = {
 			}
 			console.log("area: " + power_diagram[i].area());
 		}
+		*/
 		
-		// look at sites too?
 		
 		return [power_diagram, sites]
 	}
