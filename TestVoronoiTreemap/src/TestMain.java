@@ -15,10 +15,15 @@ public class TestMain {
 	public static void main(String[] args) {
 		//Create the root polygon(it has to be convex):
 		PolygonSimple root = new PolygonSimple(4);
+		
+		int width = 510;
+		int height = 510;
+		
+		// NOTE: THESE ARE CLOCKWISE, NOT COUNTER!!
 		root.add(0,0);
-		root.add(800,0);
-		root.add(800,800);
-		root.add(0,800);
+		root.add(width,0);
+		root.add(width, height);
+		root.add(0,height);
 
 		//Create a StatusObject of your implementation
 		StatusObjectImpl statusObject = new StatusObjectImpl();
@@ -29,13 +34,11 @@ public class TestMain {
 		//voronoiTreemap.setNumberMaxIterations(5000);
 		voronoiTreemap.setCancelOnThreshold(true);
 		
-		// just do this at the end...
-		/*
-		// needs treemap?
-		PNGStatusObject pngStatusObject = new PNGStatusObject("test.png", voronoiTreemap);
-		voronoiTreemap.setStatusObject(pngStatusObject);
-		*/
-
+		// by default, uses negative weights.
+		// let's see if turning that off causes problems for them
+		voronoiTreemap.setUseNegativeWeights(false);
+		
+		
 		//Set root polygon
 		voronoiTreemap.setRootPolygon(root);
 
@@ -43,9 +46,13 @@ public class TestMain {
 		//E.g. if a node 1 has children 3,7 and 9 the List must have an entry (1,3,7,9)
 
 		ArrayList<ArrayList<Integer>> treeList = new ArrayList<ArrayList<Integer>>();
-		treeList.add(new ArrayList<Integer> (Arrays.asList(1,2,3)));
-		treeList.add(new ArrayList<Integer> (Arrays.asList(2,4,5)));
-		treeList.add(new ArrayList<Integer> (Arrays.asList(3,6,7,8)));
+		
+		//treeList.add(new ArrayList<Integer> (Arrays.asList(1,2,3)));
+		//treeList.add(new ArrayList<Integer> (Arrays.asList(2,4,5)));
+		//treeList.add(new ArrayList<Integer> (Arrays.asList(3,6,7,8)));
+		
+		treeList.add(new ArrayList<Integer> (Arrays.asList(1,2,3,4)));
+		
 		voronoiTreemap.setTree(treeList);
 		
 
@@ -53,23 +60,23 @@ public class TestMain {
 		//(can only be set after the tree structure is defined (setTree(...)))
 		//Format: Tuple2ID with (NodeId, weight) e.g. Node 1 (1,0.55)
 		ArrayList<Tuple2ID> areaGoals = new ArrayList<Tuple2ID>();
+		
+		areaGoals.add(new Tuple2ID(2,10));
+		areaGoals.add(new Tuple2ID(3,1));
+		areaGoals.add(new Tuple2ID(4,1));
+		
 		// only need children...
 		// so I don't know why it works now...there was some issue with weights not converging...hmmm
 		//areaGoals.add(new Tuple2ID(1,1));
 		//areaGoals.add(new Tuple2ID(2,1));
 		//areaGoals.add(new Tuple2ID(3,1));
-		areaGoals.add(new Tuple2ID(4,2));
-		areaGoals.add(new Tuple2ID(5,2));
-		areaGoals.add(new Tuple2ID(6,1));
-		areaGoals.add(new Tuple2ID(7,1));
-		areaGoals.add(new Tuple2ID(8,2));
-		/*
-		int numNodes = 8; // really?  1 indexed?
-		for (int i = 1; i <= numNodes; ++i) {
-			//areaGoals.add(new Tuple2ID(i, 1));
-			areaGoals.add(new Tuple2ID(i, i));
-		}
-		*/
+		//areaGoals.add(new Tuple2ID(4,2));
+		//areaGoals.add(new Tuple2ID(5,2));
+		//areaGoals.add(new Tuple2ID(6,1));
+		//areaGoals.add(new Tuple2ID(7,1));
+		//areaGoals.add(new Tuple2ID(8,2));
+		
+		
 		voronoiTreemap.setAreaGoals(areaGoals);
 
 		//Now compute the voronoi treemap
