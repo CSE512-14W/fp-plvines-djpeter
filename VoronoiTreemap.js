@@ -135,19 +135,14 @@ var VoronoiTreemap = {
 		}
 		
 		for (var s = 0; s < sites.length; s++) {
-			console.log("adaptWeights site: " + s);
-			console.log("original weight: " + sites[s].weight);
 			var area_current = power_diagram[s].area();
 			var area_target = bounding_polygon_area * sites[s].size_fraction;
 			var f_adapt = area_target / area_current;
-			console.log("area_current: " + area_current);
-			console.log("f_adapt: " + f_adapt);
 			var w_new = Math.sqrt(sites[s].weight) * f_adapt;
 			var w_max = Math.sqrt(nn_squaredNorm[s]); // compute squareroots once?
 			var to_square = Math.min(w_new, w_max);
 			sites[s].weight = to_square * to_square;
 			sites[s].weight = Math.max(sites[s].weight, epsilon);
-			console.log("new weight: " + sites[s].weight);
 		}
 	},
 	
@@ -262,6 +257,13 @@ var VoronoiTreemap = {
 		return d3.geom.polygon(result);
 	},
 	
+	pointSquaredDistance:function(p1, p2) {
+		var dx = p2[0] - p1[0];
+		var dy = p2[1] - p1[1];
+		var squared_norm = dx * dx + dy * dy;
+		return squared_norm;
+	},
+	
 	// returns array of 2 points, where counterclockwise order contains p1
 	weightedMidpointLine:function(p1, w1, p2, w2) {
 		// this is stupid and probably wrong
@@ -278,6 +280,14 @@ var VoronoiTreemap = {
 		// now move away from mx,my to get another point
 		var mx_2 = mx + dy;
 		var my_2 = my + (-dx);
+		
+		// SANITY CHECK
+		// todo: remove once working
+		// THESE SHOULD BE EQUAL
+		var dist_1 = this.pointSquaredDistance(p1, [mx,my]) - w1;
+		var dist_2 = this.pointSquaredDistance(p2, [mx,my]) - w2;
+		var dist_3 = this.pointSquaredDistance(p1, [mx_2,my_2]) - w1;
+		var dist_4 = this.pointSquaredDistance(p2, [mx_2,my_2]) - w2;
 		
 		return [[mx, my], [mx_2, my_2]];
 	},
@@ -366,7 +376,8 @@ var VoronoiTreemap = {
 		this.setSizeForAllNodes(node); // quick if done already
 		var sites = [];
 		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
-		var initial_weight = 0.001; // initial weight
+		//var initial_weight = 0.001; // initial weight
+		var initial_weight = 10.0; // initial weight
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
 			sites.push({

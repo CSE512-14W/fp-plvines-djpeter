@@ -4,8 +4,8 @@ simple_three_json = {
 	{
 	"name": "test1",
 	"children": [
-		{"name": "test1inside1", "size": 4},
-		{"name": "test1inside2", "size": 4}
+		{"name": "test1inside1", "size": 10},
+		{"name": "test1inside2", "size": 10}
 	]
 	},
 	{
