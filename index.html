@@ -81,7 +81,7 @@ function stupid_draw() {
 }
 
 var sites = VoronoiTreemap.initSites(square_poly, simple_four_json);
-for (var i = 0; i < 100; i++) {
+for (var i = 0; i < 1; i++) {
 	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(square_poly, simple_four_json, sites, 1);
 	polygon_list = polygons_and_sites[0];
 	sites = polygons_and_sites[1];

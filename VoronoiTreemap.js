@@ -377,8 +377,8 @@ var VoronoiTreemap = {
             // sites = [];
             // sites[0] = {"p":[998, 719],"size_fraction":0.25,"weight":0.001};
             // sites[1] = {"p":[629,222],"size_fraction":0.25,"weight":0.001};
-            // sites[2] = {"p":[-418,-42],"size_fraction":0.25,"weight":0.001};
-            // sites[3] = {"p":[-381,-55],"size_fraction":0.25,"weight":0.001};
+            // sites[2] = {"p":[418,42],"size_fraction":0.25,"weight":0.001};
+            // sites[3] = {"p":[381,55],"size_fraction":0.25,"weight":0.001};
 
 	    console.log("initial sites:");
 	    console.log(sites);
