@@ -67,6 +67,7 @@ var VoronoiTreemap = {
 				i--; // try again
 			}
 		}
+            console.log("Result: " + result);
 		return result;
 	},
 	
@@ -99,8 +100,10 @@ var VoronoiTreemap = {
 	},
 	
 	adaptPositionsWeights:function(node, power_diagram, sites) {
+            // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
 		for (var s = 0; s < sites.length; s++) {
 			sites[s].p = power_diagram[s].centroid();
+                    console.log("centroid: " + sites[s].p);
 			var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
 			var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
 			sites[s].weight = to_square * to_square;
@@ -320,15 +323,18 @@ var VoronoiTreemap = {
 			return this.powerDiagramThreeSites(bounding_polygon, 
 				sites[0].p, sites[0].weight, sites[1].p, sites[1].weight, sites[2].p, sites[2].weight);
 		}
-		// else...
-		console.log("BROKEN GENERAL CODE PATH");
-	
-		site_points = sites.map(function(s) {return s.p;});
-		site_weights = sites.map(function(s) {return s.weight;});
-		result = computePowerDiagram(site_points, site_weights, bounding_polygon);
-		console.log("from computePowerDiagram:");
-		console.log(result);
-		return result;
+	    // else...
+		// console.log("BROKEN GENERAL CODE PATH");
+	        
+		// site_points = sites.map(function(s) {return s.p;});
+		// site_weights = sites.map(function(s) {return s.weight;});
+		// result = computePowerDiagram(site_points, site_weights, bounding_polygon);
+		// console.log("from computePowerDiagram:");
+		// console.log(result);
+		// return result;
+            else{
+                return computePowerDiagram(sites.map(function(a) {return a.p;}), sites.map(function(a) {return a.weight;}), bounding_polygon);
+            }
 	},
 	
 	computeVoronoiTreemapRecursive:function(bounding_polygon, node, depth) {
@@ -367,16 +373,23 @@ var VoronoiTreemap = {
 				"weight":initial_weight
 				});
 		}
-		console.log("initial sites:");
-		console.log(sites);
-		return sites;
+
+            // sites = [];
+            // sites[0] = {"p":[998, 719],"size_fraction":0.25,"weight":0.001};
+            // sites[1] = {"p":[629,222],"size_fraction":0.25,"weight":0.001};
+            // sites[2] = {"p":[-418,-42],"size_fraction":0.25,"weight":0.001};
+            // sites[3] = {"p":[-381,-55],"size_fraction":0.25,"weight":0.001};
+
+	    console.log("initial sites:");
+	    console.log(sites);
+	    return sites;
 	},
 	
 	computeVoronoiTreemapSingle:function(bounding_polygon, node) {
 		var sites = this.initSites(bounding_polygon, node);
 		return this.computeVoronoiTreemapSingleWithSites(bounding_polygon, node, sites, 100);
 	},
-	
+    
 	
 	computeVoronoiTreemapSingleWithSites:function(bounding_polygon, node, sites, max_iterations) {
 		bounding_polygon = d3.geom.polygon(bounding_polygon); // just make sure...
@@ -407,7 +420,7 @@ var VoronoiTreemap = {
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
-			area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
+		    var area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
 			//console.log("area error: " + area_error);
 			if (area_error < error_threshold) break;
 		}

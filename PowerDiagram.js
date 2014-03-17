@@ -59,16 +59,30 @@ function getFacesOfDestVertex(edge) {
 // OUT: Set of lines making up the voronoi power diagram
 function computePowerDiagram(S, W, boundingPolygon){
     var sStar = applyDeltaPi(S, W);
-    var bounds = applyDeltaPiToBounds(boundingPolygon);
-    
+    var width = 1000;
+    var height = 1000;
+    var temp = [];
+    temp[0] = [0, 0];
+    temp[1] = [width, 0];
+    temp[2] = [width,height];
+    temp[3] = [0, width];
+
+    // temp[0] = [-width, -height];
+    // temp[1] = [2 * width,  -height];
+    // temp[2] = [2*width, 2*height];
+    // temp[3] = [-width,  2 * height];
+    var bounds = applyDeltaPiToBounds(temp);
+
+
+
     ConvexHull.init(bounds, sStar);
     
     var facets = ConvexHull.compute(sStar);
 
-    // for (var i = 0; i < facets.length; i++){
-    //     var f = facets[i];
-    //     console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
-    // }
+    for (var i = 0; i < facets.length; i++){
+        var f = facets[i];
+        console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
+    }
     
     var polygons = [];
     var vertexCount = ConvexHull.points.length; 
@@ -88,7 +102,6 @@ function computePowerDiagram(S, W, boundingPolygon){
 		var site = destVertex.originalObject; 
 
 		if (!verticesVisited[destVertex.index]) {
-
 		    verticesVisited[destVertex.index] = true;
 		    if (site.isDummy) { // Check if this is one of the
                         // sites making the bounding polygon
@@ -104,8 +117,8 @@ function computePowerDiagram(S, W, boundingPolygon){
 		    var lastY = null;
 		    var dx = 1;
                     var dy = 1;
-		    for (var i =0; i < faces.length; i++) {
-			var point = faces[i].getDualPoint();
+		    for (var j =0; j < faces.length; j++) {
+			var point = faces[j].getDualPoint();
 			var x1 = point.x;
                         var y1 = point.y;
 			if (lastX !== null){
@@ -128,11 +141,16 @@ function computePowerDiagram(S, W, boundingPolygon){
 			}
 
 		    }
-		    site.nonClippedPolygon = d3.geom.polygon(protopoly);
+		    site.nonClippedPolygon = d3.geom.polygon(protopoly.reverse());
 
 		    if (!site.isDummy && site.nonClippedPolygon.length > 0) {
                         //                        site.polygon = boundingPolygon.clip(site.nonClippedPolygon);
-			polygons.push(boundingPolygon.clip(site.nonClippedPolygon));
+                        var clippedPoly = boundingPolygon.clip(site.nonClippedPolygon);
+                        if (clippedPoly.length > 0){
+			    polygons.push(clippedPoly);
+                            console.log("pushed: " + polygons[polygons.length - 1].length);
+                        }
+
 		    }
 		}
 	    }

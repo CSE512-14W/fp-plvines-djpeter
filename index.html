@@ -5,7 +5,8 @@
 <title>Voronoi Treemap</title>
 
 <script language="javascript" type="text/javascript" src="jquery-1.11.0.min.js"></script>
-<script language="javascript" type="text/javascript" src="d3.v2.js"></script>
+<!-- <script language="javascript" type="text/javascript" src="d3.v2.js"></script> -->
+<script language="javascript" type="text/javascript" src="d3-master/d3.js"></script>
 <script language="javascript" type="text/javascript" src="ConvexHull.js"></script>
 <script language="javascript" type="text/javascript" src="PowerDiagram.js"></script>
 <script language="javascript" type="text/javascript" src="VoronoiTreemap.js"></script>
@@ -60,14 +61,10 @@ var n3 = 370;
 var n4 = 500;
 var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
 
+// TEST CASE
+//var square_poly = [[-1000,-1000],[-1000, 2000],[2000,2000],[2000, -1000]];
 
-/*
-// stupid debugging
-$(document).ready(function(){
-$("#div1").text('');
-$("#div1").append(JSON.stringify(polygon_list));
-});
-*/
+var square_poly = [[0, 0],[0, 1000],[1000,1000],[1000, 0]];
 
 function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
@@ -83,18 +80,9 @@ function stupid_draw() {
 	//polylines.update();
 }
 
-/*
-var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingle(octogon_poly, simple_json);
-//var polygon_list = VoronoiTreemap.computeVoronoiTreemapRecursive(octogon_poly, simple_json, 2);
-var polygon_list = polygons_and_sites[0];
-var sites = polygons_and_sites[1];
-*/
-
-stupid_draw();
-
-var sites = VoronoiTreemap.initSites(octogon_poly, simple_json);
+var sites = VoronoiTreemap.initSites(square_poly, simple_four_json);
 for (var i = 0; i < 100; i++) {
-	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(octogon_poly, simple_json, sites, 1);
+	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(square_poly, simple_four_json, sites, 1);
 	polygon_list = polygons_and_sites[0];
 	sites = polygons_and_sites[1];
 	stupid_draw();
