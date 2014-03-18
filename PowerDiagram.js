@@ -12,15 +12,46 @@ function applyDeltaPi(S, W){
     return result;
 }
 
+function max(list){
+    var max = null;
+    for (var i = 1; i < list.length; i++) {
+        if (list[i] > max){
+            max = list[i];
+        }
+    }
+    return max;
+} 
+function min(list){
+    var min = null;
+    for (var i = 1; i < list.length; i++) {
+        if (list[i] < min){
+            min = list[i];
+        }
+    }
+    return min;
+} 
+
+
 // As applyDeltaPi, but applies a minimum weight
 // IN: sites
 // OUT: sites with Z coordinate based on X,Y,and W
 function applyDeltaPiToBounds(S){
     var result = [];
-    for (var i in S){
-        var x = S[i][0], y = S[i][1];
-        result[i] = [x,y, (x*x) + (y*y) - epsilon];
-    }
+
+    var maxX = max(S.map(function(a) {return a[0];}));
+    var minX = min(S.map(function(a) {return a[0];}));
+    var maxY = max(S.map(function(a) {return a[1];}));
+    var minY = min(S.map(function(a) {return a[1];}));
+
+    var x0 = minX - maxX;
+    var x1 = 2 * maxX;
+    var y0 = minY - maxY;
+    var y1 = 2 * maxY;
+
+    result[0] = [x0, y0, (x0 * x0) + (y0 * y0) - epsilon];
+    result[1] = [x1, y0, (x1 * x1) + (y0 * y0) - epsilon];
+    result[2] = [x1, y1, (x1 * x1) + (y1 * y1) - epsilon];
+    result[3] = [x0, y1, (x0 * x0) + (y1 * y1) - epsilon];
 
     return result;
 }
@@ -79,10 +110,10 @@ function computePowerDiagram(S, W, boundingPolygon){
     
     var facets = ConvexHull.compute(sStar);
 
-    for (var i = 0; i < facets.length; i++){
-        var f = facets[i];
-        console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
-    }
+    // for (var i = 0; i < facets.length; i++){
+    //     var f = facets[i];
+    //     console.log(i + ": " + f.verts[0].x + ", " + f.verts[1].x + ", " + + f.verts[2].x);
+    // }
     
     var polygons = [];
     var vertexCount = ConvexHull.points.length; 
@@ -148,7 +179,7 @@ function computePowerDiagram(S, W, boundingPolygon){
                         var clippedPoly = boundingPolygon.clip(site.nonClippedPolygon);
                         if (clippedPoly.length > 0){
 			    polygons.push(clippedPoly);
-                            console.log("pushed: " + polygons[polygons.length - 1].length);
+                            // console.log("pushed: " + polygons[polygons.length - 1].length);
                         }
 
 		    }
