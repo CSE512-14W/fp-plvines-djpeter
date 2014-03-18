@@ -67,9 +67,6 @@ var VoronoiTreemap = {
 				i--; // try again
 			}
 		}
-<<<<<<< HEAD
-        console.log("Result: " + result);
-=======
 
             // result = [];
 	    // result[0] = [130.92696687905118,91.98442592052743];
@@ -82,7 +79,6 @@ var VoronoiTreemap = {
 	    // result[7] = [325.7570087816566,298.1421837885864];
 
             console.log("Result: " + result);
->>>>>>> 5255eb4d7838d7a73d9af565894ea2d3edac8963
 		return result;
 	},
 	
@@ -453,12 +449,7 @@ var VoronoiTreemap = {
 		// assume that it is?!
 		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
 		
-<<<<<<< HEAD
 		var error_threshold = 0.01; // or whatever...
-=======
-		var error_threshold = 0.001; // or whatever...
-
->>>>>>> 5255eb4d7838d7a73d9af565894ea2d3edac8963
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
 			console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
 						
