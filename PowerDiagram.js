@@ -92,19 +92,19 @@ function computePowerDiagram(S, W, boundingPolygon){
     var sStar = applyDeltaPi(S, W);
     var width = 1000;
     var height = 1000;
-    var temp = [];
-    temp[0] = [0, 0];
-    temp[1] = [width, 0];
-    temp[2] = [width,height];
-    temp[3] = [0, width];
+    // var temp = [];
+    // temp[0] = [0, 0];
+    // temp[1] = [width, 0];
+    // temp[2] = [width,height];
+    // temp[3] = [0, width];
 
     // temp[0] = [-width, -height];
     // temp[1] = [2 * width,  -height];
     // temp[2] = [2*width, 2*height];
     // temp[3] = [-width,  2 * height];
-    var bounds = applyDeltaPiToBounds(temp);
+    var bounds = applyDeltaPiToBounds(boundingPolygon);
 
-
+    ConvexHull.clear();
 
     ConvexHull.init(bounds, sStar);
     
@@ -179,7 +179,7 @@ function computePowerDiagram(S, W, boundingPolygon){
                         var clippedPoly = boundingPolygon.clip(site.nonClippedPolygon);
                         if (clippedPoly.length > 0){
 			    polygons.push(clippedPoly);
-                            // console.log("pushed: " + polygons[polygons.length - 1].length);
+                            console.log("pushed: " + polygons[polygons.length - 1]);
                         }
 
 		    }

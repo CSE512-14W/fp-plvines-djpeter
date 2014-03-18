@@ -428,11 +428,11 @@ var VoronoiTreemap = {
 		// sites[3] = {"p":[375 ,125],"size_fraction":0.1,"weight":0.001};
 		
 		// if I vary slightly, then it runs, but again, weight has no effect
-		sites = [];
-        sites[0] = {"p":[125, 126],"size_fraction":0.7,"weight":0.001};
-        sites[1] = {"p":[125, 377],"size_fraction":0.1,"weight":0.001};
-		sites[2] = {"p":[375, 378],"size_fraction":0.1,"weight":0.001};
-		sites[3] = {"p":[375 ,129],"size_fraction":0.1,"weight":0.001};
+	    sites = [];
+            sites[0] = {"p":[125, 126],"size_fraction":0.7,"weight":0.001};
+            sites[1] = {"p":[125, 377],"size_fraction":0.1,"weight":0.001};
+	    sites[2] = {"p":[375, 378],"size_fraction":0.1,"weight":0.001};
+	    sites[3] = {"p":[375 ,129],"size_fraction":0.1,"weight":0.001};
 
 	    console.log("initial sites:");
 	    console.log(sites);
@@ -467,9 +467,9 @@ var VoronoiTreemap = {
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
 			console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
 						
-			this.adaptPositionsWeights(node, power_diagram, sites);
+		    this.adaptPositionsWeights(node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
-			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
+                    this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
 		    var area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
 			if (area_error < error_threshold) break;
