@@ -116,7 +116,7 @@ var VoronoiTreemap = {
 			sites[s].p = power_diagram[s].centroid();
 			// Yeah..so this limit on the weight keeps it from achieving the desired areas...
 			// however, removing it causes the optimization to break sometimes
-		    var limit_weight = true;
+		    var limit_weight = false;
 			if (limit_weight) {
 				var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
 				console.log("distance_border squared (used): " + (distance_border*distance_border));
@@ -414,11 +414,25 @@ var VoronoiTreemap = {
 				});
 		}
 
-            // sites = [];
-            // sites[0] = {"p":[998, 719],"size_fraction":0.25,"weight":0.001};
-            // sites[1] = {"p":[629,222],"size_fraction":0.25,"weight":0.001};
-            // sites[2] = {"p":[418,42],"size_fraction":0.25,"weight":0.001};
-            // sites[3] = {"p":[381,55],"size_fraction":0.25,"weight":0.001};
+        // sites = [];
+        // sites[0] = {"p":[998, 719],"size_fraction":0.25,"weight":0.001};
+        // sites[1] = {"p":[629,222],"size_fraction":0.25,"weight":0.001};
+		// sites[2] = {"p":[418,42],"size_fraction":0.25,"weight":0.001};
+		// sites[3] = {"p":[381,55],"size_fraction":0.25,"weight":0.001};
+
+		// something about exactly lineup means "can't set property twin of null"
+		// sites = [];
+        // sites[0] = {"p":[125, 125],"size_fraction":0.7,"weight":0.001};
+        // sites[1] = {"p":[125, 375],"size_fraction":0.1,"weight":0.001};
+		// sites[2] = {"p":[375, 375],"size_fraction":0.1,"weight":0.001};
+		// sites[3] = {"p":[375 ,125],"size_fraction":0.1,"weight":0.001};
+		
+		// if I vary slightly, then it runs, but again, weight has no effect
+		sites = [];
+        sites[0] = {"p":[125, 126],"size_fraction":0.7,"weight":0.001};
+        sites[1] = {"p":[125, 377],"size_fraction":0.1,"weight":0.001};
+		sites[2] = {"p":[375, 378],"size_fraction":0.1,"weight":0.001};
+		sites[3] = {"p":[375 ,129],"size_fraction":0.1,"weight":0.001};
 
 	    console.log("initial sites:");
 	    console.log(sites);
