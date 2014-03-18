@@ -52,39 +52,36 @@ function make_d3_poly(d) {
 }
 
 var refresh = function(polygon_list, sites) {
-	// don't know what that append("g") was about...
-	// OH!  GROUPING...good for draw order...still don't fully understand it...
 	var polylines = svg_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 	polylines.enter().append("path")
 			.attr("d", make_d3_poly)
 			.attr("stroke-width", "5px")
 			.attr("stroke", "black")
 			.attr("fill", "cyan");
+	polylines.exit().remove();
+	
 			
-	var circles = svg_container.append("g").selectAll("circle").data(sites);
-	circles.enter().append("circle")
+	var center_circles = svg_container.append("g").selectAll(".center.circle").data(sites);
+	center_circles.enter().append("circle")
+		.attr("class", "center circle")
 		.attr("cx", function(d) {return (d.p[0]);})
 		.attr("cy", function(d) {return (d.p[1]);})
-		//.attr("r", function(d) {return 5;})
+		.attr("r", function(d) {return 5;})
 		//.attr("r", function(d) {return (Math.sqrt(d.weight));})
-		.attr("r", function(d) {return (Math.min(Math.sqrt(d.weight), 2));})
+		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
 		.attr("stroke", "black")
 		.attr("fill", "black");
 		
-		/*
-		// for multiple circles...use this example:
-		   svg.selectAll(".blue.dot")// Select specifically blue dots
-        .data(tsv1)
-        .enter().append("circle")
-        .attr("class", "blue dot")// Assign two classes
-        ...
-
-    svg.selectAll(".orange.dot")
-        .data(tsv2)
-        .enter().append("circle")
-        .attr("class", "orange dot")
-        ...
-		*/
+	var radius_circles = svg_container.append("g").selectAll(".radius.circle").data(sites);
+	radius_circles.enter().append("circle")
+		.attr("class", "radius circle")
+		.attr("cx", function(d) {return (d.p[0]);})
+		.attr("cy", function(d) {return (d.p[1]);})
+		//.attr("r", function(d) {return 5;})
+		.attr("r", function(d) {return (Math.sqrt(d.weight));})
+		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
+		.attr("stroke", "red")
+		.attr("fill", "none");
 		
 }
 
