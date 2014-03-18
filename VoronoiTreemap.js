@@ -52,8 +52,8 @@ var VoronoiTreemap = {
 	
 	getRandomPointsInPolygon:function(polygon, n_points) {
 		// get bounding rect
-		rect = this.getPolygonBoundingRect(polygon);
-		result = []
+		var rect = this.getPolygonBoundingRect(polygon);
+		var result = []
 		for (var i = 0; i < n_points; i++) {
 			var p = [rect.x + Math.random() * rect.w, rect.y + Math.random() * rect.h];
 			// see if p in polygon itself
@@ -67,7 +67,7 @@ var VoronoiTreemap = {
 				i--; // try again
 			}
 		}
-            console.log("Result: " + result);
+        console.log("Result: " + result);
 		return result;
 	},
 	
@@ -341,7 +341,7 @@ var VoronoiTreemap = {
 		// hack in 1, 2, and 3 case here
 		// todo: move to power diagram function
 		if (sites.length == 1) {
-			return bounding_polygon;
+			return [bounding_polygon];
 		}
 		else if (sites.length == 2) {
 			return this.powerDiagramTwoSites(bounding_polygon, 
@@ -365,34 +365,35 @@ var VoronoiTreemap = {
             }
 	},
 	
+	// returns [polygons, sites, children], where children is an array of the same...
 	computeVoronoiTreemapRecursive:function(bounding_polygon, node, depth) {
+		console.log("computeVoronoiTreemapRecursive depth: " + depth);
+	
+		// probably wrong
 		if (depth <= 0) {
-			return bounding_polygon;
+			console.log("depth <= 0");
+			return; // undefined
 		}
 		
+		// node_result is [polygons, sites]
 		var node_result = this.computeVoronoiTreemapSingle(bounding_polygon, node);
 
-		if (node_result.length > 1) {
-			var all_children_flat = []
-			for (var i = 0; i < node_result.length; i++) {
-				var child_result = this.computeVoronoiTreemapRecursive(node_result[i], node.children[i], depth - 1);
-				console.log(child_result);
-				for (var j = 0; j < child_result.length; j++) {
-					all_children_flat.push(child_result[j]);
-				}
+		var children = [];
+		if (depth > 1) {
+			var children_polygons = node_result[0];
+			for (var i = 0; i < children_polygons.length; i++) {
+				var child_result = this.computeVoronoiTreemapRecursive(children_polygons[i], node.children[i], depth - 1);
+				children.push(child_result);
 			}
 		}
-		else {
-			// this is weird, maybe
-			return node_result[0];
-		}
+		return [node_result[0], node_result[1], children];		
 	},
 	
 	initSites:function(bounding_polygon, node) {
 		this.setSizeForAllNodes(node); // quick if done already
 		var sites = [];
 		var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
-		var initial_weight = 0.001; // initial weight
+		var initial_weight = 0.000001; // initial weight
 		for (var c = 0; c < node.children.length; c++) {
 			// calculate percentage weights
 			sites.push({
@@ -424,9 +425,10 @@ var VoronoiTreemap = {
 		this.setSizeForAllNodes(node); // quick if done already
 	
 		if (!node.hasOwnProperty("children")) {
-			//return null; // really? null?
-			return bounding_polygon; // really?
-			// todo: make this return sites as well!!!!
+			if (sites.length > 1) {
+				console.log ("PROBLEM: sites.length > 1!!");
+			}
+			return [bounding_polygon, sites]; // really?
 		}
 		
 		var bounding_polygon_area = bounding_polygon.area();
@@ -437,7 +439,7 @@ var VoronoiTreemap = {
 		// assume that it is?!
 		//power_diagram[i] = d3.geom.polygon(power_diagram[i]);
 		
-		var error_threshold = 0.001; // or whatever...
+		var error_threshold = 0.01; // or whatever...
 		for (var iteration = 0; iteration < max_iterations; iteration++) {
 			console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
 						

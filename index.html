@@ -87,8 +87,8 @@ var refresh = function(polygon_list, sites) {
 		
 }
 
-//var dataset = simple_two_json;
-var dataset = simple_three_json;
+var dataset = simple_two_json;
+//var dataset = simple_three_json;
 //var dataset = simple_four_json;
 var sites = VoronoiTreemap.initSites(svg_poly, dataset);
 refresh([], sites);
@@ -100,11 +100,12 @@ var iterate = function() {
 	refresh(polygon_list, sites);
 }
 
-/*
-for (var i = 0; i < 5; i++) {
-	iterate();
+var recursive = function() {
+	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapRecursive(svg_poly, dataset, 2);
+	refresh(polygons_and_sites[0], polygons_and_sites[1]);
+	console.log("recursive result:");
+	console.log(polygons_and_sites);
 }
-*/
 
 d3.select("body").append("input")
 	.attr("type", "button")
@@ -114,7 +115,15 @@ d3.select("body").append("input")
 	
 d3.select("#iterate_button").on("click", function() {iterate();});
 
+
+d3.select("body").append("input")
+	.attr("type", "button")
+	//.attr("name", "iterate_button")
+	.attr("id", "recursive_button")
+	.attr("value", "Recursive Test");
 	
+d3.select("#recursive_button").on("click", function() {recursive();});
+
 </script>
 
 
