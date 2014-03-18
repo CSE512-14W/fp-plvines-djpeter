@@ -515,6 +515,15 @@ var VoronoiTreemap = {
 		
 		
 		return [power_diagram, sites]
+	},
+	
+	// goes all the way down to leaves, and flattens those for display (debugging)
+	// expects result of recursive call [power_diagram, sites, children]
+	flattenRecursiveResultLeaves:function(tree_result) {
+		var flat_pd = [];
+		var flat_sites = [];
+		
+	
 	}
 
 
