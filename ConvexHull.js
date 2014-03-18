@@ -334,7 +334,7 @@ var ConvexHull = {
     init: function(boundingSites, sites){
         this.points  = sites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2]));});
         
-        var temppoints = boundingSites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2], null, true), true);});
+        var temppoints = boundingSites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2], null, false), false);});
 
         this.points = this.points.concat(temppoints);
 
