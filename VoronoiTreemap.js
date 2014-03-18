@@ -4,9 +4,6 @@ var epsilon = 0.0000000001;
 test_poly = [[0,0],[0,10],[10,10],[10,0]];
 test_poly = d3.geom.polygon(test_poly);
 
-var saved_power_diagram =null;
-var saved_sites= null;
-
 var VoronoiTreemap = {
 
 	/*
@@ -122,9 +119,17 @@ var VoronoiTreemap = {
 		    var limit_weight = true;
 			if (limit_weight) {
 				var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
+				console.log("distance_border squared (used): " + (distance_border*distance_border));
 				var to_square = Math.min(Math.sqrt(sites[s].weight), distance_border);
 				sites[s].weight = to_square * to_square;
 			}
+			else {
+				var distance_border = this.computeDistanceBorder(power_diagram[s], sites[s].p);
+				console.log("distance_border squared (ignored): " + (distance_border*distance_border));
+			}
+			
+			// as per VoronoiCore.java.  Doesn't seem to make a difference..
+			//sites[s].weight = Math.max(sites[s].weight, 0.00000001);
 		}
 	},
 	
@@ -303,10 +308,13 @@ var VoronoiTreemap = {
 		// SANITY CHECK
 		// todo: remove once working
 		// THESE SHOULD BE EQUAL
+		// and they are
+		/*
 		var dist_1 = this.pointSquaredDistance(p1, [mx,my]) - w1;
 		var dist_2 = this.pointSquaredDistance(p2, [mx,my]) - w2;
 		var dist_3 = this.pointSquaredDistance(p1, [mx_2,my_2]) - w1;
 		var dist_4 = this.pointSquaredDistance(p2, [mx_2,my_2]) - w2;
+		*/
 		
 		return [[mx, my], [mx_2, my_2]];
 	},
@@ -421,33 +429,6 @@ var VoronoiTreemap = {
 		return this.computeVoronoiTreemapSingleWithSites(bounding_polygon, node, sites, 100);
 	},
     
-    iterateHelper:function(power_diagram, sites, max_iterations, node, error_threshold, bounding_polygon, bounding_polygon_area){
-	for (var iteration = 0; iteration < max_iterations; iteration++) {
-	    console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
-	    
-	    // debug weights?
-	    console.log("weights:");
-	    for (var stupid = 0; stupid < sites.length; stupid++) {
-		console.log(sites[stupid].weight);
-	    }
-	    
-	    // debug areas
-	    console.log("areas (before update):");
-	    for (var i = 0; i < power_diagram.length; i++) {
-		console.log(power_diagram[i].area());
-	    }
-	    
-	    this.adaptPositionsWeights(node, power_diagram, sites);
-	    var new_power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
-	    this.adaptWeights(bounding_polygon, bounding_polygon_area, node, new_power_diagram, sites);
-	    new_power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
-	    var area_error = this.computeAreaError(bounding_polygon_area, new_power_diagram, sites);
-	    if (area_error < error_threshold) break;
-
-        }
-        return [new_power_diagram, sites] 
-    },
-	
 	computeVoronoiTreemapSingleWithSites:function(bounding_polygon, node, sites, max_iterations) {
 		bounding_polygon = d3.geom.polygon(bounding_polygon); // just make sure...
 		this.setSizeForAllNodes(node); // quick if done already
@@ -468,15 +449,29 @@ var VoronoiTreemap = {
 		
 		var error_threshold = 0.001; // or whatever...
 
-            if (saved_power_diagram !== null){
-                power_diagram = saved_power_diagram;
-                sites = saved_sites;
-            }
-            var result = this.iterateHelper(power_diagram, sites, max_iterations, node, error_threshold, bounding_polygon, bounding_polygon_area);
-
-            saved_power_diagram = result[0];
-            saved_sites = result[1];
-
+		for (var iteration = 0; iteration < max_iterations; iteration++) {
+			console.log("computeVoronoiTreemapSingleWithSites iteration: " + iteration);
+						
+			this.adaptPositionsWeights(node, power_diagram, sites);
+			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+			this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
+			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+		    var area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
+			if (area_error < error_threshold) break;
+			
+			// debug weights?
+			console.log("weights (after):");
+			for (var stupid = 0; stupid < sites.length; stupid++) {
+				console.log(sites[stupid].weight);
+			}
+			
+			// debug areas
+			console.log("areas (after):");
+			for (var i = 0; i < power_diagram.length; i++) {
+				console.log(power_diagram[i].area());
+			}
+		}
+		
 		// debug result
 		/*
 		console.log("power_diagram:");
@@ -490,7 +485,7 @@ var VoronoiTreemap = {
 		*/
 		
 		
-		return [saved_power_diagram, saved_sites]
+		return [power_diagram, sites]
 	}
 
 
