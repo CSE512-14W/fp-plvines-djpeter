@@ -110,10 +110,20 @@ var VoronoiTreemap = {
 		return result;
 	},
 	
-	adaptPositionsWeights:function(node, power_diagram, sites) {
-            // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
+	sitesToCentroids:function(power_diagram, sites) {
+	            // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
 		for (var s = 0; s < sites.length; s++) {
 			sites[s].p = power_diagram[s].centroid();
+		}
+	},
+	
+	adaptPositionsWeights:function(node, power_diagram, sites) {
+		this.sitesToCentroids(power_diagram, sites);
+            // TODO: problem, power_diagram may create fewer polygons than there are sites, in which case this is not a good loop.
+		for (var s = 0; s < sites.length; s++) {
+			// instead of here, I have a separate function which puts them in centroids first
+			//sites[s].p = power_diagram[s].centroid();
+			
 			// Yeah..so this limit on the weight keeps it from achieving the desired areas...
 			// however, removing it causes the optimization to break sometimes
 		    var limit_weight = false;
@@ -428,11 +438,11 @@ var VoronoiTreemap = {
 		// sites[3] = {"p":[375 ,125],"size_fraction":0.1,"weight":0.001};
 		
 		// if I vary slightly, then it runs, but again, weight has no effect
-	    sites = [];
-            sites[0] = {"p":[125, 126],"size_fraction":0.7,"weight":0.001};
-            sites[1] = {"p":[125, 377],"size_fraction":0.1,"weight":0.001};
-	    sites[2] = {"p":[375, 378],"size_fraction":0.1,"weight":0.001};
-	    sites[3] = {"p":[375 ,129],"size_fraction":0.1,"weight":0.001};
+	    // sites = [];
+        // sites[0] = {"p":[125, 126],"size_fraction":0.7,"weight":0.001};
+        // sites[1] = {"p":[125, 377],"size_fraction":0.1,"weight":0.001};
+	    // sites[2] = {"p":[375, 378],"size_fraction":0.1,"weight":0.001};
+	    // sites[3] = {"p":[375 ,129],"size_fraction":0.1,"weight":0.001};
 
 	    console.log("initial sites:");
 	    console.log(sites);
@@ -469,8 +479,12 @@ var VoronoiTreemap = {
 						
 		    this.adaptPositionsWeights(node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
-                    this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
+            this.adaptWeights(bounding_polygon, bounding_polygon_area, node, power_diagram, sites);
 			power_diagram = this.powerDiagramWrapper(bounding_polygon, sites);
+			
+			// not technically in algorithm, but move sites to centroids for visualization
+			this.sitesToCentroids(power_diagram, sites);
+			
 		    var area_error = this.computeAreaError(bounding_polygon_area, power_diagram, sites);
 			if (area_error < error_threshold) break;
 			
