@@ -38,6 +38,11 @@ public class TestMain {
 		// let's see if turning that off causes problems for them
 		voronoiTreemap.setUseNegativeWeights(false);
 		
+		// make it simple (still works)
+		voronoiTreemap.setUseExtrapolation(false);
+		
+		// invariant off?
+		voronoiTreemap.setGuaranteeValidCells(true);
 		
 		//Set root polygon
 		voronoiTreemap.setRootPolygon(root);
