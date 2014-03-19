@@ -129,15 +129,17 @@ ConflictList.prototype.getVertices = function(l1) {
 
 
 // IN: coordinates x, y, z
-var Vertex = function(x, y, z, orig, isDummy) {
+var Vertex = function(x, y, z, weight, orig, isDummy, percentage) {
     this.x = x;
     this.y = y;
-    this.z = z;
     this.index = 0;
     this.conflicts = new ConflictList(false);
     this.neighbors = null; // Potential trouble
     this.nonClippedPolygon = null;
     this.polygon = null;
+    
+    this.percentage = percentage;
+
     if (orig == undefined){
         this.originalObject = null;
     }
@@ -150,6 +152,27 @@ var Vertex = function(x, y, z, orig, isDummy) {
     else{
         this.isDummy = false;
     }
+
+    if (weight != null){
+        this.weight = weight;
+    }
+    else{
+        this.weight = epsilon;        
+    }
+
+    if (z != null){
+        this.z = z;
+    }
+    else{
+        this.z = this.projectZ(this.x, this.y, this.weight);
+    }
+}
+Vertex.prototype.setWeight = function(weight){
+    this.weight = weight;
+    this.z = this.projectZ(this.x, this.y, this.weight);
+}
+Vertex.prototype.projectZ = function(x, y, weight){
+    return ((x*x) + (y*y) - weight);
 }
 Vertex.prototype.subtract = function(v){
     return new Vertex(v.x - this.x, v.y - this.y, v.z - this.z);
@@ -332,11 +355,16 @@ var ConvexHull = {
 
     // IN: sites (x,y,z)
     init: function(boundingSites, sites){
-        this.points  = sites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2]));});
+        this.points = [];
+        for (var i = 0; i < sites.length; i++){
+            this.points[i] = new Vertex(sites[i].x, sites[i].y, sites[i].z, null, sites[i], false);
+        }
         
-        var temppoints = boundingSites.map(function(a) {return new Vertex(a[0], a[1], a[2], new Vertex(a[0], a[1], a[2], null, true), true);});
+        
+        // var temppoints = boundingSites.map(function(a) {return new Vertex(a[0], a[1], a[2], null, new Vertex(a[0], a[1], a[2], null, null, true), true);});
 
-        this.points = this.points.concat(temppoints);
+//        this.points = this.points.concat(temppoints);
+        this.points = this.points.concat(boundingSites);
 
 
         for (var i = 0; i < this.points.length; i++){

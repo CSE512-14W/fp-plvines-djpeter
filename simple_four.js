@@ -10,7 +10,7 @@ simple_four_json = {
 	{
 	"name": "test2",
 	"children": [
-		{"name": "test2inside1", "size": 1}
+		{"name": "test2inside1", "size": 5}
 	]
 	},
 		{
@@ -22,7 +22,7 @@ simple_four_json = {
 			{
 	"name": "test4",
 	"children": [
-		{"name": "test4inside1", "size": 1}
+		{"name": "test4inside1", "size": 5}
 	]
 	}
 ]

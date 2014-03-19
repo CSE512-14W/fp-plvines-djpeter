@@ -64,8 +64,8 @@ var refresh = function(polygon_list, sites) {
 	var center_circles = svg_container.append("g").selectAll(".center.circle").data(sites);
 	center_circles.enter().append("circle")
 		.attr("class", "center circle")
-		.attr("cx", function(d) {return (d.x);})
-		.attr("cy", function(d) {return (d.y);})
+		.attr("cx", function(d) {return (d.p[0]);})
+		.attr("cy", function(d) {return (d.p[1]);})
 		.attr("r", function(d) {return 5;})
 		//.attr("r", function(d) {return (Math.sqrt(d.weight));})
 		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
@@ -75,8 +75,8 @@ var refresh = function(polygon_list, sites) {
 	var radius_circles = svg_container.append("g").selectAll(".radius.circle").data(sites);
 	radius_circles.enter().append("circle")
 		.attr("class", "radius circle")
-		.attr("cx", function(d) {return (d.x);})
-		.attr("cy", function(d) {return (d.y);})
+		.attr("cx", function(d) {return (d.p[0]);})
+		.attr("cy", function(d) {return (d.p[1]);})
 		//.attr("r", function(d) {return 5;})
 		.attr("r", function(d) {return (Math.sqrt(d.weight));})
 		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
@@ -88,33 +88,18 @@ var refresh = function(polygon_list, sites) {
 
 //var dataset = simple_two_json;
 //var dataset = simple_three_json;
-// var dataset = simple_four_json;
-var dataset = simple_eight_json;
+var dataset = simple_four_json;
+//var dataset = simple_eight_json;
 
-//var sites = VoronoiTreemap.initSites(svg_poly, dataset);
-// refresh([], sites);
-
-var sites = VoronoiTreemap.init(svg_poly, dataset);
-
-var test = function(){
-    
-    VoronoiTreemap.normalizeSites(sites);
-    
-    VoronoiTreemap.sites = sites;
-    VoronoiTreemap.setClipPolygon(svg_poly);
-    VoronoiTreemap.useNegativeWeights = true;
-    VoronoiTreemap.cancelOnAreaErrorThreshold =  true;
-
-    var polygons = VoronoiTreemap.doIterate(10);
-
-    refresh(polygons, sites);
-
-}
+var sites = VoronoiTreemap.initSites(svg_poly, dataset);
+refresh([], sites);
 
 var iterate = function() {
-    polygons = VoronoiTreemap.iterate();
-    
-    refresh(polygons, sites);
+
+	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapSingleWithSites(svg_poly, dataset, sites, 1);
+	var polygon_list = polygons_and_sites[0];
+	sites = polygons_and_sites[1];
+	refresh(polygon_list, sites);
 }
 
 var recursive = function() {
@@ -123,14 +108,6 @@ var recursive = function() {
 	console.log("recursive result:");
 	console.log(polygons_and_sites);
 }
-
-d3.select("body").append("input")
-	.attr("type", "button")
-	//.attr("name", "iterate_button")
-	.attr("id", "test_button")
-	.attr("value", "Test!");
-	
-d3.select("#test_button").on("click", function() {test();});
 
 d3.select("body").append("input")
 	.attr("type", "button")
