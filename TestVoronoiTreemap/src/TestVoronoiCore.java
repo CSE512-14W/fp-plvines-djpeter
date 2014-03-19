@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 import kn.uni.voronoitreemap.core.VoronoiCore;
@@ -80,9 +83,27 @@ public class TestVoronoiCore {
 		long start=System.currentTimeMillis();
 
 
-		core.setUseNegativeWeights(true);
+		//core.setUseNegativeWeights(true);
+		core.setUseNegativeWeights(false);
+		
 		core.setCancelOnAreaErrorThreshold(true);
-		core.doIterate(5000);
+		
+		// can iterate one at a time:
+		int iterations = 5000;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		for (int i = 0; i < iterations; i++) {
+			core.doIterate(1);
+			System.out.println("Paused after iteration: " + i);
+			try {
+				String input = br.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// or all at once:
+		//core.doIterate(iterations);
 
 
 		long end=System.currentTimeMillis();
