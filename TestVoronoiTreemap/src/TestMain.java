@@ -56,7 +56,7 @@ public class TestMain {
 		//treeList.add(new ArrayList<Integer> (Arrays.asList(2,4,5)));
 		//treeList.add(new ArrayList<Integer> (Arrays.asList(3,6,7,8)));
 		
-		treeList.add(new ArrayList<Integer> (Arrays.asList(1,2,3,4)));
+		treeList.add(new ArrayList<Integer> (Arrays.asList(1,2,3,4,5)));
 		
 		voronoiTreemap.setTree(treeList);
 		
@@ -69,6 +69,8 @@ public class TestMain {
 		areaGoals.add(new Tuple2ID(2,10));
 		areaGoals.add(new Tuple2ID(3,1));
 		areaGoals.add(new Tuple2ID(4,1));
+		// to match simple_four
+		areaGoals.add(new Tuple2ID(5,1));
 		
 		// only need children...
 		// so I don't know why it works now...there was some issue with weights not converging...hmmm

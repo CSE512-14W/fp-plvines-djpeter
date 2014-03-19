@@ -3,6 +3,7 @@
 	<name>TestVoronoiTreemap</name>
 	<comment></comment>
 	<projects>
+		<project>Voronoi-Treemap-Library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
