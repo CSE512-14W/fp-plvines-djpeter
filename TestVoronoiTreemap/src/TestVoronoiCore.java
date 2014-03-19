@@ -22,6 +22,7 @@ public class TestVoronoiCore {
 		rootPolygon.add(width, height);
 		rootPolygon.add(0, height);
 		
+		/*
 		int amount=200;
 		for (int i=0;i<amount;i++){
 			Site site = new Site(rand.nextInt(width), rand.nextInt(width));
@@ -29,6 +30,41 @@ public class TestVoronoiCore {
 			sites.add(site);
 		}
 		sites.get(0).setPercentage(3);
+		*/
+		
+		// this throws exceptions:
+//		java.lang.RuntimeException: Weight of a Site may not be NaN.
+//		at kn.uni.voronoitreemap.diagram.PowerDiagram.computeDiagram(PowerDiagram.java:128)
+		
+/*		Site site = null;
+		site = new Site(125, 125);
+		site.setPercentage(70);
+		sites.add(site);
+		site = new Site(125, 375);
+		site.setPercentage(10);
+		sites.add(site);
+		site = new Site(375, 375);
+		site.setPercentage(10);
+		sites.add(site);
+		site = new Site(375, 125);
+		site.setPercentage(10);
+		sites.add(site);*/
+		
+		Site site = null;
+		site = new Site(125, 125);
+		site.setPercentage(70);
+		sites.add(site);
+		site = new Site(125, 376);
+		site.setPercentage(10);
+		sites.add(site);
+		site = new Site(375, 377);
+		site.setPercentage(10);
+		sites.add(site);
+		site = new Site(375, 128);
+		site.setPercentage(10);
+		sites.add(site);
+
+		
 
 
 		core.setDebugMode();
