@@ -1,0 +1,115 @@
+\documentclass{acm_proc_article-sp}
+
+\begin{document}
+
+\title{Voronoi Treemaps in D3
+Format\titlenote{(Does NOT produce the permission block, copyright information nor page numbering). For use with ACM\_PROC\_ARTICLE-SP.CLS. Supported by ACM.}}
+\LaTeX$2_\epsilon$\ and BibTeX} at
+\numberofauthors{2}
+\author{
+
+\alignauthor
+Peter Henry
+       \affaddr{University of Washington}\\
+       \email{phenry@gmail.com}
+\alignauthor
+Paul Vines
+       \affaddr{University of Washington}\\
+       \email{paul.l.vines@gmail.com}
+}
+\additionalauthors{Additional authors: John Smith (The Th{\o}rv{\"a}ld Group,
+email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+\date{30 July 1999}
+
+\maketitle
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+Treemaps are a category of visualizations used for displaying
+hierarchical data. While node-and-edge diagrams are often used for
+visualizing hierachical structures, treemaps offer some significant
+advantages. Primarily, treemaps are space-filling, and therefore allow
+each node in a hierarchy to have more viewing area devoted to it than
+in a node-and-edge diagram. This allows both larger hierarchies to be
+visualized, as well as more detail to be shown on each node, such as
+additional text, colors, or glyphs to show attributes of the
+node. 
+
+The majority of treemap layouts used are variants of rectangular
+treemaps. These Have the advantage of being relatively fast to layout
+and in cases of limited scale produce reasonably understandable
+treemaps. However, there are three drawbacks to rectangular
+treemaps. 
+
+First, as hierarchies become deeper, the treemap cells can
+become increasingly extreme in aspect ratio, resulting in narrow
+rectangles more difficult to see than if their area was distributed in
+a more square-like space. This problem is mostly mitigated by various
+tweaks to the treemapping algorithm to try to keep the aspect ratio of
+regions close to one. 
+
+Second, the borders between different regions in the hiearchy can
+become difficult to see. In particular, two cells
+neighboring one another in the treemap but not siblings in the
+hierarchy can appear to share a common edge delineating the same inner
+node is their parent, when this is in fact not the case. 
+Finally, rectangular treemap algorithms naturally only fill
+rectangular regions which could be undesirable for aesthetic or
+practical reasons.
+
+Voronoi Treemaps eliminate these problems. Firstly, Voronoi Treemap
+cells are arbitrary polygons but as will be discussed later, the
+generation algorithm results in generally low aspect ratio
+cells. Secondly, the fact that Voronoi Treemap cells are arbitrary
+polygons means edges between cells will fall at any angle, rather
+than only vertical or horizontal, and so two neighboring cells will
+generally never have a continuous-looking edge unless they are in fact
+siblings in the hierarchy and thus share the edge of their parent
+node's cell. Finally, Voronoi Treemaps can be produced for any
+arbitrary polygonal region, and so do not restrict the shape to be
+filled by the treemap.
+
+Multiple Voronoi Treemap algorithms have been created in recent years
+(CITE). However, none are available for use in a web framework.  Our
+work has been to implement one of the fastest algorithms (CITE) for
+use in the D3 web framework. Despite the optimizations employed by the
+algorithm creators, generation of a Voronoi Treemap is still a
+computationally intensive task. Therefore, we have additionally
+written the D3 module with features to try to allow Voronoi Treemaps
+to be used for web visualizations without causing a poor user
+experience even on complex datasets.
+
+The remainder of the paper is structured as follows: Section 2 has a
+discussion of related work including a brief introduction to Weighted Voronoi
+Diagrams and a discussion of the algorithms created for Voronoi
+Treemaps. Section 3 describes the implementation of our work in D3 and
+optimizations added for client-side web usability. Section 4 shows the
+use of our framework on several datasets and an evaluation of the
+computational burden of our system. Section 5 discusses the potential
+applications of our system. Section 6 concludes with proposals of
+future work to be done in this space.
+
+\section{Related Work}
+
+
+\section{Methods}
+
+
+\section{Results}
+
+
+\section{Discussion}
+
+
+\section{Future Work}
+
+
+\section{Acknowledgments}
+
+
+\section{References}
+
+\end{document}
