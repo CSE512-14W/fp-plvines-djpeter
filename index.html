@@ -10,6 +10,7 @@
 <script language="javascript" type="text/javascript" src="ConvexHull.js"></script>
 <script language="javascript" type="text/javascript" src="PowerDiagram.js"></script>
 <script language="javascript" type="text/javascript" src="VoronoiTreemap.js"></script>
+<script language="javascript" type="text/javascript" src="VoronoiTreemapD3.js"></script>
 
 <!-- test input local filesystem -->
 <script language="javascript" type="text/javascript" src="flare.js"></script>
@@ -86,10 +87,10 @@ var refresh = function(polygon_list, sites) {
 }
 
 
-//var dataset = simple_two_json;
+var dataset = simple_two_json;
 //var dataset = simple_three_json;
-// var dataset = simple_four_json;
-var dataset = simple_eight_json;
+//var dataset = simple_four_json;
+//var dataset = simple_eight_json;
 
 //var sites = VoronoiTreemap.initSites(svg_poly, dataset);
 // refresh([], sites);
@@ -105,17 +106,33 @@ var test = function(){
     VoronoiTreemap.useNegativeWeights = true;
     VoronoiTreemap.cancelOnAreaErrorThreshold =  true;
 
-    var polygons = VoronoiTreemap.doIterate(10);
+    var polygons = VoronoiTreemap.doIterate(100);
 
-    refresh(polygons, sites);
-
+    refresh(polygons, sites)
 }
 
+d3.select("body").append("input")
+	.attr("type", "button")
+	//.attr("name", "iterate_button")
+	.attr("id", "test_button")
+	.attr("value", "Test!");
+	
+d3.select("#test_button").on("click", function() {test();});
+
+/*
 var iterate = function() {
     polygons = VoronoiTreemap.iterate();
     
     refresh(polygons, sites);
 }
+
+d3.select("body").append("input")
+	.attr("type", "button")
+	//.attr("name", "iterate_button")
+	.attr("id", "iterate_button")
+	.attr("value", "Iterate!");
+	
+d3.select("#iterate_button").on("click", function() {iterate();});
 
 var recursive = function() {
 	var polygons_and_sites = VoronoiTreemap.computeVoronoiTreemapRecursive(svg_poly, dataset, 2);
@@ -127,27 +144,42 @@ var recursive = function() {
 d3.select("body").append("input")
 	.attr("type", "button")
 	//.attr("name", "iterate_button")
-	.attr("id", "test_button")
-	.attr("value", "Test!");
-	
-d3.select("#test_button").on("click", function() {test();});
-
-d3.select("body").append("input")
-	.attr("type", "button")
-	//.attr("name", "iterate_button")
-	.attr("id", "iterate_button")
-	.attr("value", "Iterate!");
-	
-d3.select("#iterate_button").on("click", function() {iterate();});
-
-
-d3.select("body").append("input")
-	.attr("type", "button")
-	//.attr("name", "iterate_button")
 	.attr("id", "recursive_button")
 	.attr("value", "Recursive Test");
 	
 d3.select("#recursive_button").on("click", function() {recursive();});
+*/
+
+
+<!-- D3 testing -->
+	// paraphrasing treemap example http://bl.ocks.org/mbostock/4063582
+	// also looking at http://bl.ocks.org/mbostock/4063423 for svg example
+	var margin = {top: 40, right: 10, bottom: 10, left: 10},
+		width = 960 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
+	
+	var vt = d3.layout.voronoitreemap()
+		.size([width,height])
+		.value(function(d) {return d.size; });
+	
+	var svg = d3.select("body").append("svg")
+		.attr("width", width)
+		.attr("height", height);
+	
+
+	// this was all in 
+	// d3.json("flare.json", function(error, root) {
+	var line = d3.svg.line(); // defaults fine?
+	
+	// such shit
+	/*
+	var path = svg.datum(dataset).selectAll("path")
+		.data(vt.nodes)
+		.enter(append("path")
+			.attr("d", function(d) {return line(d) + "Z"; }));
+			*/
+	
+	
 
 </script>
 

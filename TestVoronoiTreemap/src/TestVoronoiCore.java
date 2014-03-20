@@ -55,16 +55,16 @@ public class TestVoronoiCore {
 		
 		Site site = null;
 		site = new Site(125, 125);
-		site.setPercentage(70);
+		site.setPercentage(10);
 		sites.add(site);
 		site = new Site(125, 376);
-		site.setPercentage(10);
+		site.setPercentage(1);
 		sites.add(site);
 		site = new Site(375, 377);
-		site.setPercentage(10);
+		site.setPercentage(5);
 		sites.add(site);
 		site = new Site(375, 128);
-		site.setPercentage(10);
+		site.setPercentage(1);
 		sites.add(site);
 
 		
@@ -88,23 +88,28 @@ public class TestVoronoiCore {
 		
 		core.setCancelOnAreaErrorThreshold(true);
 		
-		// can iterate one at a time:
+		//core.setUseExtrapolation(true);
+		
 		int iterations = 5000;
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		for (int i = 0; i < iterations; i++) {
-			core.doIterate(1);
-			System.out.println("Paused after iteration: " + i);
-			try {
-				String input = br.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		
+		// can iterate one at a time:
+		if (false) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			for (int i = 0; i < iterations; i++) {
+				core.doIterate(1);
+				System.out.println("Paused after iteration: " + i);
+				try {
+					String input = br.readLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-		
-		// or all at once:
-		//core.doIterate(iterations);
-
+		else {
+			// or all at once:
+			core.doIterate(iterations);
+		}
 
 		long end=System.currentTimeMillis();
 		double diff=(end-start)/1000.0D;
