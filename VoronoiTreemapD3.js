@@ -28,8 +28,6 @@ function d3_layout_hierarchyLinks(nodes) {
 
 d3.layout.voronoitreemap = function() {
     var hierarchy = d3.layout.hierarchy().sort(null),
-    //round = Math.round,
-    //size = [1, 1], // width, height  // DON'T DO THIS,
     root_polygon = [[0,0],[500,0],[500,500],[0,500]], // obviously stupid...set somehow
     iterations = 100,
     somenewvariable = 0;
@@ -63,8 +61,8 @@ d3.layout.voronoitreemap = function() {
 		// goes all the way down
 		computeDiagramRecursively(children[i]);
 	    }
-	    
-	    //children.forEach(computeDiagramRecursively);
+		
+		debugger;
 	}
     }
     

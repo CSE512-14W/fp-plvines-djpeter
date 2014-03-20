@@ -83,7 +83,6 @@ var refresh = function(polygon_list, sites) {
 		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
 		.attr("stroke", "red")
 		.attr("fill", "none");
-		
 }
 
 
@@ -91,13 +90,15 @@ var refresh = function(polygon_list, sites) {
 //var dataset = simple_three_json;
 //var dataset = simple_four_json;
 //var dataset = simple_eight_json;
-var dataset = example_json;
+//var dataset = example_json;
+var dataset = flare_json;
 
 //var sites = VoronoiTreemap.initSites(svg_poly, dataset);
 // refresh([], sites);
 
 //var sites = VoronoiTreemap.init(svg_poly, dataset);
 
+/*
 var test = function(){
     
     VoronoiTreemap.normalizeSites(sites);
@@ -119,6 +120,7 @@ d3.select("body").append("input")
 	.attr("value", "Test!");
 	
 d3.select("#test_button").on("click", function() {test();});
+*/
 
 /*
 var iterate = function() {
@@ -157,17 +159,18 @@ var paint = function(nodes){
     for (var i = 0; i < nodes.length; i++){
         var node = nodes[i];
         if (node.polygon != null){
-            data.push(node.polygon);
-            console.log(node.polygon);
+            data.push(node);
+            //console.log(node);
         }
     }
-    var polylines = svg_container.append("g").selectAll("path").data(data, make_d3_poly);
+    var polylines = svg_container.append("g").selectAll("path").data(data);
             polylines.enter().append("path")
-	        .attr("d", make_d3_poly)
-	        .attr("stroke-width", "5px")
+	        .attr("d", function(d) {return make_d3_poly(d.polygon);})
+	        //.attr("stroke-width", "5px")
+			.attr("stroke-width", function(d) { return Math.max(10 - 5*d.depth, 2) + "px";})
 	        .attr("stroke", "black")
-	        .attr("fill", "cyan")
-        .attr("opacity", function(d) {return d.depth / 5;});
+	        //.attr("fill", "cyan")
+			.attr("fill", function(d) { return d3.hsl("cyan").brighter(d.depth / 1.5); })
             polylines.exit().remove();
 
 }
@@ -181,30 +184,16 @@ var paint = function(nodes){
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
 		*/
-	
-	var vt = d3.layout.voronoitreemap()
-		.root_polygon(svg_poly)
-		.value(function(d) {return d.size; });
-	
-	var svg = d3.select("body").append("svg")
-		.attr("width", width)
-		.attr("height", height);
-	
 
-	// this was all in 
-	// d3.json("flare.json", function(error, root) {
-	var line = d3.svg.line(); // defaults fine?
-	
-	// such shit
-	/*
-	var path = svg.datum(dataset).selectAll("path")
-		.data(vt.nodes)
-		.enter(append("path")
-			.attr("d", function(d) {return line(d) + "Z"; }));
-			*/
-			
-	// wrong probably
-        var newnodes = vt(dataset);
+var vt = d3.layout.voronoitreemap()
+	.root_polygon(svg_poly)
+	.value(function(d) {return d.size; });
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width)
+	.attr("height", height);
+
+var newnodes = vt(dataset);
 paint(newnodes);
 
 
