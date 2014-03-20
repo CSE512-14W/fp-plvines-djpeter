@@ -1,4 +1,5 @@
 \documentclass{acm_proc_article-sp}
+\usepackage{cite}
 
 \begin{document}
 
@@ -125,7 +126,7 @@ the Voronoi diagram have been developed and are briefly summarized
 below.
 
 \subsection{Previous Approaches}
-Voronoi treemaps have been implemented previously (Balzer) using both
+Voronoi treemaps have been implemented previously ~\cite{balzer:treemaps} using both
 additively weighted and geometrically weighted Voronoi diagram
 algorithms. This implementation used the same iterative algorithm for
 creating centroidal Voronoi diagrams described above. To create the
@@ -182,4 +183,7 @@ area of each cell to within an error threshold.
 
 \section{References}
 
+
+\bibliography{writeup}{}
+\bibliographystyle{plain}
 \end{document}

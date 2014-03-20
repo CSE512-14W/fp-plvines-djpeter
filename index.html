@@ -18,6 +18,7 @@
 <script language="javascript" type="text/javascript" src="simple_three.js"></script>
 <script language="javascript" type="text/javascript" src="simple_four.js"></script>
 <script language="javascript" type="text/javascript" src="simple_eight.js"></script>
+<script language="javascript" type="text/javascript" src="example.js"></script>
 
 
 </head>
@@ -38,20 +39,19 @@ var height = 510;
 var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
 // here's the whole svg as a poly
-var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+//var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
 
 // here's a octogon inside 510x510
 var n1 = 10;
 var n2 = 140;
 var n3 = 370;
 var n4 = 500;
-var octogon_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
+var svg_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
 
 
 function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
 }
-
 var refresh = function(polygon_list, sites) {
 	var polylines = svg_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 	polylines.enter().append("path")
@@ -87,15 +87,16 @@ var refresh = function(polygon_list, sites) {
 }
 
 
-var dataset = simple_two_json;
+//var dataset = simple_two_json;
 //var dataset = simple_three_json;
 //var dataset = simple_four_json;
 //var dataset = simple_eight_json;
+var dataset = example_json;
 
 //var sites = VoronoiTreemap.initSites(svg_poly, dataset);
 // refresh([], sites);
 
-var sites = VoronoiTreemap.init(svg_poly, dataset);
+//var sites = VoronoiTreemap.init(svg_poly, dataset);
 
 var test = function(){
     
@@ -151,6 +152,27 @@ d3.select("#recursive_button").on("click", function() {recursive();});
 */
 
 
+var paint = function(nodes){
+    var data = [];
+    for (var i = 0; i < nodes.length; i++){
+        var node = nodes[i];
+        if (node.polygon != null){
+            data.push(node.polygon);
+            console.log(node.polygon);
+        }
+    }
+    var polylines = svg_container.append("g").selectAll("path").data(data, make_d3_poly);
+            polylines.enter().append("path")
+	        .attr("d", make_d3_poly)
+	        .attr("stroke-width", "5px")
+	        .attr("stroke", "black")
+	        .attr("fill", "cyan")
+        .attr("opacity", function(d) {return d.depth / 5;});
+            polylines.exit().remove();
+
+}
+
+
 <!-- D3 testing -->
 	// paraphrasing treemap example http://bl.ocks.org/mbostock/4063582
 	// also looking at http://bl.ocks.org/mbostock/4063423 for svg example
@@ -182,9 +204,9 @@ d3.select("#recursive_button").on("click", function() {recursive();});
 			*/
 			
 	// wrong probably
-	vt(dataset);
-	
-	
+        var newnodes = vt(dataset);
+paint(newnodes);
+
 
 </script>
 
