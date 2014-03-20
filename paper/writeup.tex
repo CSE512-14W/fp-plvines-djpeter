@@ -56,32 +56,32 @@ Finally, rectangular treemap algorithms naturally only fill
 rectangular regions which could be undesirable for aesthetic or
 practical reasons.
 
-Voronoi Treemaps eliminate these problems. Firstly, Voronoi Treemap
+Voronoi treemaps eliminate these problems. Firstly, Voronoi treemap
 cells are arbitrary polygons but as will be discussed later, the
 generation algorithm results in generally low aspect ratio
-cells. Secondly, the fact that Voronoi Treemap cells are arbitrary
+cells. Secondly, the fact that Voronoi treemap cells are arbitrary
 polygons means edges between cells will fall at any angle, rather
 than only vertical or horizontal, and so two neighboring cells will
 generally never have a continuous-looking edge unless they are in fact
 siblings in the hierarchy and thus share the edge of their parent
-node's cell. Finally, Voronoi Treemaps can be produced for any
+node's cell. Finally, Voronoi treemaps can be produced for any
 arbitrary polygonal region, and so do not restrict the shape to be
 filled by the treemap.
 
-Multiple Voronoi Treemap algorithms have been created in recent years
+Multiple Voronoi treemap algorithms have been created in recent years
 (CITE). However, none are available for use in a web framework.  Our
 work has been to implement one of the fastest algorithms (CITE) for
 use in the D3 web framework. Despite the optimizations employed by the
-algorithm creators, generation of a Voronoi Treemap is still a
+algorithm creators, generation of a Voronoi treemap is still a
 computationally intensive task. Therefore, we have additionally
-written the D3 module with features to try to allow Voronoi Treemaps
+written the D3 module with features to try to allow Voronoi treemaps
 to be used for web visualizations without causing a poor user
 experience even on complex datasets.
 
 The remainder of the paper is structured as follows: Section 2 has a
 discussion of related work including a brief introduction to Weighted Voronoi
-Diagrams and a discussion of the algorithms created for Voronoi
-Treemaps. Section 3 describes the implementation of our work in D3 and
+diagrams and a discussion of the algorithms created for Voronoi
+treemaps. Section 3 describes the implementation of our work in D3 and
 optimizations added for client-side web usability. Section 4 shows the
 use of our framework on several datasets and an evaluation of the
 computational burden of our system. Section 5 discusses the potential
@@ -90,8 +90,82 @@ future work to be done in this space.
 
 \section{Related Work}
 
+\subsection{Voronoi Diagrams}
+Voronoi diagrams are a technique for dividing a region containing
+sites into cells to satisfy the following condition: given a distance
+function $d(p, q)$ where $p$ and $q$ are points, any point $p$ is
+labeled as belonging to the site $q$ that results in the lowest
+distance, $d(p,q)$. In this case to be labeled means to be inside a
+bounding polygon formed for each site. In the case of a simple
+euclidean distance function, $d(p,q) = \sqrt({dx}^2 + {dy}^2)$ this
+results in a cell border being equidistant between the two closest
+sites. 
+
+For Voronoi treemaps two extensions are made to the basic Voronoi
+diagram. First, sites are given initially random positions, a diagram
+is generated, and then sites are moved to the centroidal positions in
+their cell and then the diagram is re-generated. This is repeated
+until a relatively stable set of positions is found (Lloyd). The effect of
+this iterative process is to create lower aspect ratio cells. Second,
+rather than using a standard euclidean distance function the
+generation algorithm uses a weighted distance function, where each
+site is assigned a weight that corresponds to generating a larger or
+smaller cell. This allows the sizes of cells to be adjusted to reflect
+the relative size or number of children of a specific node in the
+hierarchy being displayed. 
+
+After these extensions are made, the Voronoi treemap algorithm
+proceeds to compute the Voronoi diagram for each level of the
+hierarchy: it starts at the highest level, generates the Voronoi
+diagram of the first level of nodes, and then recursively descends
+into each cell and generates the Voronoi diagram for the children of
+that node using the cell as the new bounding region. The computational
+burden of this can be high; several different algorithms for computing
+the Voronoi diagram have been developed and are briefly summarized
+below.
+
+\subsection{Previous Approaches}
+Voronoi treemaps have been implemented previously (Balzer) using both
+additively weighted and geometrically weighted Voronoi diagram
+algorithms. This implementation used the same iterative algorithm for
+creating centroidal Voronoi diagrams described above. To create the
+weighted diagrams, however, it used a sampling algorithm wherein
+points were sampled in the space and distances to nearest sites
+calculated, to give an approximation of the correct weighted Voronoi
+diagram. This results in an algorithm on the order of $O(n^2)$ where
+$n$ is the number of sites. The benefit of this algorithm is that it
+the sampling process is the bottleneck and is easily parallelized to
+achieve linear speedups with additional CPU cores.
+
+This algorithm implementation was improved by Sud et al. (CITE SUD) by
+using GPU programming to significantly speedup computation by
+parallelizing across graphics hardware. However, the algorithm
+remained $O(n^2)$ for the number of sites. Further, this approach is
+not feasible for web programming because consumer devices are not
+commonly equipped with powerful graphics cards and do not all support
+the use of the graphics card by a website (CITE).
+
+The algorithm proposed by Nocaj \& Brandes (CITE NOCAJ) offers a
+significant asymptotic improvement on these previous designs. Rather
+than a sampling-based approach, this implementation uses the algorithm
+for computing arbitrary-dimension Power Diagrams proposed by
+Aurenhammer (CITE AURENHAMMER). In this approach the 2D points
+representing sites are lifted into 3-dimensional dual space based on
+their weights. The convex hull made by these 3D points is then
+computed, and projected back down to 2D to produce the Voronoi
+diagram. This method is on the order of $O(n \log n)$ and so can
+provide a significant speedup for generating treemaps of larger
+datasets. 
 
 \section{Methods}
+The core computational components of our implementation were adapted
+from a Java implementation of the Nocaj \& Brandes algorithm (CITE
+NOCAJ) using a lift into 3-dimensions followed by computation of
+the convex hull and projection back into 2-dimensions to create the
+Voronoi diagram. As with other implementations, we use Lloyd's
+algorithm to iteratively adjust the site locations to be the centroids
+of their cells and then adjust the weights of the sites to fit the
+area of each cell to within an error threshold.
 
 
 \section{Results}
