@@ -154,12 +154,14 @@ d3.select("#recursive_button").on("click", function() {recursive();});
 <!-- D3 testing -->
 	// paraphrasing treemap example http://bl.ocks.org/mbostock/4063582
 	// also looking at http://bl.ocks.org/mbostock/4063423 for svg example
+	/*
 	var margin = {top: 40, right: 10, bottom: 10, left: 10},
 		width = 960 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
+		*/
 	
 	var vt = d3.layout.voronoitreemap()
-		.size([width,height])
+		.root_polygon(svg_poly)
 		.value(function(d) {return d.size; });
 	
 	var svg = d3.select("body").append("svg")
@@ -178,6 +180,9 @@ d3.select("#recursive_button").on("click", function() {recursive();});
 		.enter(append("path")
 			.attr("d", function(d) {return line(d) + "Z"; }));
 			*/
+			
+	// wrong probably
+	vt(dataset);
 	
 	
 
