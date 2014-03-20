@@ -61,8 +61,6 @@ d3.layout.voronoitreemap = function() {
 		// goes all the way down
 		computeDiagramRecursively(children[i]);
 	    }
-		
-		debugger;
 	}
     }
     

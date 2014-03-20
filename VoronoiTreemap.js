@@ -32,14 +32,13 @@ var VoronoiTreemap = {
 
     init:function(bounding_polygon, node) {
         this.clear();
-        this.setSizeForAllNodes(node); // quick if done already
         var sites = [];
         var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
         // var random_points = this.getRandomPointsInPolygon(bounding_polygon, 20);
         for (var c = 0; c < node.children.length; c++) {
         // for (var c = 0; c < 20; c++) {
 	    // calculate percentage weights
-            var size = (node.children[c].size * 1.0 / node.size)
+            var size = (node.children[c].value * 1.0 / node.value)
            // var size = 1;
             sites.push(new Vertex(random_points[c][0],random_points[c][1], null, epsilon, null, false, size));
         }
@@ -102,17 +101,6 @@ var VoronoiTreemap = {
 	return result;
     },
     
-    setSizeForAllNodes:function(node) {
-	// assume we're good if we have a size
-	if (!node.hasOwnProperty("size")) {
-	    var total = 0;
-	    for (var c = 0; c < node.children.length; c++) {
-		total += this.setSizeForAllNodes(node.children[c]);
-	    }
-	    node.size = total;
-	}
-	return node.size;
-    },
 
     clear: function(){
         this.debugMode = false;
