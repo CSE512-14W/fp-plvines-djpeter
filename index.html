@@ -19,6 +19,7 @@
 <script language="javascript" type="text/javascript" src="simple_four.js"></script>
 <script language="javascript" type="text/javascript" src="simple_eight.js"></script>
 <script language="javascript" type="text/javascript" src="example.js"></script>
+<script language="javascript" type="text/javascript" src="simple_two_mod.js"></script>
 
 
 </head>
@@ -32,6 +33,16 @@
 -->
 
 <script language="javascript">
+
+
+//var dataset = simple_two_json;
+//var dataset = simple_three_json;
+//var dataset = simple_four_json;
+//var dataset = simple_eight_json;
+var dataset = example_json;
+//var dataset = flare_json;
+//var dataset = simple_two_mod_json; // use "number" instead of "size"
+
 
 // here we set up the svg
 var width = 510;
@@ -85,13 +96,6 @@ var refresh = function(polygon_list, sites) {
 		.attr("fill", "none");
 }
 
-
-//var dataset = simple_two_json;
-//var dataset = simple_three_json;
-//var dataset = simple_four_json;
-//var dataset = simple_eight_json;
-//var dataset = example_json;
-var dataset = flare_json;
 
 //var sites = VoronoiTreemap.initSites(svg_poly, dataset);
 // refresh([], sites);
@@ -188,6 +192,7 @@ var paint = function(nodes){
 var vt = d3.layout.voronoitreemap()
 	.root_polygon(svg_poly)
 	.value(function(d) {return d.size; });
+	//.value(function(d) {return d.number; }); // for simple_two_mod
 
 var svg = d3.select("body").append("svg")
 	.attr("width", width)
