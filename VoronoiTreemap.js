@@ -35,15 +35,12 @@ var VoronoiTreemap = {
         this.clear();
         var sites = [];
         var random_points = this.getRandomPointsInPolygon(bounding_polygon, node.children.length);
-        // var random_points = this.getRandomPointsInPolygon(bounding_polygon, 20);
         for (var c = 0; c < node.children.length; c++) {
-        // for (var c = 0; c < 20; c++) {
 	    // calculate percentage weights
             var size = (node.children[c].value * 1.0 / node.value)
-           // var size = 1;
             sites.push(new Vertex(random_points[c][0],random_points[c][1], null, epsilon, null, false, size));
         }
-        //        sites[0].percentage = 3;
+
 
         return sites;
     },
@@ -80,8 +77,8 @@ var VoronoiTreemap = {
 	var rect = this.getPolygonBoundingRect(polygon);
 	var result = []
 	for (var i = 0; i < n_points; i++) {
-            //	    var p = [rect.x + Math.random() * rect.w, rect.y + Math.random() * rect.h];
-	    var p = [rect.x + this.random() * rect.w, rect.y + this.random() * rect.h];
+            var p = [rect.x + Math.random() * rect.w, rect.y + Math.random() * rect.h];
+            //	    var p = [rect.x + this.random() * rect.w, rect.y + this.random() * rect.h];
 	    // see if p in polygon itself
 	    //console.log(p)
 	    if (this.doesPolygonContain(polygon, p)) {
@@ -391,7 +388,7 @@ var VoronoiTreemap = {
                 }
             }
 
-//            console.log("new weight: " + finalWeight + " : " + point);
+            console.log("new weight: " + finalWeight + " : " + point);
 
             point.setWeight(finalWeight);
         }

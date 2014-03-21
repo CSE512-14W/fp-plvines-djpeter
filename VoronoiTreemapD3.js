@@ -32,20 +32,30 @@ d3.layout.voronoitreemap = function() {
     iterations = 100,
     somenewvariable = 0;
     
-    function voronoitreemap(d) {
+    function voronoitreemap(d, depth) {
 	var nodes = hierarchy(d),
 	root = nodes[0];
 
 	root.polygon = root_polygon;
 	root.site = null; // hmm?
-	computeDiagramRecursively(root);
-	
+
+        if (depth != null){
+	    max_depth = depth;
+        }
+        else{
+            max_depth = "Infinity";
+        }
+
+	computeDiagramRecursively(root, 0);
+
 	return nodes;
     }
 
-    function computeDiagramRecursively(node) {
+    function computeDiagramRecursively(node, level) {
 	var children = node.children;
-	if (children && children.length) {
+
+
+	if (children && children.length && level < max_depth) {
 	    node.sites = VoronoiTreemap.init(node.polygon, node);  // can't say dataset, how about node?
 	    VoronoiTreemap.normalizeSites(node.sites);
 	    VoronoiTreemap.sites = node.sites;
@@ -59,7 +69,10 @@ d3.layout.voronoitreemap = function() {
 		children[i].polygon = polygons[i];
 		children[i].site = VoronoiTreemap.sites[i];
 		// goes all the way down
-		computeDiagramRecursively(children[i]);
+
+  //               if (children[i].polygon.area() > 900){
+		computeDiagramRecursively(children[i], (level + 1));
+//                 }
 	    }
 
 	}

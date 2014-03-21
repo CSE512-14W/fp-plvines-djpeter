@@ -369,7 +369,7 @@ var ConvexHull = {
 
 //         for (var i = 0; i < this.points.length; i++){
 //             var p = this.points[i];            
-//            console.log(p.x + ", " + p.y + ", " + p.z)
+        //            console.log(p.x + ", " + p.y + ", " + p.z)
 //         }
 
     },
