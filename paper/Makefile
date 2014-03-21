@@ -1,9 +1,9 @@
 
 pdf: 
-	latex writeup
+	pdflatex writeup
 
 	bibtex writeup
 
-	latex writeup
+	pdflatex writeup
 
 	pdflatex writeup
