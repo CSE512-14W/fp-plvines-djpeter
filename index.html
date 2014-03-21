@@ -55,26 +55,51 @@ var dataset = flare_json;
 //var dataset = random_10_3_010_json;
 
 
+function make_regular_polygon(width, height, border, sides) {
+	var center = [width*0.5, height*0.5],
+		radius = Math.min( (width - 2*border) * 0.5, (height - 2*border) * 0.5 ),
+		angle_radians = 2*Math.PI / sides,
+		initial_angle = sides%2==0 ? -Math.PI/2 -angle_radians*0.5 : -Math.PI/2, // subtract angles
+		result = [],
+		somevariable = 0;
+		
+	// special case square?  It's super small otherwise
+	if (sides == 4) {
+		radius *= Math.sqrt(2);
+	}
+	
+	for (var i = 0; i < sides; i++) {
+		result.push([center[0] + radius * Math.cos(initial_angle - i * angle_radians), center[1] + radius * Math.sin(initial_angle - i * angle_radians)]);
+	}
+
+	return result;
+}
 
 // here we set up the svg
-var width = 510;
-var height = 510;
+var width = 800;
+var height = 600;
+var border = 5;
 var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
-// here's the whole svg as a poly
-var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+///////// bounding polygon
+// here's the whole svg as a poly...for whatever reason
+var width_less_border = width - 2*border;
+var height_less_border = height - 2*border;
+var entire_svg_polygon = [[border,border],
+	[border,height_less_border],
+	[width_less_border,height_less_border],
+	[width_less_border,border]];
 
-// here's a octogon inside 510x510
-var n1 = 10;
-var n2 = 140;
-var n3 = 370;
-var n4 = 500;
-//var svg_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
+var root_polygon = make_regular_polygon(width, height, border, 12);
+//var root_polygon = entire_svg_polygon
 
 
 function make_d3_poly(d) {
 	return "M" + d.join("L") + "Z";
 }
+
+
+////////// old refresh function (includes sites)
 var refresh = function(polygon_list, sites) {
 	var polylines = svg_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
 	polylines.enter().append("path")
@@ -109,11 +134,8 @@ var refresh = function(polygon_list, sites) {
 }
 
 
-//var sites = VoronoiTreemap.initSites(svg_poly, dataset);
-// refresh([], sites);
 
-//var sites = VoronoiTreemap.init(svg_poly, dataset);
-
+////////// Check the variables here
 /*
 var test = function(){
     
@@ -180,14 +202,14 @@ var paint = function(nodes){
         }
     }
     var polylines = svg_container.append("g").selectAll("path").data(data);
-            polylines.enter().append("path")
+	polylines.enter().append("path")
 	        .attr("d", function(d) {return make_d3_poly(d.polygon);})
 	        //.attr("stroke-width", "5px")
-			.attr("stroke-width", function(d) { return Math.max(10 - 5*d.depth, 2) + "px";})
+			.attr("stroke-width", function(d) { return Math.max(12 - 5*d.depth, 2) + "px";})
 	        .attr("stroke", "black")
 	        //.attr("fill", "cyan")
-			.attr("fill", function(d) { return d3.hsl("cyan").brighter(d.depth / 1.5); })
-            polylines.exit().remove();
+			.attr("fill", function(d) { return d3.hsl("cyan").brighter( (d.depth-1) / 1.1); });
+    polylines.exit().remove();
 
 }
 
@@ -202,7 +224,7 @@ var paint = function(nodes){
 		*/
 
 var vt = d3.layout.voronoitreemap()
-	.root_polygon(svg_poly)
+	.root_polygon(root_polygon)
 	.value(function(d) {return d.size; });
 	//.value(function(d) {return d.number; }); // for simple_two_mod
 
