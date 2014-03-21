@@ -286,6 +286,45 @@ load.
 \end{figure}
 
 
+\newlength{\comparelength}
+\setlength{\comparelength}{0.3\textwidth}
+\begin{figure*}
+        \centering
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-nostroke-none-cropped.PNG}
+                \caption{Uniform stroke width, no color}
+        \end{subfigure}
+        \qquad
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-nostroke-linear-cropped.PNG}
+                \caption{Uniform stroke width, linear color}
+        \end{subfigure}
+        \qquad
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-nostroke-name-cropped.PNG}
+                \caption{Uniform stroke width, color by name}
+        \end{subfigure}
+
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-stroke-none-cropped.PNG}
+                \caption{Variable stroke width, no color}
+        \end{subfigure}
+        \qquad
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-stroke-linear-cropped.PNG}
+                \caption{Variable stroke width, linear color}
+        \end{subfigure}
+        \qquad
+        \begin{subfigure}[b]{\comparelength}
+                \includegraphics[width=\textwidth]{source-images/compare-stroke-name-cropped.PNG}
+                \caption{Variable stroke width, color by name}
+        \end{subfigure}
+\caption{A comparison of the visual effect of indicating hierarchical structure with both stroke width and color.}
+\label{fig:comparestrokecolor}
+\end{figure*}
+
+
+
 \section{Discussion}
 \label{sec:discussion}
 Our system represents the first javascript implementation of Voronoi
