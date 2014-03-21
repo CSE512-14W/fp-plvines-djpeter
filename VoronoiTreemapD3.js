@@ -45,9 +45,12 @@ d3.layout.voronoitreemap = function() {
         else{
             max_depth = "Infinity";
         }
-
+        var date = new Date();
+        var startTime = 0 + date.getTime();
 	computeDiagramRecursively(root, 0);
-
+        var endTime = (new Date).getTime();
+        alert("TIME: " + (endTime - startTime));
+        
 	return nodes;
     }
 
