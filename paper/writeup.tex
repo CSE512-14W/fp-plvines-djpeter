@@ -15,9 +15,21 @@
 
 \maketitle
 \begin{abstract}
-Blah blah blah
+Voronoi treemaps are an alternative to traditional rectangular
+treemaps for visualizing hierarchical data. Like rectangular treemaps,
+Voronoi treemaps represent hierarchical data by dividing the canvas
+region into cells for each node at the top of the hierarchy, and then
+further dividing each of these cells for the children of those
+nodes. The organic shapes created by the Voronoi treemap can be easier
+to distinguish sibling nodes from nodes in other branches of the
+hierarchy. Voronoi treemaps can also be fit to non-rectangular
+canvases, and are often more aesthetically pleasing. In this paper we
+present our implementation of the current state-of-the-art of Voronoi
+treemap generation in javascript for use with the D3 web programming
+framework. We evaluate our contribution in terms of computational
+speed against previous native impementations of Voronoi treemap
+generation.
 \end{abstract}
-
 
 \section{Introduction}
 \label{sec:introduction}
@@ -168,9 +180,9 @@ This algorithm implementation was improved by Sud et
 al. ~\cite{sud:fast} by using GPU programming to significantly speedup
 computation by parallelizing across graphics hardware. However, the
 algorithm remained $O(n^2)$ for the number of sites. Further, this
-approach is not feasible for web programming because consumer devices
+approach is not yet feasible for web programming because consumer devices
 are not commonly equipped with powerful graphics cards and do not all
-support the use of the graphics card by a website ~\cite{needed}.
+support the use of the graphics card by a website.
 
 The algorithm proposed by Nocaj \& Brandes ~\cite{nocaj:faster} offers
 a significant asymptotic improvement on these previous designs. Rather
@@ -272,18 +284,30 @@ applications. Even given this, the performance on the first four
 datasets is within reasonable limits for users to wait for a page to
 load.
 
-\begin{figure}
-\centering \includegraphics[width=90mm]{source-images/random-10-3-025-rect.png}
-\caption{}
-\end{figure}
-\begin{figure}
-\centering \includegraphics[width=90mm]{source-images/random-10-3-000-circle.png}
-\caption{}
-\end{figure}
-\begin{figure}
-\centering \includegraphics[width=90mm]{source-images/flare-color-pentagon-100.png}
-\caption{}
-\end{figure}
+In addition to investigating the computational aspects of our Voronoi
+treemap algorithm we also investigated a variety of display aspects
+that could be utilized to emphasize the hierarchies in a Voronoi
+treemap (see Fig. \ref{fig:comparestrokecolor}. These include border
+thickness, depth-based color, and category-based color, the latter is
+also shown in Fig. \ref{fig:treemapflare} for a rectangular
+treemap. An analysis of these types of design choices for Voronoi
+treemaps has been completely lacking in previous
+publications. Unfortunately in this case we did not have the time to
+conduct a formal study of these types of design decisions and their
+impact on the understandability of Voronoi treemaps.
+
+%% \begin{figure}
+%% \centering \includegraphics[width=90mm]{source-images/random-10-3-025-rect.png}
+%% \caption{}
+%% \end{figure}
+%% \begin{figure}
+%% \centering \includegraphics[width=90mm]{source-images/random-10-3-000-circle.png}
+%% \caption{}
+%% \end{figure}
+%% \begin{figure}
+%% \centering \includegraphics[width=90mm]{source-images/flare-color-pentagon-100.png}
+%% \caption{}
+%% \end{figure}
 
 
 \newlength{\comparelength}
@@ -329,20 +353,60 @@ The hierarchical structure is clearest when both variable stroke width and color
 \section{Discussion}
 \label{sec:discussion}
 Our system represents the first javascript implementation of Voronoi
-treemaps and the first implementation meant for
-interactivity. Currently the computational burden means that utilizing
-Voronoi treemaps for very large hierarchies if not practical,
-particularly on the web.
+treemaps and the first implementation meant for interactivity.
+Currently the computational burden means that utilizing Voronoi
+treemaps for very large hierarchies is not practical, particularly on
+the web. Fortunately, many treemap applications can be easily
+restricted in depth without losing significant usefulness. Indeed,
+even with the relatively small datasets used for the valuation
+examples of our system the deeper nodes could become quite small;
+small enough that a user could well prefer the ability to
+interactively zoom in on a region to see deeper levels of hierarchy
+than stay at a constant high-level view. We believe these types of
+interactive capabilities allows Voronoi treemaps to remain useful even
+for larger datasets that cannot realistically be fully rendered in real-time
+for a user. 
+
+
 
 \section{Future Work}
 \label{sec:future}
+Our implementation covers the core of the Voronoi treemap with support
+in D3 that was already covered by a previous Java implementation plus
+the data-driven interface features of a D3 layout. However, additional
+features could be added, particularly to facilitate more interactivity
+to make up for the restrictions imposed by the computational
+complexity of Voronoi treemaps.
 
+One of these features would be ragged hierarchy trimming, where some
+branches of the hierarchy would be trimmed more aggressively than
+others in order to speed up computation by eliminating more complex
+deep branches but keep deeper levels that are relatively
+simple. Another feature would be an integrated node select/zoom
+feature to make it easier for a programmer to create a Voronoi treemap
+with node zooming and unzooming without re-performing Voronoi
+computations for nodes that had already been generated (such as when
+unzooming back out to higher levels of hierarchy). Both of these could
+help programmers make greater dynamic use of Voronoi treemaps, which
+is probably the most practical use case currently unless the total
+dataset is no more than a few hundred nodes.
+
+Finally, generation of the Voronoi treemap require generation of
+Voronoi diagrams for each inner-node in the hierarchy, which can be done
+completely independently for each inner-node. Therefore, it remains a
+parallelizable task that could potentially be performed on a user's
+GPU. As stated in earlier, WebGL and advanced graphics cards cannot
+realistically be assumed to be common on the average user's computer
+yet, but that may change in the near future. Therefore, extending this
+algorithm to run partially in WebGL could provide an
+orders-of-magnitude boost in speed and make much larger interactive
+Voronoi treemaps feasible as a website feature.
 
 \section{Acknowledgments}
 \label{sec:acknowledgements}
-
-
-
+We would like to acknowledge our use of the D3 web framework for use
+in helping create the images used for this paper and intend to
+contribute our project back to D3 for others to utilize.
 
 \bibliography{writeup}{} \bibliographystyle{plain}
 \end{document}
