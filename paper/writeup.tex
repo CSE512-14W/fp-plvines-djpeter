@@ -1,5 +1,6 @@
-\documentclass{acm_proc_article-sp} \usepackage{cite}
-
+\documentclass{acm_proc_article-sp} 
+\usepackage{cite}
+\usepackage{graphicx}
 \begin{document}
 
 \title{Voronoi Treemaps in D3}
@@ -159,8 +160,76 @@ Lloyd's algorithm to iteratively adjust the site locations to be the
 centroids of their cells and then adjust the weights of the sites to
 fit the area of each cell to within an error threshold.
 
-
 \section{Results}
+To evaluate our implementation we used a 251 node 4-level example
+hierarchical dataset used for the example implementation of the
+rectangular treemap in D3 and five other randomly generated
+hierarchical datasets of varying depth and breadth to test the limits
+of the dataset sizes our system could handle. We timed the time
+required to fully compute the Voronoi treemaps of these datasets,
+using a limit of 100 iterations which generally yielded error rates
+below 1\% between optimal cell areas and generated cell areas. We
+additionally ran these examples through a Java implementation of the
+same algorithm by Nocaj \& Brandes to compare speed differences
+between implementations. All tests were run on a Macbook Air 2012
+running an Inte Core i5 1.8 GHz processor with 4 GB of 1600 MHz DDR3
+RAM. The javascript was run in Google Chrome.
+
+\begin{table}
+\begin{tabular}{ | c | c | c | c | c | c |}
+\hline
+Dataset & Nodes & Breadth & Depth & JS Time & Java Time \\
+\hline
+Flare & 251 & 10 & 4 & 3.913 & 1.588 \\
+A & 178 & 7 & 5 & 3.112 & 1.160 \\
+B & 130 & 3 & 5 & 2.765 & 1.063 \\
+C & 73 & 5 & 3 & 1.277 & 0.946 \\
+D & 584 & 8 & 3 & 8.623 & 2.124 \\
+E & 110 & 10 & 2 & 1.733 & 1.067 \\
+\hline
+\end{tabular}
+\caption{This shows the data for how the javascript and java implementations
+  performed on a set of hiearchical datasets.}
+\label{fig:table}
+\end{table}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=90mm]{figures/chart.png}
+\caption{\label{fig:chart}
+  A chart showing the computation time required relative to the number
+  of nodes in the dataset.
+}
+\end{figure}
+
+As can be seen in \ref{fig:chart} the javascript implementation was
+consistantly slower, as was to be expected since javascript is
+typically a slower language and was being run within a
+browser. However, the difference is within well within an order of
+magnitude, and quite insignificant for the smaller datasets. 
+
+Of course, our javascript implementation is also meant to be used on
+websites, which are much more sensitive to latency than native
+applications. Even given this, the performance on the first four
+datasets is within reasonable limits for users to wait for a page to
+load. 
+
+\begin{figure}
+\centering
+\includegraphics[width=90mm]{source images/random-10-3-025-rect.png}
+\caption{}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=90mm]{source images/random-10-3-000-circle.png}
+\caption{}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=90mm]{source images/flare-color-pentagon-100.png}
+\caption{}
+\end{figure}
 
 
 \section{Discussion}
