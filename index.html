@@ -39,6 +39,19 @@
 
 <h2>Voronoi Treemap</h2>
 
+<!-- input to control paint style -->
+<div>
+
+<label><input type="checkbox" name="checkbox_stroke" id="checkbox_stroke" value="stroke" checked>Stroke Width</label>
+
+<select id="select_color">
+  <option value="linear">Color: Linear</option>
+  <option value="name">Color: Name</option>
+  <option value="none">Color: None</option>
+</select>
+
+</div>
+
 <!--
 <div id="div1">This is div1</div><br><br>
 -->
@@ -206,9 +219,6 @@ d3.select("body").append("input")
 d3.select("#recursive_button").on("click", function() {recursive();});
 */
 
-// flare treemap color
-
-
 var paint = function(nodes){
 	// background color
 	//var background_color = "lightgray";
@@ -220,25 +230,42 @@ var paint = function(nodes){
 		.attr("height", height)
 		.attr("fill", background_color);
 
+	// a bit awkward to use the UI element here
+	var stroke_by_depth = d3.select("#checkbox_stroke").property('checked');
+		
 	// strokes by depth
 	var stroke_min = 2,
-		stroke_max = 10,
+		stroke_max = stroke_by_depth ? 10 : stroke_min,
 		stroke_levels = 3,// could determine from max depth...
-		stroke_delta = (stroke_max - stroke_min) * 1.0 / stroke_levels; 
+		stroke_delta = (stroke_max - stroke_min) * 1.0 / stroke_levels;
+	
 
 	// constant color
 	//var color_func = "cyan";
-	// brighter by depth
+	// brighter by depth (don't use this, prefer linear color)
 	//var color_func = function(d) { return d3.hsl("cyan").brighter( (d.depth-1) / 1.1) };
 	// d3 treemap style (requires name)
-	//var color_d3 = d3.scale.category20c();
-	//var color_func = function(d) { return d.children ? color_d3(d.name) : "none"; };
+
 	// linear color scale?
 	// needs max depth
-	var nodes_all_depths = nodes.map(function(x) {return x.depth});
-	var nodes_max_depth = Math.max.apply(null, nodes_all_depths);
-	var color_d3_linear = d3.scale.linear().domain([0, nodes_max_depth]).range(["blue","lightblue"]);
-	var color_func = function(d) { return color_d3_linear(d.depth); };
+
+	
+	var select_color = d3.select("#select_color").node().value;
+	// or d3.select("#objectID").property("value")  // ?
+	if (select_color == "linear") {
+		var nodes_all_depths = nodes.map(function(x) {return x.depth});
+		var nodes_max_depth = Math.max.apply(null, nodes_all_depths);
+		var color_d3_linear = d3.scale.linear().domain([0, nodes_max_depth]).range(["blue","lightblue"]);
+		var color_func = function(d) { return color_d3_linear(d.depth); };
+	}
+	else if (select_color == "name") {
+		var color_d3 = d3.scale.category20c();
+		var color_func = function(d) { return d.children ? color_d3(d.name) : "none"; };
+	}
+	else {
+		var color_func = "lightblue"; // or whatever
+	}
+	
 
     var data = [];
     for (var i = 0; i < nodes.length; i++){
@@ -260,14 +287,14 @@ var paint = function(nodes){
 }
 
 
+// want to be able to change paint options for a fixed diagram:
+
+
+
 <!-- D3 testing -->
 	// paraphrasing treemap example http://bl.ocks.org/mbostock/4063582
 	// also looking at http://bl.ocks.org/mbostock/4063423 for svg example
-	/*
-	var margin = {top: 40, right: 10, bottom: 10, left: 10},
-		width = 960 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
-		*/
+
 
 var vt = d3.layout.voronoitreemap()
 	.root_polygon(root_polygon)
@@ -281,6 +308,8 @@ var svg = d3.select("body").append("svg")
 var newnodes = vt(dataset);
 paint(newnodes);
 
+d3.select("#checkbox_stroke").on("click", function() {paint(newnodes)});
+d3.select("#select_color").on("click", function() {paint(newnodes)});
 
 </script>
 
