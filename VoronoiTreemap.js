@@ -102,7 +102,7 @@ var VoronoiTreemap = {
 	// result[6] = [234.0266134799458,33.144795794505626];
 	// result[7] = [325.7570087816566,298.1421837885864];
 
-        console.log("Result: " + result);
+        //console.log("Result: " + result);
 	return result;
     },
     
@@ -436,8 +436,6 @@ var VoronoiTreemap = {
     doIterate: function(iterationAmount){
         
         var polygons = [];
-
-        console.log("doIterate: " + iterationAmount);
         
         if (this.sites.length == 1){
             polygons.push(this.clipPolygon);
@@ -451,7 +449,7 @@ var VoronoiTreemap = {
         var k = 0;
         for (var i = 0; i < iterationAmount; i++){
             polygons = this.iterate();
-            console.log(i + ": error: " + this.lastMaxError);
+            //console.log(i + ": error: " + this.lastMaxError);
             if (this.cancelOnAreaErrorThreshold && this.lastMaxError < this.errorAreaThreshold){
                 break;
             }
