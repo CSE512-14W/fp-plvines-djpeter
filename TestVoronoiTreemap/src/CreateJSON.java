@@ -39,8 +39,8 @@ public class CreateJSON {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		int breadth = 10;
-		int depth = 3;
+		int breadth = 4;
+		int depth = 4;
 		float chance_to_stop_early = (float) 0; // <= 0 means always continue down depth
 		
 		JSONObject root = new JSONObject();
@@ -51,12 +51,20 @@ public class CreateJSON {
 		
 		//String filename = "random_" + breadth + "_" + depth + "_" + ".json";
 		int percent_early = (int) (chance_to_stop_early * 100);
-		String filename = String.format("random_%d_%d_%03d.json", breadth, depth, percent_early);
+		String filename_base = String.format("random_%d_%d_%03d", breadth, depth, percent_early);
+		
+		int indent_factor = 2;
+		
+		String filename_json = filename_base + ".json";
 		Writer writer =  new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(filename), "utf-8"));
+				new FileOutputStream(filename_json), "utf-8"));
+		writer.write(root.toString(indent_factor));
+		writer.close();
 		
-		writer.write(root.toString());
-		
+		String filename_js = filename_base + ".js";
+		writer =  new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(filename_js), "utf-8"));
+		writer.write(filename_base + "_json = " + root.toString(indent_factor));
 		writer.close();
 	}
 

@@ -48,7 +48,7 @@ public class TestJSONJava {
 		//String file = "C:\\devlibs\\github\\fp-plvines-djpeter\\flare.json";
 		//String file = "C:\\devlibs\\github\\fp-plvines-djpeter\\example.json";
 		//String file = "C:\\devlibs\\github\\fp-plvines-djpeter\\simple_eight.json";
-		String file = "C:\\devlibs\\github\\fp-plvines-djpeter\\random_10_3.json";
+		String file = "C:\\devlibs\\github\\fp-plvines-djpeter\\random_4_4_000_edit.json";
 		
 		
 		//BufferedReader reader = new BufferedReader( new FileReader (file));
