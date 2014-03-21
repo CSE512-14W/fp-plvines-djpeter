@@ -99,7 +99,7 @@ var entire_svg_polygon = [[border,border],
 	[width_less_border,height_less_border],
 	[width_less_border,border]];
 
-var root_polygon = make_regular_polygon(width, height, border, 3);
+var root_polygon = make_regular_polygon(width, height, border, 100);
 //var root_polygon = entire_svg_polygon
 
 
@@ -205,12 +205,14 @@ d3.select("#recursive_button").on("click", function() {recursive();});
 
 var paint = function(nodes){
 	// background color
+	//var background_color = "lightgray";
+	var background_color = "none";
 	svg_container.append("g").append("rect")
 		.attr("x", 0)
 		.attr("y", 0)
 		.attr("width", width)
 		.attr("height", height)
-		.attr("fill", "lightgray")
+		.attr("fill", background_color);
 
 	// strokes by depth
 	var stroke_min = 2,
@@ -258,7 +260,7 @@ var paint = function(nodes){
 var vt = d3.layout.voronoitreemap()
 	.root_polygon(root_polygon)
 	.value(function(d) {return d.size; })
-	.iterations(10);
+	.iterations(100);
 
 var svg = d3.select("body").append("svg")
 	.attr("width", width)
