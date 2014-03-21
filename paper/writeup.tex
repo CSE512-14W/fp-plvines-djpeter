@@ -1,5 +1,4 @@
-\documentclass{acm_proc_article-sp} 
-\usepackage{cite}
+\documentclass{acm_proc_article-sp} \usepackage{cite}
 \usepackage{graphicx}
 \begin{document}
 
@@ -19,11 +18,12 @@ Blah blah blah
 
 \section{Introduction}
 Treemaps are a category of visualizations used for displaying
-hierarchical data. While node-and-edge diagrams are often used for
-visualizing hierachical structures, treemaps offer some significant
-advantages. Primarily, treemaps are space-filling, and therefore allow
-each node in a hierarchy to have more viewing area devoted to it than
-in a node-and-edge diagram. This allows both larger hierarchies to be
+hierarchical data (see Fig. \ref{tree:example} as an example). While
+node-and-edge diagrams are often used for visualizing hierachical
+structures, treemaps offer some significant advantages. Primarily,
+treemaps are space-filling, and therefore allow each node in a
+hierarchy to have more viewing area devoted to it than in a
+node-and-edge diagram. This allows both larger hierarchies to be
 visualized, as well as more detail to be shown on each node, such as
 additional text, colors, or glyphs to show attributes of the node.
 
@@ -46,6 +46,13 @@ share a common edge delineating the same inner node is their parent,
 when this is in fact not the case.  Finally, rectangular treemap
 algorithms naturally only fill rectangular regions which could be
 undesirable for aesthetic or practical reasons.
+
+\begin{figure}
+\centering \includegraphics[width=90mm]{figures/tree-example.png}
+\caption{Example of the same tree represented by a colored
+  node-and-edge diagram and as a Voronoi treemap.}
+\label{tree:example}
+\end{figure}
 
 Voronoi treemaps eliminate these problems. Firstly, Voronoi treemap
 cells are arbitrary polygons but as will be discussed later, the
@@ -177,63 +184,54 @@ RAM. The javascript was run in Google Chrome.
 
 \begin{table}
 \begin{tabular}{ | c | c | c | c | c | c |}
-\hline
-Dataset & Nodes & Breadth & Depth & JS Time & Java Time \\
-\hline
-Flare & 251 & 10 & 4 & 3.913 & 1.588 \\
-A & 178 & 7 & 5 & 3.112 & 1.160 \\
-B & 130 & 3 & 5 & 2.765 & 1.063 \\
-C & 73 & 5 & 3 & 1.277 & 0.946 \\
-D & 584 & 8 & 3 & 8.623 & 2.124 \\
-E & 110 & 10 & 2 & 1.733 & 1.067 \\
-\hline
+\hline Dataset & Nodes & Breadth & Depth & JS Time & Java Time
+\\ \hline Flare & 251 & 10 & 4 & 3.913 & 1.588 \\ A & 178 & 7 & 5 &
+3.112 & 1.160 \\ B & 130 & 3 & 5 & 2.765 & 1.063 \\ C & 73 & 5 & 3 &
+1.277 & 0.946 \\ D & 584 & 8 & 3 & 8.623 & 2.124 \\ E & 110 & 10 & 2 &
+1.733 & 1.067 \\ \hline
 \end{tabular}
-\caption{This shows the data for how the javascript and java implementations
-  performed on a set of hiearchical datasets.}
+\caption{This shows the data for how the javascript and java
+  implementations performed on a set of hiearchical datasets.}
 \label{fig:table}
 \end{table}
 
 
 \begin{figure}
-\centering
-\includegraphics[width=90mm]{figures/chart.png}
-\caption{\label{fig:chart}
-  A chart showing the computation time required relative to the number
-  of nodes in the dataset.
-}
+\centering \includegraphics[width=90mm]{figures/chart.png}
+\caption{\label{fig:chart} A chart showing the computation time
+  required relative to the number of nodes in the dataset.  }
 \end{figure}
 
 As can be seen in \ref{fig:chart} the javascript implementation was
 consistantly slower, as was to be expected since javascript is
 typically a slower language and was being run within a
 browser. However, the difference is within well within an order of
-magnitude, and quite insignificant for the smaller datasets. 
+magnitude, and quite insignificant for the smaller datasets.
 
 Of course, our javascript implementation is also meant to be used on
 websites, which are much more sensitive to latency than native
 applications. Even given this, the performance on the first four
 datasets is within reasonable limits for users to wait for a page to
-load. 
+load.
 
 \begin{figure}
-\centering
-\includegraphics[width=90mm]{source images/random-10-3-025-rect.png}
+\centering \includegraphics[width=90mm]{source
+  images/random-10-3-025-rect.png}
 \caption{}
 \end{figure}
 \begin{figure}
-\centering
-\includegraphics[width=90mm]{source images/random-10-3-000-circle.png}
+\centering \includegraphics[width=90mm]{source
+  images/random-10-3-000-circle.png}
 \caption{}
 \end{figure}
 \begin{figure}
-\centering
-\includegraphics[width=90mm]{source images/flare-color-pentagon-100.png}
+\centering \includegraphics[width=90mm]{source
+  images/flare-color-pentagon-100.png}
 \caption{}
 \end{figure}
 
 
 \section{Discussion}
-
 
 \section{Future Work}
 
@@ -244,6 +242,5 @@ load.
 \section{References}
 
 
-\bibliography{writeup}{}
-\bibliographystyle{plain}
+\bibliography{writeup}{} \bibliographystyle{plain}
 \end{document}
