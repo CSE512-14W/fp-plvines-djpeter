@@ -1,5 +1,8 @@
 \documentclass{acm_proc_article-sp} \usepackage{cite}
 \usepackage{graphicx}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
 \begin{document}
 
 \title{Voronoi Treemaps in D3}
@@ -71,7 +74,7 @@ Multiple Voronoi treemap algorithms have been created in recent
 years~\cite{balzer:treemaps, sud:fast, nocaj:faster}. However,
 none are available for use in a web framework.  Our work has been to
 implement one of the fastest algorithms for use in the D3 web
-framework~\cite{cite D3}. Despite the optimizations employed by the algorithm
+framework~\cite{Bostock2011}. Despite the optimizations employed by the algorithm
 creators, generation of a Voronoi treemap is still a computationally
 intensive task. Therefore, we have additionally written the D3 module
 with features to try to allow Voronoi treemaps to be used for web
@@ -163,7 +166,8 @@ the resulting Voronoi treemap is resolution-independent.
 \section{Methods}
 \label{sec:methods}
 The core computational components of our implementation were adapted
-from a Java implementation of the Nocaj \& Brandes algorithm
+from a Java implementation\footnote{\url{https://github.com/ArlindNocaj/Voronoi-Treemap-Library}}
+ of the Nocaj \& Brandes algorithm
 ~\cite{nocaj:faster} using a lift into 3-dimensions followed by
 computation of the convex hull and projection back into 2-dimensions
 to create the Voronoi diagram. As with other implementations, we use
@@ -173,9 +177,36 @@ fit the area of each cell to within an error threshold.
 
 \section{Results}
 \label{sec:results}
+
+
+\begin{figure*}
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{source images/d3-treemap-flare.png}
+                \caption{D3 Standard Treemap}
+                \label{fig:treemapflare}
+        \end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+	\qquad
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{source images/voronoi-flare-960-500-cropped.png}
+                \caption{Our Voronoi Treemap}
+                \label{fig:voronoiflare}
+        \end{subfigure}
+        \caption{A comparison of standard and Voronoi treemaps on the same dataset.}\label{fig:comparestandard}
+\end{figure*}
+
+
+We first present a visual comparison between a standard rectangular treemap and the
+same data visualized using our system (Figure~\ref{fig:comparestandard}).
+Notice that the hierarchical structure is more readily
+apparent in the Voronoi treemap.
+
 To evaluate our implementation we used a 251 node 4-level example
 hierarchical dataset used for the example implementation of the
-rectangular treemap in D3 and five other randomly generated
+rectangular treemap in D3\footnote{\url{http://bl.ocks.org/mbostock/4063582} }
+and five other randomly generated
 hierarchical datasets of varying depth and breadth to test the limits
 of the dataset sizes our system could handle. We timed the time
 required to fully compute the Voronoi treemaps of these datasets,

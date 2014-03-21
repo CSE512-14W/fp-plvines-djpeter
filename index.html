@@ -86,7 +86,7 @@ Max depth to show:
 
 <script language="javascript">
 
-//var dataset = flare_json;
+var dataset = flare_json;
 //var dataset = simple_two_json;
 //var dataset = simple_three_json;
 //var dataset = simple_four_json;
@@ -101,7 +101,7 @@ Max depth to show:
 //var dataset = random_10_3_025_json;
 
 // simple example
-var dataset = paper_simple_example;
+//var dataset = paper_simple_example;
 
 
 function make_regular_polygon(width, height, border, sides) {
@@ -134,8 +134,10 @@ function make_regular_polygon(width, height, border, sides) {
 }
 
 // here we set up the svg
-var width = 1000;
-var height = 800;
+//var width = 1000;
+//var height = 800;
+var width = 960;
+var height = 500;
 var border = 10;
 var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
@@ -335,7 +337,7 @@ var paint = function(nodes){
 var vt = d3.layout.voronoitreemap()
 	.root_polygon(root_polygon)
 	.value(function(d) {return d.size; })
-	.iterations(1000);
+	.iterations(100);
 
 var svg = d3.select("body").append("svg")
 	.attr("width", width)

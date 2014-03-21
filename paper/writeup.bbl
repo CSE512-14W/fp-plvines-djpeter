@@ -10,6 +10,12 @@ Michael Balzer and Oliver Deussen.
 \newblock Voronoi treemaps.
 \newblock {\em Information Visualization, IEEE Symposium on}, 0:7, 2005.
 
+\bibitem{Bostock2011}
+Michael Bostock, Vadim Ogievetsky, and Jeffrey Heer.
+\newblock {D3: Data-Driven Documents}.
+\newblock {\em IEEE transactions on visualization and computer graphics},
+  17(12):2301--9, December 2011.
+
 \bibitem{nocaj:faster}
 Arlind Nocaj and Ulrik Brandes.
 \newblock Computing voronoi treemaps: Faster, simpler, and

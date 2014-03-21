@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.21)  21 MAR 2014 03:29
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.21)  21 MAR 2014 04:03
 entering extended mode
 **C:/devlibs/github/fp-plvines-djpeter/paper/writeup.tex
 (C:/devlibs/github/fp-plvines-djpeter/paper/writeup.tex
@@ -197,162 +197,249 @@ LaTeX Info: Redefining \cite on input line 302.
 LaTeX Info: Redefining \nocite on input line 373.
 Package: cite 2010/09/10  v 5.3
 )
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\url\url.sty"
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen123
+\captionmargin@=\dimen124
+\captionwidth=\dimen125
+\caption@tempdima=\dimen126
+\caption@indent=\dimen127
+\caption@parindent=\dimen128
+\caption@hangindent=\dimen129
+\abovecaptionskip=\skip44
+\belowcaptionskip=\skip45
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2-> \vskip \baselineskip \
+setbox \@tempboxa \hbox {\textbf {#1: #2}} \ifdim \wd \@tempboxa >\hsize \textb
+f {#1: #2}\par \else \hbox to\hsize {\hfil \box \@tempboxa \hfil }\par \fi .
+\c@ContinuedFloat=\count109
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\subcaption.sty"
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+\c@subfigure=\count110
+\c@subtable=\count111
+)
 (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
-LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count109
-\scratchdimen=\dimen123
+\scratchcounter=\count112
+\scratchdimen=\dimen130
 \scratchbox=\box30
-\nofMPsegments=\count110
-\nofMParguments=\count111
+\nofMPsegments=\count113
+\nofMParguments=\count114
 \everyMPshowfont=\toks36
-\MPscratchCnt=\count112
-\MPscratchDim=\dimen124
-\MPnumerator=\count113
-\makeMPintoPDFobject=\count114
+\MPscratchCnt=\count115
+\MPscratchDim=\dimen131
+\MPnumerator=\count116
+\makeMPintoPDFobject=\count117
 \everyMPtoPDFconversion=\toks37
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 14.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Try loading font information for U+msa on input line 16.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 14.
+LaTeX Font Info:    Try loading font information for U+msb on input line 16.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 14.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 16.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ulasy.fd"
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
+<figures/tree-example.png, id=1, 621.07031pt x 772.38562pt>
+File: figures/tree-example.png Graphic file (type png)
 
-LaTeX Warning: Citation `citeD3' on page \thepage  undefined on input line 67.
+<use figures/tree-example.png>
+Package pdftex.def Info: figures/tree-example.png used on input line 55.
+(pdftex.def)             Requested size: 256.0748pt x 318.45978pt.
 
-
-LaTeX Warning: Citation `lloyd' on page \thepage  undefined on input line 102.
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 55--57
+ [][] 
+ []
 
 [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
-]
+ <C:/devlibs/github/fp-plvines-djpeter/paper/figures/tree-example.png>]
 
-LaTeX Warning: Citation `needed' on page \thepage  undefined on input line 141.
-
-
-
-Underfull \vbox (badness 2698) has occurred while \output is active []
+LaTeX Warning: Citation `lloyd' on page \thepage  undefined on input line 112.
 
 
-Overfull \hbox (14.75066pt too wide) in paragraph at lines 184--197
+LaTeX Warning: Citation `needed' on page \thepage  undefined on input line 151.
+
+
+LaTeX Font Info:    Try loading font information for T1+aett on input line 169.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ae\t1aett.fd"
+File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
+)
+Underfull \hbox (badness 10000) in paragraph at lines 169--169
+[][]$\T1/aett/m/n/9 https : / / github . com / ArlindNocaj /$
+ []
+
+
+LaTeX Warning: File `source images/d3-treemap-flare.png' not found on input lin
+e 185.
+
+<source images/d3-treemap-flare.png, id=10, 711.4078pt x 343.2825pt>
+File: source images/d3-treemap-flare.png Graphic file (type png)
+
+<use source images/d3-treemap-flare.png>
+Package pdftex.def Info: source images/d3-treemap-flare.png used on input line 
+185.
+(pdftex.def)             Requested size: 226.79846pt x 109.43883pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 185--186
+[]\T1/aer/m/n/9 images/d3-treemap-flare.png
+ []
+
+
+LaTeX Warning: File `source images/voronoi-flare-960-500-cropped.png' not found
+ on input line 193.
+
+
+<source images/voronoi-flare-960-500-cropped.png, id=12, 713.66624pt x 368.8781
+3pt>
+File: source images/voronoi-flare-960-500-cropped.png Graphic file (type png)
+ <use source images/voronoi-flare-960-500-cropped.png>
+Package pdftex.def Info: source images/voronoi-flare-960-500-cropped.png used o
+n input line 193.
+(pdftex.def)             Requested size: 226.79846pt x 117.22725pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--194
+[]\T1/aer/m/n/9 images/voronoi-flare-960-500-cropped.png
+ []
+
+[2]
+Overfull \hbox (14.75066pt too wide) in paragraph at lines 222--230
 [][] 
  []
 
-<figures/chart.png, id=13, 463.0098pt x 318.9516pt>
+<figures/chart.png, id=21, 463.0098pt x 318.9516pt>
 File: figures/chart.png Graphic file (type png)
  <use figures/chart.png>
-Package pdftex.def Info: figures/chart.png used on input line 204.
+Package pdftex.def Info: figures/chart.png used on input line 236.
 (pdftex.def)             Requested size: 256.0748pt x 176.40213pt.
 
-Overfull \hbox (16.0748pt too wide) in paragraph at lines 204--208
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 236--238
  [][] 
  []
 
 
-Underfull \vbox (badness 1117) has occurred while \output is active []
-
- [2 <C:/devlibs/github/fp-plvines-djpeter/paper/figures/chart.png>]
-
 LaTeX Warning: File `source images/random-10-3-025-rect.png' not found on input
- line 225.
+ line 255.
 
-<source images/random-10-3-025-rect.png, id=19, 1451.4225pt x 788.9475pt>
+<source images/random-10-3-025-rect.png, id=22, 737.75626pt x 587.19376pt>
 File: source images/random-10-3-025-rect.png Graphic file (type png)
 
 <use source images/random-10-3-025-rect.png>
 Package pdftex.def Info: source images/random-10-3-025-rect.png used on input l
-ine 225.
-(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+ine 255.
+(pdftex.def)             Requested size: 256.0748pt x 203.80956pt.
 
-Overfull \hbox (16.0748pt too wide) in paragraph at lines 225--226
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 255--256
  [] 
  []
 
 
 LaTeX Warning: File `source images/random-10-3-000-circle.png' not found on inp
-ut line 230.
+ut line 260.
 
-<source images/random-10-3-000-circle.png, id=20, 1451.4225pt x 788.9475pt>
+<source images/random-10-3-000-circle.png, id=23, 594.72188pt x 596.98032pt>
 File: source images/random-10-3-000-circle.png Graphic file (type png)
 
 <use source images/random-10-3-000-circle.png>
 Package pdftex.def Info: source images/random-10-3-000-circle.png used on input
- line 230.
-(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+ line 260.
+(pdftex.def)             Requested size: 256.0748pt x 257.04268pt.
 
-Overfull \hbox (16.0748pt too wide) in paragraph at lines 230--231
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 260--261
  [] 
  []
 
 
 LaTeX Warning: File `source images/flare-color-pentagon-100.png' not found on i
-nput line 235.
+nput line 265.
 
-<source images/flare-color-pentagon-100.png, id=21, 1451.4225pt x 788.9475pt>
+
+<source images/flare-color-pentagon-100.png, id=24, 567.62062pt x 538.26094pt>
 File: source images/flare-color-pentagon-100.png Graphic file (type png)
 
 <use source images/flare-color-pentagon-100.png>
 Package pdftex.def Info: source images/flare-color-pentagon-100.png used on inp
-ut line 235.
-(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+ut line 265.
+(pdftex.def)             Requested size: 256.0748pt x 242.83939pt.
 
-Overfull \hbox (16.0748pt too wide) in paragraph at lines 235--236
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 265--266
  [] 
  []
 
-(C:\devlibs\github\fp-plvines-djpeter\paper\writeup.bbl) [3 <C:/devlibs/github/
-fp-plvines-djpeter/paper/source images/random-10-3-025-rect.png> <C:/devlibs/gi
-thub/fp-plvines-djpeter/paper/source images/random-10-3-000-circle.png> <C:/dev
-libs/github/fp-plvines-djpeter/paper/source images/flare-color-pentagon-100.png
->] (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux)
+[3 <C:/devlibs/github/fp-plvines-djpeter/paper/source images/d3-treemap-flare.p
+ng> <C:/devlibs/github/fp-plvines-djpeter/paper/source images/voronoi-flare-960
+-500-cropped.png> <C:/devlibs/github/fp-plvines-djpeter/paper/figures/chart.png
+> <C:/devlibs/github/fp-plvines-djpeter/paper/source images/random-10-3-025-rec
+t.png>] (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.bbl) [4 <C:/devlibs
+/github/fp-plvines-djpeter/paper/source images/random-10-3-000-circle.png> <C:/
+devlibs/github/fp-plvines-djpeter/paper/source images/flare-color-pentagon-100.
+png>] (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 2545 strings out of 493921
- 31031 string characters out of 3144876
- 89763 words of memory out of 3000000
- 5798 multiletter control sequences out of 15000+200000
- 47315 words of font info for 64 fonts, out of 3000000 for 9000
+ 3774 strings out of 493921
+ 52919 string characters out of 3144876
+ 117016 words of memory out of 3000000
+ 7000 multiletter control sequences out of 15000+200000
+ 53018 words of font info for 75 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,10n,28p,315b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,10n,38p,351b,454s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program F
 iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Program
  Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program Fi
 les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files 
-(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Program Files (x86)/M
-iKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.
-9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
-type1/urw/times/utmb8a.pfb>
-Output written on writeup.pdf (3 pages, 891579 bytes).
+(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86
+)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb><C:/Program Files (x86)/MiKTeX 2
+.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/u
+rw/times/utmb8a.pfb>
+Output written on writeup.pdf (4 pages, 775004 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
+ 74 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
