@@ -13,15 +13,15 @@
 <script language="javascript" type="text/javascript" src="VoronoiTreemapD3.js"></script>
 
 <!-- test input local filesystem -->
+<!--
 <script language="javascript" type="text/javascript" src="test.js"></script>
-<script language="javascript" type="text/javascript" src="flare.js"></script>
+-->
 <script language="javascript" type="text/javascript" src="simple_two.js"></script>
 <script language="javascript" type="text/javascript" src="simple_three.js"></script>
 <script language="javascript" type="text/javascript" src="simple_four.js"></script>
 <script language="javascript" type="text/javascript" src="simple_eight.js"></script>
 <script language="javascript" type="text/javascript" src="example.js"></script>
 <script language="javascript" type="text/javascript" src="simple_two_mod.js"></script>
-<script language="javascript" type="text/javascript" src="random_10_3_000.js"></script>
 <script language="javascript" type="text/javascript" src="random_10_3_010.js"></script>
 <script language="javascript" type="text/javascript" src="random_6_4_000.js"></script>
 <script language="javascript" type="text/javascript" src="random_4_4_000.js"></script>
@@ -31,7 +31,10 @@
 <script language="javascript" type="text/javascript" src="random_10_5_000.js"></script>
 <script language="javascript" type="text/javascript" src="random_10_3_025.js"></script>
 
+<!-- use below here for the demo -->
+<script language="javascript" type="text/javascript" src="flare.js"></script>
 <script language="javascript" type="text/javascript" src="paper_simple_example.js"></script>
+<script language="javascript" type="text/javascript" src="random_10_3_000.js"></script>
 
 
 
@@ -41,8 +44,26 @@
 
 <h2>Voronoi Treemap</h2>
 
-<!-- input to control paint style -->
+
 <div>
+
+<select id="select_dataset">
+<option value="flare">Flare</option>
+<option value="paper_simple_example">Paper example</option>
+<option value="random_10_3_000">Random breadth 10 depth 3</option>
+</select>
+
+<select id="select_polygon">
+<option value="rectangle">Rectangle</option>
+<option value="triangle">Triangle</option>
+<option value="pentagon">Pentagon</option>
+<option value="octogon">Octogon</option>
+<option value="circle">Circle (100-gon)</option>
+</select>
+
+<button type="button" id="button_compute">Compute Diagram!</button>
+
+<br><br>
 
 <label><input type="checkbox" name="checkbox_stroke" id="checkbox_stroke" checked>Stroke Width</label>
 
@@ -57,9 +78,11 @@ Color:
 
 &nbsp;&nbsp;
 
+<!--
 <label><input type="checkbox" name="checkbox_leaf_centroids" id="checkbox_leaf_centroids">Show Leaf Centroids</label>
 
 &nbsp;&nbsp;
+-->
 
 Max depth to show: 
 <select id="select_max_depth">
@@ -80,28 +103,11 @@ Max depth to show:
 
 </div>
 
-<!--
-<div id="div1">This is div1</div><br><br>
--->
+
+
+
 
 <script language="javascript">
-
-var dataset = flare_json;
-//var dataset = simple_two_json;
-//var dataset = simple_three_json;
-//var dataset = simple_four_json;
-//var dataset = simple_eight_json;
-//var dataset = example_json;
-//var dataset = test_json;
-//var dataset = simple_two_mod_json; // use "number" instead of "size"
-//var dataset = random_10_3_010_json;
-
-// has name for color
-//var dataset = random_10_3_000_json;
-//var dataset = random_10_3_025_json;
-
-// simple example
-//var dataset = paper_simple_example;
 
 
 function make_regular_polygon(width, height, border, sides) {
@@ -134,24 +140,53 @@ function make_regular_polygon(width, height, border, sides) {
 }
 
 // here we set up the svg
-//var width = 1000;
-//var height = 800;
-var width = 960;
-var height = 500;
+var width = 1000;
+var height = 800;
 var border = 10;
-var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
+var svg_container = d3.select("body").append("svg")
+	.attr("width",width)
+	.attr("height",height)
+	.attr("id","svgid");
 
 ///////// bounding polygon
-// here's the whole svg as a poly...for whatever reason
-var width_less_border = width - 2*border;
-var height_less_border = height - 2*border;
-var entire_svg_polygon = [[border,border],
-	[border,height_less_border],
-	[width_less_border,height_less_border],
-	[width_less_border,border]];
+function get_selected_polygon() {
+	var width_less_border = width - 2*border;
+	var height_less_border = height - 2*border;
+	var entire_svg_polygon = [[border,border],
+		[border,height_less_border],
+		[width_less_border,height_less_border],
+		[width_less_border,border]];
 
-//var root_polygon = make_regular_polygon(width, height, border, 100);
-var root_polygon = entire_svg_polygon
+	var select_polygon = d3.select("#select_polygon").node().value;
+	if (select_polygon == "rectangle") {
+		return entire_svg_polygon;
+	}
+	else if (select_polygon == "triangle") {
+		return make_regular_polygon(width, height, border, 3);
+	}
+	else if (select_polygon == "pentagon") {
+		return make_regular_polygon(width, height, border, 5);
+	}
+	else if (select_polygon == "octogon") {
+		return make_regular_polygon(width, height, border, 8);
+	}
+	else if (select_polygon == "circle") {
+		return make_regular_polygon(width, height, border, 100);
+	}	
+}
+
+function get_selected_dataset() {
+	var select_dataset = d3.select("#select_dataset").node().value;
+	if (select_dataset == "flare") {
+		return flare_json;
+	}
+	else if (select_dataset == "paper_simple_example") {
+		return paper_simple_example_json;
+	}
+	else if (select_dataset == "random_10_3_000") {
+		return random_10_3_000_json;
+	}
+}
 
 
 function make_d3_poly(d) {
@@ -159,68 +194,9 @@ function make_d3_poly(d) {
 }
 
 
-////////// old refresh function (includes sites)
-var refresh = function(polygon_list, sites) {
-	var polylines = svg_container.append("g").selectAll("path").data(polygon_list, make_d3_poly);
-	polylines.enter().append("path")
-			.attr("d", make_d3_poly)
-			.attr("stroke-width", "5px")
-			.attr("stroke", "black")
-			.attr("fill", "cyan");
-	polylines.exit().remove();
-	
-			
-	var center_circles = svg_container.append("g").selectAll(".center.circle").data(sites);
-	center_circles.enter().append("circle")
-		.attr("class", "center circle")
-		.attr("cx", function(d) {return (d.x);})
-		.attr("cy", function(d) {return (d.y);})
-		.attr("r", function(d) {return 5;})
-		//.attr("r", function(d) {return (Math.sqrt(d.weight));})
-		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
-		.attr("stroke", "black")
-		.attr("fill", "black");
-		
-	var radius_circles = svg_container.append("g").selectAll(".radius.circle").data(sites);
-	radius_circles.enter().append("circle")
-		.attr("class", "radius circle")
-		.attr("cx", function(d) {return (d.x);})
-		.attr("cy", function(d) {return (d.y);})
-		//.attr("r", function(d) {return 5;})
-		.attr("r", function(d) {return (Math.sqrt(d.weight));})
-		//.attr("r", function(d) {return (Math.max(Math.sqrt(d.weight), 2));})
-		.attr("stroke", "red")
-		.attr("fill", "none");
-}
-
-
-
-////////// Check the variables here
-/*
-var test = function(){
-    
-    VoronoiTreemap.normalizeSites(sites);
-    
-    VoronoiTreemap.sites = sites;
-    VoronoiTreemap.setClipPolygon(svg_poly);
-    VoronoiTreemap.useNegativeWeights = true;
-    VoronoiTreemap.cancelOnAreaErrorThreshold =  true;
-
-    var polygons = VoronoiTreemap.doIterate(100);
-
-    refresh(polygons, sites)
-}
-
-d3.select("body").append("input")
-	.attr("type", "button")
-	//.attr("name", "iterate_button")
-	.attr("id", "test_button")
-	.attr("value", "Test!");
-	
-d3.select("#test_button").on("click", function() {test();});
-*/
-
 var paint = function(nodes){
+	svg_container.selectAll("path").remove();
+
 	// background color
 	//var background_color = "lightgray";
 	var background_color = "none";
@@ -292,9 +268,10 @@ var paint = function(nodes){
         }
     }
 
+	// disabled because of weirdness with non-leaf centroids
 	// centroid circles
-	var show_leaf_centroids = d3.select("#checkbox_leaf_centroids").property('checked');
-	if (show_leaf_centroids) {
+	//var show_leaf_centroids = d3.select("#checkbox_leaf_centroids").property('checked');
+	if (false) {
 		var center_circles = svg_container.append("g").selectAll(".center.circle").data(leaf_node_list);
 		center_circles.enter().append("circle")
 			.attr("class", "center circle")
@@ -324,33 +301,32 @@ var paint = function(nodes){
 	}
 }
 
+var newnodes;
+function compute() {
+	
 
-// want to be able to change paint options for a fixed diagram:
+	var select_polygon = get_selected_polygon();
+
+	var vt = d3.layout.voronoitreemap()
+		.root_polygon(select_polygon)
+		.value(function(d) {return d.size; })
+		.iterations(100);
+	
+	var select_dataset = get_selected_dataset();
+	newnodes = vt(select_dataset);
+	paint(newnodes);
+}
 
 
-
-<!-- D3 testing -->
-	// paraphrasing treemap example http://bl.ocks.org/mbostock/4063582
-	// also looking at http://bl.ocks.org/mbostock/4063423 for svg example
-
-
-var vt = d3.layout.voronoitreemap()
-	.root_polygon(root_polygon)
-	.value(function(d) {return d.size; })
-	.iterations(100);
-
-var svg = d3.select("body").append("svg")
-	.attr("width", width)
-	.attr("height", height);
-
-var newnodes = vt(dataset);
-paint(newnodes);
 
 // yeah...should probably update on all input changes
+// nope...only the fast ones!
 d3.select("#checkbox_stroke").on("click", function() {paint(newnodes)});
 d3.select("#select_color").on("change", function() {paint(newnodes)});
 d3.select("#checkbox_leaf_centroids").on("click", function() {paint(newnodes)});
 d3.select("#select_max_depth").on("change", function() {paint(newnodes)});
+
+d3.select("#button_compute").on("click", function() {compute();});
 
 
 </script>

@@ -45,7 +45,7 @@ public class CreateJSON {
 	public static void main(String[] args) throws IOException {
 		int breadth = 10;
 		int depth = 3;
-		float chance_to_stop_early = (float) 0.25; // <= 0 means always continue down depth
+		float chance_to_stop_early = (float) 0; // <= 0 means always continue down depth
 		
 		JSONObject root = new JSONObject();
 		

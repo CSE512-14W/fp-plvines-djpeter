@@ -1,4 +1,4 @@
-paper_simple_example = {
+paper_simple_example_json = {
 "name": "root",
 "children": [
 	{
