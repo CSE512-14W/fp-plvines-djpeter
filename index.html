@@ -22,6 +22,12 @@
 <script language="javascript" type="text/javascript" src="simple_two_mod.js"></script>
 <script language="javascript" type="text/javascript" src="random_10_3_000.js"></script>
 <script language="javascript" type="text/javascript" src="random_10_3_010.js"></script>
+<script language="javascript" type="text/javascript" src="random_6_4_000.js"></script>
+<script language="javascript" type="text/javascript" src="random_4_4_000.js"></script>
+<script language="javascript" type="text/javascript" src="random_5_4_000.js"></script>
+<script language="javascript" type="text/javascript" src="random_10_4_000.js"></script>
+<script language="javascript" type="text/javascript" src="random_10_2_000.js"></script>
+<script language="javascript" type="text/javascript" src="random_10_5_000.js"></script>
 
 
 
@@ -40,13 +46,22 @@
 
 //var dataset = simple_two_json;
 //var dataset = simple_three_json;
-//var dataset = simple_four_json;
+var dataset = simple_four_json;
 //var dataset = simple_eight_json;
 //var dataset = example_json;
 //var dataset = flare_json;
 //var dataset = simple_two_mod_json; // use "number" instead of "size"
 //var dataset = random_10_3_000_json;
-var dataset = random_10_3_010_json;
+//var dataset = random_10_3_010_json;
+//var dataset = random_6_4_000_json; // THIS BREAKS IT
+//var dataset = random_4_4_000_json; // THIS BREAKS IT (when in the octogon...in the square it works)
+//var dataset = random_5_4_000_json; // THIS BREAKS IT
+//var dataset = random_10_4_000_json; // THIS BREAKS IT
+//var dataset = random_10_2_000_json; // this one is ok
+//var dataset = random_10_5_000_json; // THIS BREAKS IT
+
+
+
 
 
 
@@ -56,14 +71,14 @@ var height = 510;
 var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
 // here's the whole svg as a poly
-//var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
+var svg_poly = [[0,0],[0,height],[width,height],[width,0]];
 
 // here's a octogon inside 510x510
 var n1 = 10;
 var n2 = 140;
 var n3 = 370;
 var n4 = 500;
-var svg_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
+//var svg_poly = [[n1, n2], [n1, n3], [n2, n4], [n3, n4], [n4, n3], [n4, n2], [n3, n1], [n2, n1]];
 
 
 function make_d3_poly(d) {
