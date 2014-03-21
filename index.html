@@ -51,8 +51,8 @@
 //var dataset = simple_four_json;
 //var dataset = simple_eight_json;
 //var dataset = example_json;
-//var dataset = flare_json;
-var dataset = test_json;
+var dataset = flare_json;
+//var dataset = test_json;
 //var dataset = simple_two_mod_json; // use "number" instead of "size"
 //var dataset = random_10_3_010_json;
 
@@ -231,8 +231,14 @@ var paint = function(nodes){
 	// brighter by depth
 	//var color_func = function(d) { return d3.hsl("cyan").brighter( (d.depth-1) / 1.1) };
 	// d3 treemap style (requires name)
-	var color_d3 = d3.scale.category20c();
-	var color_func = function(d) { return d.children ? color_d3(d.name) : "none"; };
+	//var color_d3 = d3.scale.category20c();
+	//var color_func = function(d) { return d.children ? color_d3(d.name) : "none"; };
+	// linear color scale?
+	// needs max depth
+	var nodes_all_depths = nodes.map(function(x) {return x.depth});
+	var nodes_max_depth = Math.max.apply(null, nodes_all_depths);
+	var color_d3_linear = d3.scale.linear().domain([0, nodes_max_depth]).range(["blue","lightblue"]);
+	var color_func = function(d) { return color_d3_linear(d.depth); };
 
     var data = [];
     for (var i = 0; i < nodes.length; i++){
