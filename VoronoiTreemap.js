@@ -9,6 +9,7 @@ var VoronoiTreemap = {
     cancelOnAreaErrorThreshold: true,
     cancelOnMaxIterat: true,
     errorAreaThreshold: 0,
+	//errorAreaThreshold: 5.0, // try to stop the crashes (doesn't seem to help too much)
     clipPolygon: [],
     guaranteeInvariant:false,
     sites: [],
@@ -388,7 +389,7 @@ var VoronoiTreemap = {
                 }
             }
 
-            console.log("new weight: " + finalWeight + " : " + point);
+            //console.log("new weight: " + finalWeight + " : " + point);
 
             point.setWeight(finalWeight);
         }
