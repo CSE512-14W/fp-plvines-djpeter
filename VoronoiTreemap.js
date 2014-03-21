@@ -6,9 +6,9 @@ var VoronoiTreemap = {
     preflowPercentage: 0.08,
     useNegativeWeights: true,
     useExtrapolation: false,
-    cancelOnAreaErrorThreshold: false,
+    cancelOnAreaErrorThreshold: true,
     cancelOnMaxIterat: true,
-    errorAreaThreshold: 0.05,
+    errorAreaThreshold: 0,
     clipPolygon: [],
     guaranteeInvariant:false,
     sites: [],
@@ -29,6 +29,7 @@ var VoronoiTreemap = {
     currentMaxNegativeWeight: 0,
     aggressiveMode: false,
     boundingSites: [],
+    seed: 25, 
 
     init:function(bounding_polygon, node) {
         this.clear();
@@ -70,12 +71,18 @@ var VoronoiTreemap = {
 	return contains;
     },
 
+    random:function() {
+        var x = Math.sin(this.seed++) * 10000;
+        return x - Math.floor(x);
+    },
+
     getRandomPointsInPolygon:function(polygon, n_points) {
 	// get bounding rect
 	var rect = this.getPolygonBoundingRect(polygon);
 	var result = []
 	for (var i = 0; i < n_points; i++) {
-	    var p = [rect.x + Math.random() * rect.w, rect.y + Math.random() * rect.h];
+            //	    var p = [rect.x + Math.random() * rect.w, rect.y + Math.random() * rect.h];
+	    var p = [rect.x + this.random() * rect.w, rect.y + this.random() * rect.h];
 	    // see if p in polygon itself
 	    //console.log(p)
 	    if (this.doesPolygonContain(polygon, p)) {
@@ -121,9 +128,9 @@ var VoronoiTreemap = {
         this.preflowPercentage = 0.08;
         this.useNegativeWeights = true;
         this.useExtrapolation = false;
-        this.cancelOnAreaErrorThreshold = false;
+        //        this.cancelOnAreaErrorThreshold = true;
         this.cancelOnMaxIterat = true;
-        this.errorAreaThreshold = 0.05;
+        //        this.errorAreaThreshold = 1000;
         this.firstIteration = true;
         this.clipPolygon= [];
         this.sites= [];
@@ -284,7 +291,7 @@ var VoronoiTreemap = {
 
     iterate: function(){
         var polygons = [];
-        console.log("iterate()");
+//        console.log("iterate()");
         
 	this.currentMaxNegativeWeight=0;
 	this.currentEuclidChange = 0;
@@ -348,7 +355,6 @@ var VoronoiTreemap = {
         // Omitting because guaranteeInvariant is always false
         //
         //
-        
         for (var z = 0; z < this.sites.length; z++){
             var point = this.sites[z];
             var poly = point.polygon; // Definitely should not be null
@@ -397,7 +403,7 @@ var VoronoiTreemap = {
                 }
             }
 
-            console.log("new weight: " + finalWeight);
+//            console.log("new weight: " + finalWeight + " : " + point);
 
             point.setWeight(finalWeight);
         }
@@ -459,7 +465,8 @@ var VoronoiTreemap = {
         var k = 0;
         for (var i = 0; i < iterationAmount; i++){
             polygons = this.iterate();
-            if (this.cancelOnAreaError && this.lastMaxError < this.errorAreaThreshold){
+            console.log(i + ": error: " + this.lastMaxError);
+            if (this.cancelOnAreaErrorThreshold && this.lastMaxError < this.errorAreaThreshold){
                 break;
             }
         }

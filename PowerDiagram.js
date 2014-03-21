@@ -280,7 +280,7 @@ function computePowerDiagramIntegrated(sites, boundingSites, clippingPolygon){
                         site.polygon = clippedPoly;
                         if (clippedPoly.length > 0){
 			    polygons.push(clippedPoly);
-                            console.log("pushed: " + polygons[polygons.length - 1]);
+//                            console.log("pushed: " + polygons[polygons.length - 1]);
                         }
 
 		    }
@@ -288,7 +288,8 @@ function computePowerDiagramIntegrated(sites, boundingSites, clippingPolygon){
 	    }
 	}
     }
-    console.log("finished computing power diagram");
+//    console.log("finished computing power diagram");
+    
 
     return polygons;
 }

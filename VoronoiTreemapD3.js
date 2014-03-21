@@ -50,7 +50,7 @@ d3.layout.voronoitreemap = function() {
 	    VoronoiTreemap.normalizeSites(node.sites);
 	    VoronoiTreemap.sites = node.sites;
 	    VoronoiTreemap.setClipPolygon(node.polygon);
-	    VoronoiTreemap.useNegativeWeights = true;
+	    VoronoiTreemap.useNegativeWeights = false;
 	    VoronoiTreemap.cancelOnAreaErrorThreshold =  true;
 	    var polygons = VoronoiTreemap.doIterate(iterations);
 	    
@@ -62,7 +62,7 @@ d3.layout.voronoitreemap = function() {
 		computeDiagramRecursively(children[i]);
 	    }
 		
-		debugger;
+            //		debugger;
 	}
     }
     

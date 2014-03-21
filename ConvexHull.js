@@ -134,7 +134,7 @@ var Vertex = function(x, y, z, weight, orig, isDummy, percentage) {
     this.y = y;
     this.index = 0;
     this.conflicts = new ConflictList(false);
-    this.neighbors = null; // Potential trouble
+    this.neighbours = null; // Potential trouble
     this.nonClippedPolygon = null;
     this.polygon = null;
     
@@ -367,10 +367,10 @@ var ConvexHull = {
         this.points = this.points.concat(boundingSites);
 
 
-        for (var i = 0; i < this.points.length; i++){
-            var p = this.points[i];            
-            console.log(p.x + ", " + p.y + ", " + p.z)
-        }
+//         for (var i = 0; i < this.points.length; i++){
+//             var p = this.points[i];            
+//            console.log(p.x + ", " + p.y + ", " + p.z)
+//         }
 
     },
 
