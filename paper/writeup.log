@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.20)  20 MAR 2014 13:49
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.3.21)  21 MAR 2014 03:29
 entering extended mode
 **C:/devlibs/github/fp-plvines-djpeter/paper/writeup.tex
 (C:/devlibs/github/fp-plvines-djpeter/paper/writeup.tex
@@ -192,19 +192,24 @@ LaTeX Font Info:    Try loading font information for T1+aer on input line 100.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ae\t1aer.fd"
 File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
 )))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\cite\cite.sty"
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 373.
+Package: cite 2010/09/10  v 5.3
+)
 (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -220,65 +225,134 @@ LaTeX Font Info:    ... okay on input line 3.
 \makeMPintoPDFobject=\count114
 \everyMPtoPDFconversion=\toks37
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 20.
+LaTeX Font Info:    Try loading font information for U+msa on input line 14.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 20.
+LaTeX Font Info:    Try loading font information for U+msb on input line 14.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 20.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 14.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ulasy.fd"
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
-) [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
+)
+
+LaTeX Warning: Citation `citeD3' on page \thepage  undefined on input line 67.
+
+
+LaTeX Warning: Citation `lloyd' on page \thepage  undefined on input line 102.
+
+[1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
 ]
-Overfull \hbox (2.62657pt too wide) in paragraph at lines 128--139
-\T1/aer/m/n/9 Voronoi treemaps have been im-ple-mented pre-vi-ously (Balzer)
+
+LaTeX Warning: Citation `needed' on page \thepage  undefined on input line 141.
+
+
+
+Underfull \vbox (badness 2698) has occurred while \output is active []
+
+
+Overfull \hbox (14.75066pt too wide) in paragraph at lines 184--197
+[][] 
+ []
+
+<figures/chart.png, id=13, 463.0098pt x 318.9516pt>
+File: figures/chart.png Graphic file (type png)
+ <use figures/chart.png>
+Package pdftex.def Info: figures/chart.png used on input line 204.
+(pdftex.def)             Requested size: 256.0748pt x 176.40213pt.
+
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 204--208
+ [][] 
  []
 
 
-Overfull \hbox (13.54308pt too wide) in paragraph at lines 148--159
-\T1/aer/m/n/9 this im-ple-men-ta-tion uses the al-go-rithm for com-put-ing arbi
-trary-
+Underfull \vbox (badness 1117) has occurred while \output is active []
+
+ [2 <C:/devlibs/github/fp-plvines-djpeter/paper/figures/chart.png>]
+
+LaTeX Warning: File `source images/random-10-3-025-rect.png' not found on input
+ line 225.
+
+<source images/random-10-3-025-rect.png, id=19, 1451.4225pt x 788.9475pt>
+File: source images/random-10-3-025-rect.png Graphic file (type png)
+
+<use source images/random-10-3-025-rect.png>
+Package pdftex.def Info: source images/random-10-3-025-rect.png used on input l
+ine 225.
+(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 225--226
+ [] 
  []
 
 
-Overfull \hbox (6.29901pt too wide) in paragraph at lines 148--159
-\T1/aer/m/n/9 dimension Power Di-a-grams pro-posed by Au-ren-ham-mer (CITE
+LaTeX Warning: File `source images/random-10-3-000-circle.png' not found on inp
+ut line 230.
+
+<source images/random-10-3-000-circle.png, id=20, 1451.4225pt x 788.9475pt>
+File: source images/random-10-3-000-circle.png Graphic file (type png)
+
+<use source images/random-10-3-000-circle.png>
+Package pdftex.def Info: source images/random-10-3-000-circle.png used on input
+ line 230.
+(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 230--231
+ [] 
  []
 
 
-Overfull \hbox (15.71051pt too wide) in paragraph at lines 161--169
-\T1/aer/m/n/9 Bran-des al-go-rithm (CITE NO-CAJ) us-ing a lift into 3-dimension
-s
+LaTeX Warning: File `source images/flare-color-pentagon-100.png' not found on i
+nput line 235.
+
+<source images/flare-color-pentagon-100.png, id=21, 1451.4225pt x 788.9475pt>
+File: source images/flare-color-pentagon-100.png Graphic file (type png)
+
+<use source images/flare-color-pentagon-100.png>
+Package pdftex.def Info: source images/flare-color-pentagon-100.png used on inp
+ut line 235.
+(pdftex.def)             Requested size: 256.0748pt x 139.18744pt.
+
+Overfull \hbox (16.0748pt too wide) in paragraph at lines 235--236
+ [] 
  []
 
-[2] (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux) ) 
+(C:\devlibs\github\fp-plvines-djpeter\paper\writeup.bbl) [3 <C:/devlibs/github/
+fp-plvines-djpeter/paper/source images/random-10-3-025-rect.png> <C:/devlibs/gi
+thub/fp-plvines-djpeter/paper/source images/random-10-3-000-circle.png> <C:/dev
+libs/github/fp-plvines-djpeter/paper/source images/flare-color-pentagon-100.png
+>] (C:\devlibs\github\fp-plvines-djpeter\paper\writeup.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2398 strings out of 493921
- 28738 string characters out of 3144876
- 86018 words of memory out of 3000000
- 5670 multiletter control sequences out of 15000+200000
- 41684 words of font info for 55 fonts, out of 3000000 for 9000
+ 2545 strings out of 493921
+ 31031 string characters out of 3144876
+ 89763 words of memory out of 3000000
+ 5798 multiletter control sequences out of 15000+200000
+ 47315 words of font info for 64 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,10n,28p,298b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files
- (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Program Files (x86)/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program Files (x86)/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
-ts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1
-/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/tim
-es/utmb8a.pfb>
-Output written on writeup.pdf (2 pages, 85224 bytes).
+ 41i,10n,28p,315b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files 
+(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86
+)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/MiKTeX 2.
+9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
+type1/urw/times/utmb8a.pfb>
+Output written on writeup.pdf (3 pages, 891579 bytes).
 PDF statistics:
- 38 PDF objects out of 1000 (max. 8388607)
+ 58 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

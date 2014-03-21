@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{aurenhammer:power}
+F.~Aurenhammer.
+\newblock Power diagrams: properties, algorithms, and applications.
+\newblock {\em SIAM Journal on Computing}, 16(1), 1987.
+
+\bibitem{balzer:treemaps}
+Michael Balzer and Oliver Deussen.
+\newblock Voronoi treemaps.
+\newblock {\em Information Visualization, IEEE Symposium on}, 0:7, 2005.
+
+\bibitem{nocaj:faster}
+Arlind Nocaj and Ulrik Brandes.
+\newblock Computing voronoi treemaps: Faster, simpler, and
+  resolution-independent.
+\newblock {\em EuroVis}, 31(3), 2012.
+
+\bibitem{sud:fast}
+Avneesh Sud, Danyel Fisher, and Huai-Ping Lee.
+\newblock Fast dynamic voronoi treemaps.
+\newblock pages 85--94, 2010.
+
+\end{thebibliography}

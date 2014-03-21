@@ -18,6 +18,7 @@ Blah blah blah
 
 
 \section{Introduction}
+\label{sec:introduction}
 Treemaps are a category of visualizations used for displaying
 hierarchical data. While node-and-edge diagrams are often used for
 visualizing hierachical structures, treemaps offer some significant
@@ -28,7 +29,7 @@ visualized, as well as more detail to be shown on each node, such as
 additional text, colors, or glyphs to show attributes of the node.
 
 The majority of treemap layouts used are variants of rectangular
-treemaps. These Have the advantage of being relatively fast to layout
+treemaps. These have the advantage of being relatively fast to layout,
 and in cases of limited scale produce reasonably understandable
 treemaps. However, there are three drawbacks to rectangular treemaps.
 
@@ -39,48 +40,49 @@ square-like space. This problem is mostly mitigated by various tweaks
 to the treemapping algorithm to try to keep the aspect ratio of
 regions close to one.
 
-Second, the borders between different regions in the hiearchy can
+Second, the borders between different regions in the hierarchy can
 become difficult to see. In particular, two cells neighboring one
 another in the treemap but not siblings in the hierarchy can appear to
-share a common edge delineating the same inner node is their parent,
+share a common edge delineating the same inner node as their parent,
 when this is in fact not the case.  Finally, rectangular treemap
-algorithms naturally only fill rectangular regions which could be
+algorithms only fill rectangular regions, which could be
 undesirable for aesthetic or practical reasons.
 
 Voronoi treemaps eliminate these problems. Firstly, Voronoi treemap
-cells are arbitrary polygons but as will be discussed later, the
+cells are arbitrary polygons, and as will be discussed later, the
 generation algorithm results in generally low aspect ratio
 cells. Secondly, the fact that Voronoi treemap cells are arbitrary
 polygons means edges between cells will fall at any angle, rather than
-only vertical or horizontal, and so two neighboring cells will
-generally never have a continuous-looking edge unless they are in fact
+only vertical or horizontal, and thus two neighboring cells will
+rarely have a continuous-looking edge unless they are in fact
 siblings in the hierarchy and thus share the edge of their parent
 node's cell. Finally, Voronoi treemaps can be produced for any
 arbitrary polygonal region, and so do not restrict the shape to be
 filled by the treemap.
 
-Multiple Voronoi treemap algorithms have been created in recent years
-~\cite{balzer:treemaps}~\cite{sud:fast}~\cite{nocaj:faster}. However,
+Multiple Voronoi treemap algorithms have been created in recent 
+years~\cite{balzer:treemaps, sud:fast, nocaj:faster}. However,
 none are available for use in a web framework.  Our work has been to
 implement one of the fastest algorithms for use in the D3 web
-framework. Despite the optimizations employed by the algorithm
+framework~\cite{cite D3}. Despite the optimizations employed by the algorithm
 creators, generation of a Voronoi treemap is still a computationally
 intensive task. Therefore, we have additionally written the D3 module
 with features to try to allow Voronoi treemaps to be used for web
 visualizations without causing a poor user experience even on complex
 datasets.
 
-The remainder of the paper is structured as follows: Section 2 has a
+The remainder of the paper is structured as follows: Section~\ref{sec:related} has a
 discussion of related work including a brief introduction to Weighted
 Voronoi diagrams and a discussion of the algorithms created for
-Voronoi treemaps. Section 3 describes the implementation of our work
-in D3 and optimizations added for client-side web usability. Section 4
+Voronoi treemaps. Section~\ref{sec:methods} describes the implementation of our work
+in D3 and optimizations added for client-side web usability. Section~\ref{sec:results}
 shows the use of our framework on several datasets and an evaluation
-of the computational burden of our system. Section 5 discusses the
-potential applications of our system. Section 6 concludes with
+of the computational burden of our system. Section~\ref{sec:discussion} discusses the
+potential applications of our system. Section~\ref{sec:future} concludes with
 proposals of future work to be done in this space.
 
 \section{Related Work}
+\label{sec:related}
 
 \subsection{Voronoi Diagrams}
 Voronoi diagrams are a technique for dividing a region containing
@@ -93,7 +95,7 @@ euclidean distance function, $d(p,q) = \sqrt({dx}^2 + {dy}^2)$ this
 results in a cell border being equidistant between the two closest
 sites.
 
-For Voronoi treemaps two extensions are made to the basic Voronoi
+For Voronoi treemaps, two extensions are made to the basic Voronoi
 diagram. First, sites are given initially random positions, a diagram
 is generated, and then sites are moved to the centroidal positions in
 their cell and then the diagram is re-generated. This is repeated
@@ -119,8 +121,8 @@ below.
 \subsection{Previous Approaches}
 Voronoi treemaps have been implemented previously
 ~\cite{balzer:treemaps} using both additively weighted and
-geometrically weighted Voronoi diagram algorithms. This implementation
-used the same iterative algorithm for creating centroidal Voronoi
+geometrically weighted Voronoi diagram algorithms. This initial system
+used the iterative algorithm for creating centroidal Voronoi
 diagrams described above. To create the weighted diagrams, however, it
 used a sampling algorithm wherein points were sampled in the space and
 distances to nearest sites calculated, to give an approximation of the
@@ -148,9 +150,11 @@ their weights. The convex hull made by these 3D points is then
 computed, and projected back down to 2D to produce the Voronoi
 diagram. This method is on the order of $O(n \log n)$ and so can
 provide a significant speedup for generating treemaps of larger
-datasets.
+datasets. A second benefit is that by computing the Power Diagram analytically,
+the resulting Voronoi treemap is resolution-independent.
 
 \section{Methods}
+\label{sec:methods}
 The core computational components of our implementation were adapted
 from a Java implementation of the Nocaj \& Brandes algorithm
 ~\cite{nocaj:faster} using a lift into 3-dimensions followed by
@@ -161,6 +165,7 @@ centroids of their cells and then adjust the weights of the sites to
 fit the area of each cell to within an error threshold.
 
 \section{Results}
+\label{sec:results}
 To evaluate our implementation we used a 251 node 4-level example
 hierarchical dataset used for the example implementation of the
 rectangular treemap in D3 and five other randomly generated
@@ -233,15 +238,17 @@ load.
 
 
 \section{Discussion}
+\label{sec:discussion}
 
 
 \section{Future Work}
+\label{sec:future}
 
 
 \section{Acknowledgments}
+\label{sec:acknowledgements}
 
 
-\section{References}
 
 
 \bibliography{writeup}{}
