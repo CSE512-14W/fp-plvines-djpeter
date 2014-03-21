@@ -67,14 +67,11 @@ function make_regular_polygon(width, height, border, sides) {
 	
 	// special case few sides
 	if (sides == 3) {
-		if (height <= width) {
-			center[1] += height_radius / 3.0;
-			radius = height_radius * 4.0 / 3.0;
-		}
-		else {
-			// not adjusted vertically yet...oh well
-			radius *= 2 / Math.sqrt(3);
-		}
+		center[1] += height_radius / 3.0; // can always do this (I think?)
+	
+		radius_for_width = width_radius * 2 / Math.sqrt(3);
+		radius_for_height = height_radius * 4.0 / 3.0;
+		radius = Math.min(radius_for_width, radius_for_height);
 	}
 	else if (sides == 4) {
 		radius *= Math.sqrt(2);
@@ -88,8 +85,8 @@ function make_regular_polygon(width, height, border, sides) {
 }
 
 // here we set up the svg
-var width = 800;
-var height = 600;
+var width = 1000;
+var height = 800;
 var border = 10;
 var svg_container = d3.select("body").append("svg").attr("width",width).attr("height",height);
 
@@ -203,13 +200,31 @@ d3.select("body").append("input")
 d3.select("#recursive_button").on("click", function() {recursive();});
 */
 
+// flare treemap color
+
 
 var paint = function(nodes){
+	// background color
+	svg_container.append("g").append("rect")
+		.attr("x", 0)
+		.attr("y", 0)
+		.attr("width", width)
+		.attr("height", height)
+		.attr("fill", "lightgray")
+
+	// strokes by depth
 	var stroke_min = 2,
 		stroke_max = 10,
 		stroke_levels = 3,// could determine from max depth...
 		stroke_delta = (stroke_max - stroke_min) * 1.0 / stroke_levels; 
-		
+
+	// constant color
+	//var color_func = "cyan";
+	// brighter by depth
+	//var color_func = function(d) { return d3.hsl("cyan").brighter( (d.depth-1) / 1.1) };
+	// d3 treemap style (requires name)
+	var color_d3 = d3.scale.category20c();
+	var color_func = function(d) { return d.children ? color_d3(d.name) : "none"; };
 
     var data = [];
     for (var i = 0; i < nodes.length; i++){
@@ -225,8 +240,7 @@ var paint = function(nodes){
 	        //.attr("stroke-width", "5px")
 			.attr("stroke-width", function(d) { return Math.max(stroke_max - stroke_delta*d.depth, stroke_min) + "px";})
 	        .attr("stroke", "black")
-	        //.attr("fill", "cyan")
-			.attr("fill", function(d) { return d3.hsl("cyan").brighter( (d.depth-1) / 1.1); });
+	        .attr("fill", color_func);
     polylines.exit().remove();
 
 }
