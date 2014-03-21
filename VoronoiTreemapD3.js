@@ -83,9 +83,15 @@ d3.layout.voronoitreemap = function() {
     
     
     voronoitreemap.root_polygon = function(x) {
-	if (!arguments.length) return root_polygon;
-	root_polygon = x;
-	return voronoitreemap;
+		if (!arguments.length) return root_polygon;
+		root_polygon = x;
+		return voronoitreemap;
+    };
+	
+	voronoitreemap.iterations = function(x) {
+		if (!arguments.length) return iterations;
+		iterations = x;
+		return voronoitreemap;
     };
     
     

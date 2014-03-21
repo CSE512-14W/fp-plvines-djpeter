@@ -119,7 +119,7 @@ public class TestJSONJava {
 		StatusObjectImpl statusObject = new StatusObjectImpl();
 
 		//Get the voronoi treemap with the your status object as parameter and whether you want to use multithreaded computation
-		VoronoiTreemapInterface voronoiTreemap = MainClass.getInstance(statusObject,true);
+		VoronoiTreemapInterface voronoiTreemap = MainClass.getInstance(statusObject,true /* multithreaded */);
 		
 		//voronoiTreemap.setNumberMaxIterations(5000);
 		voronoiTreemap.setCancelOnThreshold(true);
